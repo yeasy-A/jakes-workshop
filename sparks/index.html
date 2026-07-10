@@ -31,9 +31,15 @@
   :root{
     --paper:#f0e6d6; --paper-2:#fbf5ea; --card:#fffaf1;
     --ink:#231d16; --ink-soft:#6c6052; --line:#d8c9b3;
-    --accent:#ec5a23; --accent-d:#c8461a; --blue:#2f6db0; --green:#3f9d52; --gold:#e0a429; --violet:#8e5cd1;
+    --accent:#ec5a23; --accent-d:#c8461a; --accent-glow:rgba(236,90,35,.13); --blue:#2f6db0; --green:#3f9d52; --gold:#e0a429; --violet:#8e5cd1;
     --radius:18px;
     --shadow:0 1px 3px rgba(60,40,20,.07),0 10px 28px -10px rgba(60,40,20,.32),0 2px 0 rgba(0,0,0,.03);
+  }
+  :root[data-theme="dark"]{
+    --paper:#1b1712; --paper-2:#221d17; --card:#2a231b;
+    --ink:#f3ead9; --ink-soft:#b8a891; --line:#453a2c;
+    --accent:#ec5a23; --accent-d:#c8461a; --accent-glow:rgba(236,90,35,.13);
+    --shadow:0 1px 3px rgba(0,0,0,.35),0 10px 28px -10px rgba(0,0,0,.55),0 2px 0 rgba(0,0,0,.08);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;height:100%}
@@ -45,6 +51,12 @@
       linear-gradient(160deg,var(--paper),#e7dac6);
     background-attachment:fixed; min-height:100%; overscroll-behavior:none; -webkit-font-smoothing:antialiased;
   }
+  :root[data-theme="dark"] body{
+    background:
+      radial-gradient(ellipse 90% 55% at 65% -2%, rgba(236,90,35,.10) 0%, transparent 65%),
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0) 0 0/22px 22px,
+      linear-gradient(160deg,var(--paper),#0f0c09);
+  }
   .wrap{max-width:560px;margin:0 auto;padding:18px 18px calc(28px + env(safe-area-inset-bottom));min-height:100%;display:flex;flex-direction:column}
   .mono{font-family:"DM Mono",ui-monospace,monospace}
 
@@ -53,9 +65,9 @@
   .logo .mark{font-size:22px}
   .bar .spacer{flex:1}
   .modepill{display:flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
-  .modepill button{font:inherit;font-size:12.5px;font-weight:600;border:0;background:transparent;color:var(--ink-soft);padding:6px 11px;border-radius:999px;cursor:pointer;line-height:1}
+  .modepill button{font:inherit;font-size:12.5px;font-weight:600;border:0;background:transparent;color:var(--ink-soft);padding:11px 13px;border-radius:999px;cursor:pointer;line-height:1}
   .modepill button.on{background:var(--ink);color:var(--paper-2)}
-  .iconbtn{border:1px solid var(--line);background:var(--paper-2);width:38px;height:38px;border-radius:12px;cursor:pointer;display:grid;place-items:center;color:var(--ink);font-size:17px}
+  .iconbtn{border:1px solid var(--line);background:var(--paper-2);width:44px;height:44px;border-radius:12px;cursor:pointer;display:grid;place-items:center;color:var(--ink);font-size:17px}
   .iconbtn:active{transform:translateY(1px)}
 
   .screen{display:none;flex:1;flex-direction:column;animation:pop .28s ease}
@@ -68,8 +80,15 @@
   .gametabs button{flex:0 0 auto;min-width:90px;border:1.5px solid var(--line);background:var(--paper-2);border-radius:14px;padding:10px 8px;font:inherit;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:700;font-size:13.5px}
   .gametabs button small{font-weight:500;font-size:10.5px;color:var(--ink-soft)}
   .gametabs button .gi{font-size:21px}
-  .gametabs button.on{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(236,90,35,.13)}
+  .gametabs button.on{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-glow)}
+  :root[data-theme="dark"] .gametabs button.on{background:#35291d}
   .gamegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 10px}
+  #gameGrid{display:flex;flex-direction:column;gap:20px;margin:6px 0 10px}
+  .catblock{display:flex;flex-direction:column;gap:8px}
+  .catblock .gamegrid{margin:0}
+  .cat-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding:0 2px}
+  .cat-n{font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink)}
+  .cat-t{font-size:12px;color:var(--ink-soft)}
   .gcard{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:16px;box-shadow:0 1px 3px rgba(60,40,20,.07),0 8px 24px -8px rgba(60,40,20,.22);padding:14px 14px 13px;cursor:pointer;font:inherit;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
   .gcard:active{transform:translateY(3px);box-shadow:0 1px 2px rgba(60,40,20,.08)}
   .gcard .gi{font-size:30px;line-height:1}
@@ -82,11 +101,13 @@
   .hero{text-align:center;padding:6px 4px 4px}
   .hero h1{font-size:28px;line-height:1.06;margin:6px 0 8px;letter-spacing:-1px}
   .hero p{color:var(--ink-soft);margin:0;font-size:14.5px;line-height:1.4}
+  .hero .maker-note{color:var(--ink-soft);margin:6px auto 0;font-size:12.5px;line-height:1.45;max-width:420px;opacity:.85}
   .heat{display:flex;gap:8px;margin:16px 0 4px}
   .heat .h{flex:1;border:1.5px solid var(--line);background:var(--paper-2);border-radius:14px;padding:11px 8px;text-align:center;cursor:pointer;transition:.15s}
   .heat .h .k{font-weight:700;font-size:14px}
   .heat .h .d{font-size:11px;color:var(--ink-soft);margin-top:2px}
-  .heat .h.on{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(236,90,35,.13)}
+  .heat .h.on{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-glow)}
+  :root[data-theme="dark"] .heat .h.on{background:#35291d}
   .bigbtn{margin-top:16px;border:0;border-radius:16px;background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:19px;padding:18px;cursor:pointer;box-shadow:0 8px 0 var(--accent-d), var(--shadow);transition:transform .1s ease,box-shadow .1s ease;width:100%}
   .bigbtn:active{transform:translateY(5px);box-shadow:0 3px 0 var(--accent-d)}
   .rowbtns{display:flex;gap:10px;margin-top:12px}
@@ -163,6 +184,7 @@
   .oddtile:active{transform:scale(.97)}
   .oddtile.ok{background:#e9f6ec;border-color:var(--green)}
   .oddtile.bad{background:#fbeae4;border-color:var(--accent);animation:shake .32s}
+  :root[data-theme="dark"] .oddtile.bad{background:#3a201b}
 
   /* chain + rhyme */
   .gamebig{text-align:center;font-size:clamp(30px,10vw,44px);font-weight:700;letter-spacing:1px;padding:16px 12px 2px}
@@ -228,6 +250,10 @@
   .seg{display:flex;gap:6px}
   .seg button{flex:1;font:inherit;font-size:13px;font-weight:600;border:1.5px solid var(--line);background:var(--card);border-radius:11px;padding:11px 6px;cursor:pointer;color:var(--ink)}
   .seg button.on{background:var(--ink);color:var(--paper-2);border-color:var(--ink)}
+  .seg.accentseg{gap:10px}
+  .seg.accentseg button{flex:0 0 auto;width:38px;height:38px;border-radius:50%;padding:0;border:1.5px solid var(--line);position:relative}
+  .seg.accentseg button.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--paper-2),0 0 0 4px var(--ink)}
+  .seg.accentseg button.on::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
   .sheet .closebtn{margin-top:18px;width:100%;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:16px;padding:15px;border-radius:14px;cursor:pointer}
 
   a.iconbtn{text-decoration:none}
@@ -246,6 +272,7 @@
   .optbtn:active{transform:scale(.99)}
   .optbtn.okopt{background:#e9f6ec;border-color:var(--green)}
   .optbtn.badopt{background:#fbeae4;border-color:var(--accent);animation:shake .32s}
+  :root[data-theme="dark"] .optbtn.badopt{background:#3a201b}
   /* n-back */
   .nbstim{text-align:center;font-size:clamp(60px,22vw,96px);line-height:1;padding:20px 0 4px}
   .nbhint{text-align:center;color:var(--ink-soft);font-size:14px;padding-bottom:14px}
@@ -268,6 +295,19 @@
   .shp-circle{border-radius:50%}
   .shp-square{border-radius:7px}
   .shp-triangle{clip-path:polygon(50% 3%,97% 97%,3% 97%)}
+  /* driftwatch */
+  .dwstim{display:grid;place-items:center;margin:16px auto 6px;width:min(58vw,220px);aspect-ratio:1;border-radius:28px;background:var(--paper-2);border:1.5px solid var(--line);font-size:clamp(50px,16vw,84px);cursor:pointer;transition:transform .08s ease}
+  .dwstim:active{transform:scale(.94)}
+  .dwstim.ok{background:#e9f6ec;border-color:var(--green)}
+  .dwstim.bad{background:#fbeae4;border-color:var(--accent);animation:shake .32s}
+  /* needle */
+  .needlegrid{display:grid;gap:4px;padding:8px 10px 14px}
+  .needletile{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:6px;background:var(--paper-2);transition:transform .08s}
+  .needletile:active{transform:scale(.94)}
+  .needletile.hit{background:#e9f6ec;box-shadow:0 0 0 2px var(--green) inset}
+  .needletile.miss{animation:shake .32s}
+  .needmeta{display:flex;justify-content:space-between;align-items:center;padding:0 16px 4px;font-size:13px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  #needStopwatch{font-weight:700;color:var(--ink);font-size:15px}
   canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper-2);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:50;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -279,6 +319,7 @@
   @media(hover:hover){
     .gcard:hover{transform:translateY(-3px);box-shadow:0 2px 6px rgba(60,40,20,.10),0 16px 32px -10px rgba(60,40,20,.30)}
     .heat .h:hover{border-color:var(--accent);background:#fff}
+    :root[data-theme="dark"] .heat .h:hover{background:#35291d}
     .gametabs button:hover{border-color:var(--accent-d);background:var(--card)}
     .rowbtns .ghost:hover{background:var(--card);border-color:rgba(108,96,82,.6)}
     .optbtn:hover{background:var(--card);border-color:rgba(108,96,82,.6)}
@@ -293,7 +334,20 @@
 
   /* ── footer wordmark ── */
   .suite-footer{text-align:center;color:var(--ink-soft);font-size:12px;opacity:.45;padding:18px 0 calc(2px + env(safe-area-inset-bottom));letter-spacing:.5px;flex-shrink:0}
+
+  /* ghost (race-your-best overlay) */
+  .ghost-race{margin:10px 2px 4px;display:flex;flex-direction:column;gap:4px}
+  .ghost-race-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+  .ghost-race-row .ghostie{opacity:.55}
+  .ghost-track{position:relative;height:30px;background:var(--paper-2);border:1.5px solid var(--line);border-radius:12px;margin-top:2px}
+  .ghost-mark{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);font-size:19px;transition:left .2s linear;line-height:1}
+  .ghost-mark.ghostie{opacity:.4}
+  .ghost-delta{text-align:center;font-size:12.5px;font-weight:600;color:var(--ink-soft);min-height:16px}
+  .ghost-delta.ahead{color:var(--green)}
+  .ghost-delta.behind{color:var(--accent-d)}
+  .ghost-empty{text-align:center;font-size:13px;color:var(--ink-soft);margin:10px 2px 2px;font-style:italic}
 </style>
+<script>try{document.documentElement.dataset.theme=(JSON.parse(localStorage.getItem('sparks')||'{}').theme)||'light'}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
@@ -314,6 +368,7 @@
     <div class="hero" style="padding-top:2px">
       <h1>Pick a game</h1>
       <p>Quick brain games — tap one to play.</p>
+      <p class="maker-note">I built these for my own mind first — quick, gamified drills for an idea-rich, easily-distracted brain. If yours runs like mine, they might help you too.</p>
     </div>
     <div class="gamegrid" id="gameGrid"></div>
     <div class="streakline" id="streakLineHome"></div>
@@ -499,6 +554,25 @@
     </div>
   </section>
 
+  <!-- ============ ICONOGRAPHY ============ -->
+  <section class="screen" id="screen-iconography">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="icoScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="icoCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="icoTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="icoBarWrap"><div class="fill" id="icoBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">ICONOGRAPHY</div><div class="badge" id="icoBadge">who's this?</div></div>
+      <div id="icoCard"></div>
+      <div id="icoOpts" class="optlist"></div>
+    </div>
+    <div class="lk-feedback" id="icoFb"></div>
+    <div class="playbtns">
+      <button class="done" id="icoEnd">End round</button>
+    </div>
+  </section>
+
   <!-- ============ N-BACK ============ -->
   <section class="screen" id="screen-nback">
     <div class="linktop">
@@ -553,6 +627,153 @@
     </div>
     <div class="lk-feedback" id="swFb"></div>
     <div class="playbtns"><button class="new" id="swPass" title="Pass">⤼</button><button class="done" id="swEnd">End round</button></div>
+  </section>
+
+  <!-- ============ DRIFTWATCH ============ -->
+  <section class="screen" id="screen-driftwatch">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="dwScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="dwCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="dwTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="dwBarWrap"><div class="fill" id="dwBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">TAP EVERY ICON</div><div class="badge" id="dwRule">except 🦈</div></div>
+      <button class="dwstim" id="dwIcon" type="button">🪵</button>
+    </div>
+    <div class="lk-feedback" id="dwFb"></div>
+    <div class="playbtns"><button class="done" id="dwEnd">End round</button></div>
+  </section>
+
+  <!-- ============ CAIRN ============ -->
+  <section class="screen" id="screen-cairn">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="cairnScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="cairnCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="cairnTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="cairnBarWrap"><div class="fill" id="cairnBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">CAIRN</div><div class="badge">remember the stone</div></div>
+      <div class="gamesub" id="cairnTarget">Watch for: <b id="cairnTargetName"></b></div>
+      <div class="oddgrid" id="cairnGrid"></div>
+    </div>
+    <div class="lk-feedback" id="cairnFb"></div>
+    <div class="playbtns">
+      <button class="new" id="cairnPass" title="Pass — reveals the correct stone">⤼</button>
+      <button class="done" id="cairnEnd">End round</button>
+    </div>
+  </section>
+
+  <!-- ============ NEEDLE ============ -->
+  <section class="screen" id="screen-needle">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="needScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="needCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="needTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="needBarWrap"><div class="fill" id="needBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">FIND THE ODD ONE</div><div class="badge" id="needBadge">round 1</div></div>
+      <div class="needmeta"><span id="needStopwatch">0.0s</span><span id="needPbLine"></span></div>
+      <div class="needlegrid" id="needGrid"></div>
+    </div>
+    <div class="lk-feedback" id="needFb"></div>
+    <div class="playbtns"><button class="new" id="needPass" title="Reveal — new round">⤼</button><button class="done" id="needEnd">End round</button></div>
+  </section>
+
+  <!-- ============ CHAMELEON ============ -->
+  <section class="screen" id="screen-chameleon">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="chScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="chCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="chTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="chBarWrap"><div class="fill" id="chBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">CHAMELEON</div><div class="badge">no rule shown</div></div>
+      <div style="text-align:center;padding:14px 0 8px" id="chTarget"></div>
+      <div class="oddgrid" id="chOpts"></div>
+    </div>
+    <div class="lk-feedback" id="chFb"></div>
+    <div class="playbtns"><button class="done" id="chEnd">End round</button></div>
+  </section>
+
+  <!-- ============ GHOST ============ -->
+  <section class="screen" id="screen-ghost">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="ghScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="ghCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="ghTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="ghBarWrap"><div class="fill" id="ghBarFill"></div></div>
+
+    <div class="ghost-race" id="ghRaceWrap" style="display:none">
+      <div class="ghost-race-row">
+        <span class="ghost-race-lbl you">🏃 you <b id="ghYouScoreEl">0</b></span>
+        <span class="ghost-race-lbl ghostie">👻 ghost <b id="ghGhostScoreEl">0</b></span>
+      </div>
+      <div class="ghost-track" id="ghTrack">
+        <span class="ghost-mark ghostie" id="ghGhostMark">👻</span>
+        <span class="ghost-mark you" id="ghYouMark">🏃</span>
+      </div>
+      <div class="ghost-delta" id="ghDelta"></div>
+    </div>
+    <div class="ghost-empty" id="ghEmptyNote" style="display:none">First run — this becomes your ghost to beat next time 👻</div>
+
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">WHAT COMES NEXT?</div><div class="badge">race your ghost</div></div>
+      <div class="seqrow" id="ghSeq"></div>
+      <div class="oddgrid" id="ghGrid"></div>
+    </div>
+    <div class="lk-feedback" id="ghFb"></div>
+    <div class="playbtns">
+      <button class="new" id="ghPass" title="Pass — reveals the answer">⤼</button>
+      <button class="done" id="ghEnd">End round</button>
+    </div>
+  </section>
+
+  <!-- ============ FORK IN THE ROAD ============ -->
+  <section class="screen" id="screen-forkintheroad">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="frkScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="frkCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="frkTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="frkBarWrap"><div class="fill" id="frkBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">FORK IN THE ROAD</div><div class="badge" id="frkParBadge">PAR 3</div></div>
+      <div class="gamebig" id="frkCurVal">12</div>
+      <div class="gamesub" id="frkGoalLine">reach <b>16</b></div>
+      <div class="oddgrid" id="frkOps"></div>
+    </div>
+    <div class="lk-feedback" id="frkFb"></div>
+    <div class="trail" id="frkTrail"></div>
+    <div class="playbtns">
+      <button class="new" id="frkUndo" title="Undo last tap">↺</button>
+      <button class="new" id="frkPass" title="Pass — reveals a solution">⤼</button>
+      <button class="done" id="frkEnd">End round</button>
+    </div>
+  </section>
+
+  <!-- ============ BLINDFOLD ============ -->
+  <section class="screen" id="screen-blindfold">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="blScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="blCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="blTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="blBarWrap"><div class="fill" id="blBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">BLINDFOLD</div><div class="badge">memorize the path</div></div>
+      <div class="gamesub" id="blStatus">Watch the path…</div>
+      <div class="oddgrid" id="blGrid"></div>
+    </div>
+    <div class="lk-feedback" id="blFb"></div>
+    <div class="playbtns">
+      <button class="new" id="blPass" title="Pass — reveals the path">⤼</button>
+      <button class="done" id="blEnd">End round</button>
+    </div>
   </section>
 
   <!-- ============ RESULTS (shared) ============ -->
@@ -639,6 +860,19 @@
       <div class="seg" id="soundSeg"><button data-s="on" class="on">On</button><button data-s="off">Off</button></div>
     </div>
     <div class="setrow">
+      <div class="lab">Appearance</div>
+      <div class="seg" id="themeSeg"><button data-t="light" class="on">Light</button><button data-t="dark">Dark</button></div>
+    </div>
+    <div class="setrow">
+      <div class="lab">Accent</div>
+      <div class="seg accentseg" id="accentSeg">
+        <button data-a="ember" class="on" style="background:#ec5a23" aria-label="Ember"></button>
+        <button data-a="blue" style="background:#2f6db0" aria-label="Blue"></button>
+        <button data-a="green" style="background:#3f9d52" aria-label="Green"></button>
+        <button data-a="violet" style="background:#8e5cd1" aria-label="Violet"></button>
+      </div>
+    </div>
+    <div class="setrow">
       <div class="lab">Reset</div>
       <div class="seg"><button id="clearData" style="color:var(--accent-d)">Clear all stats &amp; spark book</button></div>
     </div>
@@ -669,6 +903,23 @@ const GAMES = [
   {id:"nback",  icon:"🧠", name:"N-Back", tag:"working memory"},
   {id:"stroop", icon:"🎨", name:"Don't Read It", tag:"inhibition"},
   {id:"switch", icon:"🔀", name:"Switch", tag:"flexibility"},
+  {id:"driftwatch", icon:"🎯", name:"Driftwatch", tag:"stay locked in"},
+  {id:"cairn", icon:"🪨", name:"Cairn", tag:"remember the stone"},
+  {id:"needle", icon:"🪡", name:"Needle", tag:"find it fast"},
+  {id:"goldeneye", icon:"👁️", name:"Golden Eye", tag:"golden ratio"},
+  {id:"chameleon", icon:"🦎", name:"Chameleon", tag:"read the feedback"},
+  {id:"whiplash", icon:"🌀", name:"Whiplash", tag:"juggle the rules"},
+  {id:"ration", icon:"⏳", name:"Ration", tag:"push your luck"},
+  {id:"mirror", icon:"🪞", name:"Mirror", tag:"complete the symmetry"},
+  {id:"web", icon:"🕸️", name:"Web", tag:"fewest hops wins"},
+  {id:"ruleforge", icon:"🔨", name:"Rule Forge", tag:"author your round"},
+  {id:"ghost", icon:"👻", name:"Ghost", tag:"race your best"},
+  {id:"forkintheroad", icon:"🛤️", name:"Fork in the Road", tag:"beat the par"},
+  {id:"blindfold", icon:"🙈", name:"Blindfold", tag:"memorize the path"},
+  {id:"iconography", icon:"🔑", name:"Iconography", tag:"know the saint"},
+  {id:"vestments", icon:"🎗️", name:"Vestments", tag:"tap the color"},
+  {id:"rosewindow", icon:"🌹", name:"Rose Window", tag:"match the rotation"},
+  {id:"illumination", icon:"📜", name:"Illumination", tag:"find the sacred symbol"},
 ];
 
 /* ---------- Sparks content ---------- */
@@ -792,12 +1043,39 @@ const RANK_TABLES = {
   nback:[[0,"Warming up"],[300,"Holding on"],[800,"Sharp recall"],[1500,"Memory athlete"],[2600,"Mind palace 🧠"]],
   stroop:[[0,"Warming up"],[300,"Holding back"],[800,"Cool head"],[1500,"Iron focus"],[2600,"Unshakable 🎨"]],
   switch:[[0,"Warming up"],[300,"Limbering up"],[800,"Quick shifter"],[1500,"Flexible mind"],[2600,"Shape-shifter 🔀"]],
+  driftwatch:[[0,"Warming up"],[300,"Finding rhythm"],[800,"Steady watch"],[1500,"Sharp lookout"],[2600,"Iron vigilance ⚓"]],
+  cairn:[[0,"Warming up"],[300,"Sharp eye"],[800,"Stone reader"],[1500,"Cairn master"],[2600,"Stonekeeper 🪨"]],
+  needle:[[0,"Warming up"],[600,"Sharp eye"],[1800,"Fast tracker"],[4000,"Needle finder"],[8000,"Hawkeye 🪡"]],
+  goldeneye:[[0,"Warming up"],[400,"Finding your eye"],[1000,"Sharp eye"],[2000,"Golden eye 👁️"],[3500,"Da Vinci precision"]],
+  chameleon:[[0,"Warming up"],[300,"Blending in"],[800,"Sharp-eyed"],[1500,"Quick to adapt"],[2600,"Master of disguise 🦎"]],
+  whiplash:[[0,"Warming up"],[300,"Finding the rhythm"],[800,"Juggling it"],[1500,"Rule master"],[2600,"Unshakable 🌀"]],
+  ration:[[0,"Warming up"],[400,"Getting greedy"],[1000,"Patient hand"],[2200,"Ice in the veins"],[4000,"Master of delay ⏳"]],
+  mirror:[[0,"Warming up"],[300,"Finding the seam"],[800,"Symmetry eye"],[1500,"Mirror master"],[2600,"Perfect symmetry ✨"]],
+  web:[[0,"Warming up"],[300,"Finding the thread"],[800,"Sharp connector"],[1500,"Web-walker"],[2600,"Master weaver 🕸️"]],
+  ruleforge:[[0,"Warming up"],[300,"Rule-breaker"],[800,"Combo architect"],[1500,"Rule Forge master"],[2600,"Grand Forger 🔨"]],
+  ghost:[[0,"Warming up"],[300,"Finding your pace"],[800,"Neck and neck"],[1500,"Pulling ahead"],[2600,"Outrunning yourself 👻"]],
+  forkintheroad:[[0,"Warming up"],[300,"Finding the way"],[800,"Efficient router"],[1500,"Shortest-path master"],[2600,"Oracle of the Fork 🛤️"]],
+  blindfold:[[0,"Warming up"],[300,"Finding your bearings"],[800,"Sure-footed"],[1500,"Master navigator"],[2600,"Walks it blind 🙈"]],
+  iconography:[[0,"Warming up"],[300,"Learning the saints"],[800,"Sharp interpreter"],[1500,"Iconography master"],[2600,"Hagiographer 🔑"]],
+  vestments:[[0,"Warming up"],[300,"Learning the colors"],[800,"Sacristan's eye"],[1500,"Vestments master"],[2600,"Master of Ceremonies 🎗️"]],
+  rosewindow:[[0,"Warming up"],[300,"Finding the pattern"],[800,"Symmetry eye"],[1600,"Cathedral eye"],[2800,"Rose master ✨"]],
+  illumination:[[0,"Warming up"],[600,"Sharp eye"],[1800,"Illuminator"],[4000,"Manuscript master"],[8000,"Scriptorium sage 📜"]],
 };
-const GAME_UNIT = {sparks:"IDEAS",link:"POINTS",odd:"POINTS",chain:"LINKS",rhyme:"RHYMES",pattern:"POINTS",symbol:"POINTS",nback:"POINTS",stroop:"POINTS",switch:"POINTS"};
+const GAME_UNIT = {sparks:"IDEAS",link:"POINTS",odd:"POINTS",chain:"LINKS",rhyme:"RHYMES",pattern:"POINTS",symbol:"POINTS",nback:"POINTS",stroop:"POINTS",switch:"POINTS",driftwatch:"POINTS",cairn:"POINTS",needle:"POINTS",goldeneye:"POINTS",chameleon:"POINTS",whiplash:"POINTS",ration:"POINTS",mirror:"POINTS",web:"POINTS",ruleforge:"POINTS",ghost:"POINTS",forkintheroad:"POINTS",blindfold:"POINTS",iconography:"POINTS",vestments:"POINTS",rosewindow:"POINTS",illumination:"POINTS"};
 const PLAYER_COLORS = ["#ec5a23","#2f6db0","#3f9d52","#e0a429","#8e5cd1","#d6457e","#28a0a0","#7a6a55"];
 
+/* ---------- theme + accent ---------- */
+const ACCENTS = {
+  ember:  {accent:"#ec5a23", d:"#c8461a", glow:"rgba(236,90,35,.13)"},
+  blue:   {accent:"#2f6db0", d:"#24548a", glow:"rgba(47,109,176,.13)"},
+  green:  {accent:"#3f9d52", d:"#2e7b3e", glow:"rgba(63,157,82,.13)"},
+  violet: {accent:"#8e5cd1", d:"#6c3fa8", glow:"rgba(142,92,209,.13)"}
+};
+function applyTheme(t){ document.documentElement.dataset.theme = t; }
+function applyAccent(a){ const c=ACCENTS[a]||ACCENTS.ember; const r=document.documentElement.style; r.setProperty("--accent",c.accent); r.setProperty("--accent-d",c.d); r.setProperty("--accent-glow",c.glow); }
+
 /* ---------- state ---------- */
-const DEFAULT = {game:"sparks", mode:"solo", len:90, sound:"on", streak:0, lastDay:null, party:null,
+const DEFAULT = {game:"sparks", mode:"solo", len:90, sound:"on", theme:"light", accent:"ember", streak:0, lastDay:null, party:null,
   best:0, rounds:0, favs:[],
   linkBest:0, linkBestCombo:0,
   oddBest:0, oddBestCombo:0,
@@ -807,7 +1085,24 @@ const DEFAULT = {game:"sparks", mode:"solo", len:90, sound:"on", streak:0, lastD
   symbolBest:0, symbolBestCombo:0,
   nbackBest:0, nbackBestCombo:0,
   stroopBest:0, stroopBestCombo:0,
-  switchBest:0, switchBestCombo:0};
+  switchBest:0, switchBestCombo:0,
+  driftwatchBest:0, driftwatchBestCombo:0,
+  cairnBest:0, cairnBestCombo:0,
+  needleBest:0, needleBestCombo:0,
+  goldeneyeBest:0, goldeneyeBestCombo:0, goldeneyeBestErr:null,
+  chameleonBest:0, chameleonBestCombo:0, chameleonBestRecovery:null,
+  whiplashBest:0, whiplashBestCombo:0,
+  rationBest:0, rationBestCombo:0,
+  mirrorBest:0, mirrorBestCombo:0,
+  webBest:0, webBestCombo:0, webRounds:0,
+  ruleforgeBest:0, ruleforgeBestCombo:0, ruleforgeBestMult:0,
+  ghostBest:0, ghostBestCombo:0, ghostBestLen:0, ghostTrace:[],
+  forkintheroadBest:0, forkintheroadBestCombo:0,
+  blindfoldBest:0, blindfoldBestCombo:0,
+  iconographyBest:0, iconographyBestCombo:0,
+  vestmentsBest:0, vestmentsBestCombo:0,
+  rosewindowBest:0, rosewindowBestCombo:0,
+  illuminationBest:0, illuminationBestCombo:0};
 let S = load();
 function load(){ try{ return {...DEFAULT, ...JSON.parse(localStorage.getItem("sparks")||"{}")}; }catch(e){ return {...DEFAULT}; } }
 function save(){ try{ localStorage.setItem("sparks", JSON.stringify(S)); }catch(e){} }
@@ -834,7 +1129,7 @@ function tableRank(game,n){ const T=RANK_TABLES[game]; let r=T[0][1]; for(const[
 function scoreRank(n){ return tableRank(S.game,n); }
 function shuffle(arr,rng){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor((rng?rng():Math.random())*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function bumpStreak(){ const t=todayKey(); if(S.lastDay===t) return; const n=new Date(); const y=localDateKey(new Date(n.getFullYear(),n.getMonth(),n.getDate()-1)); S.streak=(S.lastDay===y)?S.streak+1:1; S.lastDay=t; }
-function clearTimers(){ [timer,lkTimer,oddTimer,chainTimer,rhTimer,patTimer,symTimer,nbTimer,stTimer,swTimer].forEach(t=>clearInterval(t)); }
+function clearTimers(){ [timer,lkTimer,oddTimer,chainTimer,rhTimer,patTimer,symTimer,nbTimer,stTimer,swTimer,dwTimer,dwStreamTimer,cairnTimer,needTimer,needStopTimer,geTimer,chTimer,whTimer,whRuleTimer,ratTimer,ratTickTimer,mirTimer,webTimer,rfTimer,ghTimer,ghTicker,frkTimer,blTimer,icoTimer,vesTimer,rwTimer,illumTimer,illumStopTimer].forEach(t=>clearInterval(t)); }
 function fourOpts(answer,cands,rng){ const set=[answer]; for(const d of shuffle(cands.map(String),rng)){ if(set.length>=4)break; if(d!==answer&&!set.includes(d)) set.push(d); } let k=1; while(set.length<4){ const n=Number(answer); const c=isNaN(n)?answer+"·"+k:String(n+k); if(!set.includes(c))set.push(c); if(++k>40)break; } return shuffle(set,rng); }
 function comboEl(el,n){ if(n>=2){ el.textContent="🔥 ×"+n; el.classList.remove("dim"); } else { el.textContent="×1"; el.classList.add("dim"); } }
 /* generic countdown driving a tbar+time element; calls onEnd at 0 */
@@ -974,11 +1269,11 @@ function loadOdd(){
 }
 function updateOddHUD(){ $("#oddScoreEl").textContent=oddScore; comboEl($("#oddCombo"),oddCombo); }
 function tapOdd(btn){
-  if(oddLocked) return; const it=btn.dataset.it;
+  if(oddLocked||!oddCur) return; const it=btn.dataset.it;
   if(it===oddCur.odd){ oddLocked=true; btn.classList.add("ok"); oddCombo++; if(oddCombo>oddBestCombo)oddBestCombo=oddCombo; const pts=100*oddCombo; oddScore+=pts;
     const fb=$("#oddFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ the others are all ${oddCur.cat}  +${pts}${oddCombo>=2?"  (×"+oddCombo+")":""}`; beepUp(); updateOddHUD(); setTimeout(loadOdd,850);
   } else { btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); oddCombo=0; updateOddHUD(); const fb=$("#oddFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not the odd one — look again"; beep(); } }
-function passOdd(){ if(oddLocked) return; oddLocked=true; oddCombo=0; updateOddHUD(); $$("#oddGrid .oddtile").forEach(b=>{ if(b.dataset.it===oddCur.odd) b.classList.add("ok"); }); const fb=$("#oddFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ the odd one was the misfit — others are ${oddCur.cat}`; setTimeout(loadOdd,1000); }
+function passOdd(){ if(oddLocked||!oddCur) return; oddLocked=true; oddCombo=0; updateOddHUD(); $$("#oddGrid .oddtile").forEach(b=>{ if(b.dataset.it===oddCur.odd) b.classList.add("ok"); }); const fb=$("#oddFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ the odd one was the misfit — others are ${oddCur.cat}`; setTimeout(loadOdd,1000); }
 function endOdd(){ clearInterval(oddTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(oddScore);
   S.oddRounds=(S.oddRounds||0)+1; const best=oddScore>(S.oddBest||0); if(best)S.oddBest=oddScore; if(oddBestCombo>(S.oddBestCombo||0))S.oddBestCombo=oddBestCombo; bumpStreak(); save();
   resultsSplash(oddScore, best, S.oddBest>0?`Best score: ${S.oddBest}`:"", null); }
@@ -1090,11 +1385,11 @@ function loadPattern(){ const rng=patSeed||Math.random; patSeed=null; patCur=gen
   $$("#patGrid .patt").forEach(b=>b.onclick=()=>tapPattern(b));
   const fb=$("#patFb"); fb.className="lk-feedback"; fb.textContent=""; }
 function updatePatHUD(){ $("#patScoreEl").textContent=patScore; comboEl($("#patCombo"),patCombo); }
-function tapPattern(btn){ if(patLocked) return; const v=btn.dataset.v;
+function tapPattern(btn){ if(patLocked||!patCur) return; const v=btn.dataset.v;
   if(v===String(patCur.answer)){ patLocked=true; btn.classList.add("ok"); patCombo++; if(patCombo>patBestCombo)patBestCombo=patCombo; const pts=100*patCombo; patScore+=pts;
     const fb=$("#patFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ that's the pattern!  +${pts}${patCombo>=2?"  (×"+patCombo+")":""}`; beepUp(); updatePatHUD(); setTimeout(loadPattern,800);
   } else { btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); patCombo=0; updatePatHUD(); const fb=$("#patFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not quite — read the rule again"; beep(); } }
-function passPattern(){ if(patLocked) return; patLocked=true; patCombo=0; updatePatHUD(); $$("#patGrid .patt").forEach(b=>{ if(b.dataset.v===String(patCur.answer)) b.classList.add("ok"); }); const fb=$("#patFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ it was ${patCur.answer}`; setTimeout(loadPattern,1000); }
+function passPattern(){ if(patLocked||!patCur) return; patLocked=true; patCombo=0; updatePatHUD(); $$("#patGrid .patt").forEach(b=>{ if(b.dataset.v===String(patCur.answer)) b.classList.add("ok"); }); const fb=$("#patFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ it was ${patCur.answer}`; setTimeout(loadPattern,1000); }
 function endPattern(){ clearInterval(patTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(patScore);
   const best=patScore>(S.patternBest||0); if(best)S.patternBest=patScore; if(patBestCombo>(S.patternBestCombo||0))S.patternBestCombo=patBestCombo; bumpStreak(); save();
   resultsSplash(patScore, best, S.patternBest>0?`Best score: ${S.patternBest}`:"", null); }
@@ -1137,11 +1432,11 @@ function loadSymbol(){ const rng=symSeed||Math.random; symSeed=null; symCur=genS
   }
   $$("#symOpts button").forEach(b=>b.onclick=()=>tapSymbol(b)); }
 function updateSymHUD(){ $("#symScoreEl").textContent=symScore; comboEl($("#symCombo"),symCombo); }
-function tapSymbol(btn){ if(symLocked) return; const okClass=symDir==="fwd"?"okopt":"ok", badClass=symDir==="fwd"?"badopt":"bad";
+function tapSymbol(btn){ if(symLocked||!symCur) return; const okClass=symDir==="fwd"?"okopt":"ok", badClass=symDir==="fwd"?"badopt":"bad";
   if(btn.dataset.ok==="1"){ symLocked=true; btn.classList.add(okClass); symCombo++; if(symCombo>symBestCombo)symBestCombo=symCombo; const pts=100*symCombo; symScore+=pts;
     const fb=$("#symFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ ${symCur.target.n} → ${symCur.target.m}  +${pts}${symCombo>=2?"  (×"+symCombo+")":""}`; beepUp(); updateSymHUD(); setTimeout(loadSymbol,1100);
   } else { btn.classList.add(badClass); symCombo=0; updateSymHUD(); const fb=$("#symFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not the usual meaning — try again"; beep(); } }
-function passSymbol(){ if(symLocked) return; symLocked=true; symCombo=0; updateSymHUD(); const okClass=symDir==="fwd"?"okopt":"ok";
+function passSymbol(){ if(symLocked||!symCur) return; symLocked=true; symCombo=0; updateSymHUD(); const okClass=symDir==="fwd"?"okopt":"ok";
   $$("#symOpts button").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add(okClass); }); const fb=$("#symFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ ${symCur.target.n} → ${symCur.target.m}`; setTimeout(loadSymbol,1300); }
 function endSymbol(){ clearInterval(symTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(symScore);
   const best=symScore>(S.symbolBest||0); if(best)S.symbolBest=symScore; if(symBestCombo>(S.symbolBestCombo||0))S.symbolBestCombo=symBestCombo; bumpStreak(); save();
@@ -1185,7 +1480,7 @@ function loadStroop(){ const rng=stSeed||Math.random; stSeed=null; stCur=genStro
   $("#stOpts").innerHTML=stCur.opts.map(o=>`<button class="colbtn" data-c="${o.n}" style="--cc:${o.c}">${o.n[0]+o.n.slice(1).toLowerCase()}</button>`).join("");
   $$("#stOpts button").forEach(b=>b.onclick=()=>tapStroop(b)); const fb=$("#stFb"); fb.className="lk-feedback"; fb.textContent=""; }
 function updateStHUD(){ $("#stScoreEl").textContent=stScore; comboEl($("#stCombo"),stCombo); }
-function tapStroop(btn){ if(stLocked) return;
+function tapStroop(btn){ if(stLocked||!stCur) return;
   if(btn.dataset.c===stCur.ink.n){ stLocked=true; btn.classList.add("okc"); stCombo++; if(stCombo>stBestCombo)stBestCombo=stCombo; const pts=100*stCombo; stScore+=pts;
     const fb=$("#stFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ ${stCur.ink.n.toLowerCase()} ink!  +${pts}${stCombo>=2?"  (×"+stCombo+")":""}`; beepUp(); updateStHUD(); setTimeout(loadStroop,650);
   } else { btn.classList.add("badc"); stCombo=0; updateStHUD(); const fb=$("#stFb"); fb.className="lk-feedback bad"; fb.textContent="✗ tap the INK color, not the word"; beep(); } }
@@ -1218,11 +1513,11 @@ function loadSwitch(){ const rng=swSeed||Math.random; swSeed=null; swCur=genSwit
   $("#swOpts").innerHTML=swCur.opts.map(o=>`<button class="oddtile swtile" data-ok="${o.ok}">${swItem(o.color,o.shape)}</button>`).join("");
   $$("#swOpts button").forEach(b=>b.onclick=()=>tapSwitch(b)); const fb=$("#swFb"); fb.className="lk-feedback"; fb.textContent=""; }
 function updateSwHUD(){ $("#swScoreEl").textContent=swScore; comboEl($("#swCombo"),swCombo); }
-function tapSwitch(btn){ if(swLocked) return;
+function tapSwitch(btn){ if(swLocked||!swCur) return;
   if(btn.dataset.ok==="1"){ swLocked=true; btn.classList.add("ok"); swCombo++; if(swCombo>swBestCombo)swBestCombo=swCombo; const pts=100*swCombo; swScore+=pts;
     const fb=$("#swFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ right!  +${pts}${swCombo>=2?"  (×"+swCombo+")":""}`; beepUp(); updateSwHUD(); setTimeout(loadSwitch,700);
   } else { btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); swCombo=0; updateSwHUD(); const fb=$("#swFb"); fb.className="lk-feedback bad"; fb.textContent=`✗ the rule is ${swCur.rule==="color"?"MATCH THE COLOR":"MATCH THE SHAPE"}`; beep(); } }
-function passSwitch(){ if(swLocked) return; swLocked=true; swCombo=0; updateSwHUD(); $$("#swOpts button").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add("ok"); }); const fb=$("#swFb"); fb.className="lk-feedback bad"; fb.textContent="↷ moving on"; setTimeout(loadSwitch,900); }
+function passSwitch(){ if(swLocked||!swCur) return; swLocked=true; swCombo=0; updateSwHUD(); $$("#swOpts button").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add("ok"); }); const fb=$("#swFb"); fb.className="lk-feedback bad"; fb.textContent="↷ moving on"; setTimeout(loadSwitch,900); }
 function endSwitch(){ clearInterval(swTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(swScore);
   const best=swScore>(S.switchBest||0); if(best)S.switchBest=swScore; if(swBestCombo>(S.switchBestCombo||0))S.switchBestCombo=swBestCombo; bumpStreak(); save();
   resultsSplash(swScore, best, S.switchBest>0?`Best score: ${S.switchBest}`:"", null); }
@@ -1265,10 +1560,2107 @@ function partyPodium(){ const sorted=[...S.party.players].sort((a,b)=>b.total-a.
   $("#podiumList").innerHTML=sorted.map((p,i)=>`<div class="prow${p.total===top&&top>0?" win":""}"><div class="dot">${medals[i]||"&nbsp;"}</div><div class="nm">${esc(p.name)}</div><div class="sc">${p.total}</div></div>`).join(""); confetti(true); show("podium"); }
 $("#podiumHome").onclick=goHome;
 
+
+
+/* =========================================================
+   DRIFTWATCH (sustained attention / SART)
+   ========================================================= */
+const DW_GO = ["🪵","🍾","⚓","🐚","🦆","🛟","🥥","🍃","🧊","🎈","🪣","🧦","🪁","🧢","🔑","🧵","🧻","🥄","🎀","🧤"];
+const DW_NOGO = ["🦈","💣","🎐","🐍","🦂"];
+const DW_INTERVAL = 700;
+let dwScore=0,dwCombo=0,dwBestCombo=0,dwLapses=0,dwHits=0,dwNoGoIcon=null,dwCur=null,dwResponded=true,dwTrialN=0,dwTimer=null,dwStreamTimer=null,dwSeed=null;
+function dwPick(rng,pool,avoid){ let x=pool[Math.floor(rng()*pool.length)],g=0; while(x===avoid&&g++<8) x=pool[Math.floor(rng()*pool.length)]; return x; }
+function startDriftwatch(opts={}){ dwScore=0;dwCombo=0;dwBestCombo=0;dwLapses=0;dwHits=0;dwTrialN=0;dwCur=null;dwResponded=true; playLen=S.len;
+  dwSeed=opts.daily?mulberry32(hashStr("driftwatch"+todayKey())):null;
+  const rng0=dwSeed||Math.random; dwNoGoIcon=DW_NOGO[Math.floor(rng0()*DW_NOGO.length)];
+  $("#dwRule").textContent="except "+dwNoGoIcon;
+  updateDwHUD(); show("driftwatch"); $("#dwIcon").className="dwstim"; const fb=$("#dwFb"); fb.className="lk-feedback"; fb.textContent="";
+  loadDriftwatch();
+  clearInterval(dwStreamTimer); dwStreamTimer=setInterval(dwTick,DW_INTERVAL);
+  clearInterval(dwTimer); dwTimer=runTimer(null,$("#dwTime"),$("#dwBarFill"),$("#dwBarWrap"),()=>endDriftwatch()); }
+function loadDriftwatch(){ const rng=dwSeed||Math.random; dwSeed=null; dwTrialN++;
+  const prevWasNoGo = !!(dwCur&&dwCur.noGo);
+  const noGo = dwTrialN>2 && !prevWasNoGo && rng()<0.16;
+  const icon = noGo ? dwNoGoIcon : dwPick(rng,DW_GO,dwCur&&dwCur.icon);
+  dwCur={icon,noGo}; dwResponded=false;
+  const el=$("#dwIcon"); el.className="dwstim"; el.textContent=icon; }
+function dwTick(){ if(!$("#screen-driftwatch").classList.contains("active")) return;
+  if(dwCur && !dwResponded){
+    if(dwCur.noGo){ dwCombo++; if(dwCombo>dwBestCombo)dwBestCombo=dwCombo; dwHits++; const pts=140*dwCombo; dwScore+=pts;
+      const fb=$("#dwFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ held back  +${pts}${dwCombo>=2?"  (×"+dwCombo+")":""}`; beepUp();
+    } else { dwCombo=0; dwLapses++; const fb=$("#dwFb"); fb.className="lk-feedback bad"; fb.textContent="— missed one, stay with it"; beep(); }
+    updateDwHUD();
+  }
+  loadDriftwatch(); }
+function tapDriftwatch(){ if(!dwCur||dwResponded) return; dwResponded=true; const el=$("#dwIcon");
+  if(dwCur.noGo){ dwCombo=0; dwLapses++; el.classList.add("bad");
+    const fb=$("#dwFb"); fb.className="lk-feedback bad"; fb.textContent=`✗ that was the one to leave — ${dwNoGoIcon}`; beep();
+  } else { dwCombo++; if(dwCombo>dwBestCombo)dwBestCombo=dwCombo; dwHits++; const pts=100*dwCombo; dwScore+=pts; el.classList.add("ok");
+    const fb=$("#dwFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ +${pts}${dwCombo>=2?"  (×"+dwCombo+")":""}`; beepUp(); }
+  updateDwHUD(); }
+function updateDwHUD(){ $("#dwScoreEl").textContent=dwScore; comboEl($("#dwCombo"),dwCombo); }
+function endDriftwatch(){ clearInterval(dwTimer); clearInterval(dwStreamTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(dwScore);
+  const best=dwScore>(S.driftwatchBest||0); if(best)S.driftwatchBest=dwScore; if(dwBestCombo>(S.driftwatchBestCombo||0))S.driftwatchBestCombo=dwBestCombo; bumpStreak(); save();
+  resultsSplash(dwScore, best, S.driftwatchBest>0?`Best score: ${S.driftwatchBest}`:"", null); }
+$("#dwIcon").onclick=tapDriftwatch;
+$("#dwEnd").onclick=()=>endDriftwatch();
+
+/* =========================================================
+   CAIRN (visuospatial encoding / focus & follow-through)
+   ========================================================= */
+const CAIRN_POOL = OBJECTS.filter(o=>o.e!=="🪨"); // exclude rock — it IS the stone-cover icon, would hide itself
+const CAIRN_COLS = {4:2,6:3,9:3,12:4,16:4};
+function cairnSizeFor(round){ const steps=[4,6,9,12,16]; return steps[Math.min(steps.length-1, Math.floor((round-1)/2))]; }
+function cairnRevealFor(round){ return Math.max(550, 1500-(round-1)*80); }
+function cairnFontFor(size){ return size<=4?52:size<=6?46:size<=9?38:size<=12?32:26; }
+
+let cairnScore=0,cairnCombo=0,cairnBestCombo=0,cairnRound=0,cairnCur=null,cairnPhase="idle",cairnLocked=true,cairnTimer=null,cairnSeed=null;
+
+function buildCairn(rng,round){
+  const size=cairnSizeFor(round), revealMs=cairnRevealFor(round), cols=CAIRN_COLS[size]||4;
+  const items=shuffle(CAIRN_POOL,rng).slice(0,size); const targetIdx=Math.floor(rng()*size);
+  return {size,revealMs,cols,items,targetIdx};
+}
+
+function startCairn(opts={}){
+  cairnScore=0; cairnCombo=0; cairnBestCombo=0; cairnRound=0; playLen=S.len; cairnSeed=opts.daily?mulberry32(hashStr("cairn"+todayKey())):null;
+  updateCairnHUD(); show("cairn"); loadCairn();
+  clearInterval(cairnTimer); cairnTimer=runTimer(null,$("#cairnTime"),$("#cairnBarFill"),$("#cairnBarWrap"),()=>endCairn());
+}
+
+function loadCairn(){
+  if(!$("#screen-cairn").classList.contains("active")) return;
+  cairnRound++; const rng=cairnSeed||Math.random; cairnSeed=null;
+  cairnCur=buildCairn(rng,cairnRound); cairnPhase="ready"; cairnLocked=true;
+  renderCairnGrid(true);
+  const t=cairnCur.items[cairnCur.targetIdx]; $("#cairnTargetName").textContent=`${t.e} ${t.n}`;
+  const fb=$("#cairnFb"); fb.className="lk-feedback unsure"; fb.textContent="👀 Watch closely…";
+  setTimeout(flashCairn,550);
+}
+
+function renderCairnGrid(covered){
+  const g=$("#cairnGrid"); g.style.gridTemplateColumns=`repeat(${cairnCur.cols},1fr)`; const fpx=cairnFontFor(cairnCur.size);
+  g.innerHTML=cairnCur.items.map((it,i)=>`<button class="oddtile" data-i="${i}" style="font-size:${fpx}px" disabled>${covered?"🪨":it.e}</button>`).join("");
+  $$("#cairnGrid .oddtile").forEach(b=>b.onclick=()=>tapCairn(+b.dataset.i,b));
+}
+
+function flashCairn(){
+  if(!$("#screen-cairn").classList.contains("active")) return;
+  $$("#cairnGrid .oddtile").forEach((b,i)=>b.textContent=cairnCur.items[i].e);
+  setTimeout(coverCairn,cairnCur.revealMs);
+}
+
+function coverCairn(){
+  if(!$("#screen-cairn").classList.contains("active")) return;
+  $$("#cairnGrid .oddtile").forEach(b=>b.textContent="🪨");
+  const fb=$("#cairnFb"); fb.className="lk-feedback unsure"; fb.textContent="✋ Hold that thought…";
+  setTimeout(enableGuess,500);
+}
+
+function enableGuess(){
+  if(!$("#screen-cairn").classList.contains("active")) return;
+  cairnPhase="guess"; cairnLocked=false;
+  $$("#cairnGrid .oddtile").forEach(b=>b.disabled=false);
+  const fb=$("#cairnFb"); fb.className="lk-feedback"; fb.textContent="Tap the stone that hid it";
+}
+
+function updateCairnHUD(){ $("#cairnScoreEl").textContent=cairnScore; comboEl($("#cairnCombo"),cairnCombo); }
+
+function tapCairn(i,btn){
+  if(cairnLocked||cairnPhase!=="guess") return; cairnLocked=true; cairnPhase="reveal";
+  $$("#cairnGrid .oddtile").forEach(b=>b.disabled=true);
+  const fb=$("#cairnFb");
+  if(i===cairnCur.targetIdx){
+    btn.classList.add("ok"); btn.textContent=cairnCur.items[i].e;
+    cairnCombo++; if(cairnCombo>cairnBestCombo)cairnBestCombo=cairnCombo;
+    const pts=(80+cairnCur.size*10)*cairnCombo; cairnScore+=pts;
+    fb.className="lk-feedback ok"; fb.textContent=`✓ that was it — +${pts}${cairnCombo>=2?"  (×"+cairnCombo+")":""}`; beepUp();
+  } else {
+    btn.classList.add("bad");
+    const tgt=$$("#cairnGrid .oddtile").find(b=>+b.dataset.i===cairnCur.targetIdx);
+    if(tgt){ tgt.classList.add("ok"); tgt.textContent=cairnCur.items[cairnCur.targetIdx].e; }
+    cairnCombo=0; fb.className="lk-feedback bad"; fb.textContent="✗ not that one — see the highlighted stone"; beep();
+  }
+  updateCairnHUD(); setTimeout(loadCairn,950);
+}
+
+function passCairn(){
+  if(cairnLocked||cairnPhase!=="guess") return; cairnLocked=true; cairnPhase="reveal";
+  $$("#cairnGrid .oddtile").forEach(b=>b.disabled=true);
+  const tgt=$$("#cairnGrid .oddtile").find(b=>+b.dataset.i===cairnCur.targetIdx);
+  if(tgt){ tgt.classList.add("ok"); tgt.textContent=cairnCur.items[cairnCur.targetIdx].e; }
+  cairnCombo=0; updateCairnHUD();
+  const fb=$("#cairnFb"); fb.className="lk-feedback bad"; fb.textContent="↷ it was hiding under this stone"; setTimeout(loadCairn,1000);
+}
+
+function endCairn(){
+  clearInterval(cairnTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(cairnScore);
+  const best=cairnScore>(S.cairnBest||0); if(best)S.cairnBest=cairnScore; if(cairnBestCombo>(S.cairnBestCombo||0))S.cairnBestCombo=cairnBestCombo; bumpStreak(); save();
+  resultsSplash(cairnScore, best, S.cairnBest>0?`Best score: ${S.cairnBest}`:"", null);
+}
+$("#cairnPass").onclick=passCairn; $("#cairnEnd").onclick=()=>endCairn();
+
+/* =========================================================
+   NEEDLE (focus & follow-through — visual search)
+   ========================================================= */
+let needScore=0, needCombo=0, needBestCombo=0, needRound=1, needSessionBest=Infinity, needCur=null, needLocked=false, needStart=0, needTimer=null, needStopTimer=null, needSeed=null;
+function nudgeHex(hex,amt){ const n=parseInt(hex.slice(1),16); const cl=v=>Math.max(0,Math.min(255,v));
+  const r=cl(((n>>16)&255)+amt), g=cl(((n>>8)&255)+amt), b=cl((n&255)+amt);
+  return "#"+[r,g,b].map(v=>v.toString(16).padStart(2,"0")).join(""); }
+function needFmt(ms){ return (ms/1000).toFixed(2); }
+function genNeedle(rng,round){
+  const gridN=Math.min(9,4+Math.ceil(round/2)); const total=gridN*gridN;
+  const shape=SW_SHAPES[Math.floor(rng()*SW_SHAPES.length)];
+  const color=SW_COLORS[Math.floor(rng()*SW_COLORS.length)];
+  const variants = shape==="circle" ? ["shade","size"] : ["rotate","shade","size"];
+  const variant=variants[Math.floor(rng()*variants.length)];
+  const targetIdx=Math.floor(rng()*total);
+  const baseStyle=`background:${color.c}`; let targetStyle;
+  if(variant==="rotate"){ const deg=(rng()<0.5?-1:1)*(22+Math.floor(rng()*16)); targetStyle=`background:${color.c};transform:rotate(${deg}deg)`; }
+  else if(variant==="shade"){ const amt=rng()<0.5?-26:26; targetStyle=`background:${nudgeHex(color.c,amt)}`; }
+  else { const sc=rng()<0.5?0.78:1.22; targetStyle=`background:${color.c};transform:scale(${sc})`; }
+  return {gridN,total,shape,color,variant,targetIdx,baseStyle,targetStyle};
+}
+function startNeedle(opts={}){ needScore=0;needCombo=0;needBestCombo=0;needRound=1;needSessionBest=Infinity; playLen=S.len; needSeed=opts.daily?mulberry32(hashStr("needle"+todayKey())):null;
+  updateNeedHUD(); show("needle"); loadNeedle(); clearInterval(needTimer); needTimer=runTimer(null,$("#needTime"),$("#needBarFill"),$("#needBarWrap"),()=>endNeedle()); }
+function loadNeedle(){ const rng=needSeed||Math.random; needSeed=null; needCur=genNeedle(rng,needRound); needLocked=false; needStart=Date.now();
+  const g=$("#needGrid"); g.style.gridTemplateColumns=`repeat(${needCur.gridN},1fr)`; g.style.gap=needCur.gridN>=8?"2px":"4px";
+  let html=""; for(let i=0;i<needCur.total;i++){ const isT=i===needCur.targetIdx;
+    html+=`<div class="needletile" data-i="${i}"><span class="shp-${needCur.shape}" style="display:block;width:72%;height:72%;${isT?needCur.targetStyle:needCur.baseStyle}"></span></div>`; }
+  g.innerHTML=html; $$("#needGrid .needletile").forEach(t=>t.onclick=()=>tapNeedle(t));
+  $("#needBadge").textContent="round "+needRound;
+  $("#needPbLine").textContent = S.needleBest ? "PB "+needFmt(S.needleBest)+"s" : "no PB yet";
+  $("#needStopwatch").textContent="0.0s"; clearInterval(needStopTimer);
+  needStopTimer=setInterval(()=>{ $("#needStopwatch").textContent=needFmt(Date.now()-needStart)+"s"; },100);
+  const fb=$("#needFb"); fb.className="lk-feedback"; fb.textContent=""; }
+function updateNeedHUD(){ $("#needScoreEl").textContent=needScore; comboEl($("#needCombo"),needCombo); }
+function tapNeedle(tile){ if(needLocked||!needCur) return; const i=+tile.dataset.i;
+  if(i===needCur.targetIdx){ needLocked=true; clearInterval(needStopTimer); const elapsed=Date.now()-needStart;
+    tile.classList.add("hit"); $("#needStopwatch").textContent=needFmt(elapsed)+"s";
+    needCombo++; if(needCombo>needBestCombo)needBestCombo=needCombo; if(elapsed<needSessionBest)needSessionBest=elapsed;
+    const pts=Math.round(Math.max(30,260-elapsed/12))*needCombo; needScore+=pts; updateNeedHUD();
+    const fb=$("#needFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ found it — ${needFmt(elapsed)}s  +${pts}${needCombo>=2?"  (×"+needCombo+")":""}`; beepUp();
+    setTimeout(()=>{ needRound++; loadNeedle(); },550);
+  } else { tile.classList.remove("miss"); void tile.offsetWidth; tile.classList.add("miss"); needCombo=0; updateNeedHUD();
+    const fb=$("#needFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not it — keep looking"; beep(); } }
+function passNeedle(){ if(needLocked||!needCur) return; needLocked=true; needCombo=0; updateNeedHUD(); clearInterval(needStopTimer);
+  const tiles=$$("#needGrid .needletile"); const t=tiles[needCur.targetIdx]; if(t) t.classList.add("hit");
+  const fb=$("#needFb"); fb.className="lk-feedback bad"; fb.textContent="↷ there it was"; setTimeout(loadNeedle,1000); }
+function endNeedle(){ clearInterval(needTimer); clearInterval(needStopTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(needScore);
+  const gotPB = needSessionBest<Infinity && (!S.needleBest || needSessionBest<S.needleBest); if(gotPB) S.needleBest=Math.round(needSessionBest);
+  if(needBestCombo>(S.needleBestCombo||0)) S.needleBestCombo=needBestCombo; bumpStreak(); save();
+  const bestLine = S.needleBest ? `Best time: ${needFmt(S.needleBest)}s` : "";
+  resultsSplash(needScore, gotPB, bestLine, null); }
+$("#needPass").onclick=passNeedle; $("#needEnd").onclick=()=>endNeedle();
+
+/* =========================================================
+   GOLDEN EYE (proportion sense)
+   Self-injects its own screen markup + a small stylesheet at
+   load time, so no edits to the static <style> block or the
+   .screen HTML sections are required. Anchors right after
+   #screen-stats (before <footer>) so it sits correctly inside
+   .wrap. Safe to paste this whole block anywhere inside the
+   main <script> tag, in the same run of per-game blocks as
+   SYMBOLS/N-BACK/etc — position doesn't matter since
+   #screen-stats already exists by the time the script runs.
+   ========================================================= */
+document.head.insertAdjacentHTML("beforeend", `<style>
+.ge-bar{position:relative;display:block;width:80%;height:64px;margin:0 auto;padding:0;border:0;border-radius:14px;cursor:pointer;touch-action:none;user-select:none;background:linear-gradient(180deg,var(--accent),var(--accent-d));box-shadow:var(--shadow);font:inherit}
+.ge-bar.flash{animation:geflash .22s ease-out}
+.ge-bar.locked{opacity:.5}
+@keyframes geflash{from{opacity:0;transform:scaleX(.5)}to{opacity:1;transform:scaleX(1)}}
+.ge-mark{display:none;position:absolute;top:-9px;bottom:-9px;width:3px;border-radius:2px;transform:translateX(-50%);pointer-events:none}
+.ge-mark.on{display:block}
+.ge-mark.you{background:var(--ink)}
+.ge-mark.truth{background:var(--gold);box-shadow:0 0 7px var(--gold)}
+.ge-legend{text-align:center;color:var(--ink-soft);font-size:11.5px;margin-top:12px}
+</style>`);
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-goldeneye">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="geScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="geCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="geTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="geBarWrap"><div class="fill" id="geBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">GOLDEN EYE</div><div class="badge" style="background:var(--gold)">tap the split</div></div>
+      <div class="gamesub" style="padding-top:10px">Tap where the bar splits at the <b>golden ratio</b> — you get 2 seconds</div>
+      <div style="padding:4px 20px 22px">
+        <div class="tbar" id="geRoundBarWrap" style="height:5px;margin:0 0 26px"><div class="fill" id="geRoundFill" style="background:var(--gold)"></div></div>
+        <button class="ge-bar" id="geBar" aria-label="Tap where the bar splits at the golden ratio">
+          <div class="ge-mark truth" id="geMarkTrue"></div>
+          <div class="ge-mark you" id="geMarkYou"></div>
+        </button>
+        <div class="ge-legend">gold line = the golden split &nbsp;·&nbsp; dark line = your tap</div>
+      </div>
+    </div>
+    <div class="lk-feedback" id="geFb"></div>
+    <div class="playbtns">
+      <button class="done" id="geEnd">End round</button>
+    </div>
+  </section>
+`);
+
+const GOLDEN_PCT = (Math.sqrt(5)-1)/2*100; // ≈61.803% — the true split point, measured from the bar's left edge
+const GE_ROUND_MS = 2000;                  // exact 2s tap window per round, per spec
+const GE_TIERS = [                         // ordered tightest→loosest; first match wins. err is abs percentage-point distance from GOLDEN_PCT
+  {max:1.2, icon:"🎯", label:"Perfect!",  mult:2.2},
+  {max:3,   icon:"✨", label:"Excellent", mult:1.7},
+  {max:6,   icon:"👍", label:"Good",      mult:1.3},
+  {max:12,  icon:"🙂", label:"Close",     mult:1.0},
+];
+function geTier(err){ for(const t of GE_TIERS) if(err<=t.max) return t; return null; } // null = miss, breaks combo
+
+let geScore=0, geCombo=0, geBestCombo=0, geLocked=false, geTimer=null, geRoundTO=null, geSeed=null, geCur=null, geLog=[];
+
+function startGoldenEye(opts={}){
+  geScore=0; geCombo=0; geBestCombo=0; geLog=[]; playLen=S.len;
+  geSeed = opts.daily ? mulberry32(hashStr("goldeneye"+todayKey())) : null;
+  updateGEHUD(); show("goldeneye"); loadGoldenEye();
+  clearInterval(geTimer); geTimer=runTimer(null,$("#geTime"),$("#geBarFill"),$("#geBarWrap"),()=>endGoldenEye());
+}
+function loadGoldenEye(){
+  const rng = geSeed||Math.random; geSeed=null;
+  geCur = {lenPct: 56+Math.floor(rng()*38)}; // bar renders at 56–93% of the card's width — varies each round so the split can't be memorized by pixel, only by proportion
+  geLocked=false;
+  const bar=$("#geBar");
+  bar.style.width=geCur.lenPct+"%";
+  bar.classList.remove("locked");
+  $("#geMarkYou").classList.remove("on");
+  $("#geMarkTrue").classList.remove("on");
+  const fb=$("#geFb"); fb.className="lk-feedback"; fb.textContent="";
+  bar.classList.remove("flash"); void bar.offsetWidth; bar.classList.add("flash"); // re-trigger idiom, same one used for .shake elsewhere in this file
+  armRoundTimer();
+  geRoundTO = setTimeout(missGoldenEye, GE_ROUND_MS);
+}
+function armRoundTimer(){
+  const fill=$("#geRoundFill");
+  fill.style.transition="none"; fill.style.width="100%";
+  void fill.offsetWidth;
+  fill.style.transition=`width ${GE_ROUND_MS}ms linear`;
+  fill.style.width="0%";
+}
+function updateGEHUD(){ $("#geScoreEl").textContent=geScore; comboEl($("#geCombo"),geCombo); }
+function fmtErr(n){ return n==null ? "—" : n.toFixed(1); }
+function revealGE(tapPct){
+  const truth=$("#geMarkTrue"), you=$("#geMarkYou");
+  truth.style.left=GOLDEN_PCT+"%"; truth.classList.add("on");
+  if(tapPct!=null){ you.style.left=tapPct+"%"; you.classList.add("on"); }
+  $("#geBar").classList.add("locked");
+}
+function tapGoldenEye(e){
+  if(geLocked || !geCur) return;
+  geLocked=true; clearTimeout(geRoundTO);
+  const bar=$("#geBar");
+  const pct=Math.max(0,Math.min(100, e.offsetX/bar.clientWidth*100));
+  const err=Math.abs(pct-GOLDEN_PCT);
+  const isBest = S.goldeneyeBestErr==null || err<S.goldeneyeBestErr;
+  if(isBest){ S.goldeneyeBestErr=err; save(); }
+  revealGE(pct);
+  const tier=geTier(err), fb=$("#geFb");
+  let pts=0;
+  if(tier){
+    geCombo++; if(geCombo>geBestCombo)geBestCombo=geCombo;
+    pts=Math.round(100*geCombo*tier.mult); geScore+=pts;
+    fb.className="lk-feedback ok";
+    fb.innerHTML=`${tier.icon} ${tier.label} — ${fmtErr(err)}% off  +${pts}${geCombo>=2?"  (×"+geCombo+")":""}${isBest?'  <span class="newbest">🎯 new best!</span>':""}`;
+    beepUp(); if(isBest) confetti();
+  } else {
+    geCombo=0;
+    fb.className="lk-feedback bad";
+    fb.innerHTML=`✗ ${fmtErr(err)}% off — not quite${isBest?'  <span class="newbest">🎯 still your best!</span>':""}`;
+    beep();
+  }
+  geLog.push({err,hit:!!tier,pts});
+  updateGEHUD();
+  geRoundTO=setTimeout(loadGoldenEye, tier?900:1300);
+}
+function missGoldenEye(){
+  if(geLocked || !geCur) return;
+  geLocked=true;
+  revealGE(null);
+  geCombo=0; updateGEHUD();
+  const fb=$("#geFb"); fb.className="lk-feedback bad"; fb.textContent="⏱ too slow — the window closed";
+  geLog.push({err:null,hit:false,pts:0});
+  beep();
+  geRoundTO=setTimeout(loadGoldenEye, 1300);
+}
+function endGoldenEye(){
+  clearInterval(geTimer); clearTimeout(geRoundTO); // Golden Eye's round-advance is time-driven and self-perpetuating (unlike sibling games' one-shot post-answer setTimeout), so every pending GE timer funnels through geRoundTO and gets cleared here — see notes.
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(geScore);
+  const best=geScore>(S.goldeneyeBest||0); if(best)S.goldeneyeBest=geScore;
+  if(geBestCombo>(S.goldeneyeBestCombo||0))S.goldeneyeBestCombo=geBestCombo;
+  bumpStreak(); save();
+  const accLine = S.goldeneyeBestErr!=null ? ` · best accuracy ${fmtErr(S.goldeneyeBestErr)}% off` : "";
+  const recap = geLog.length ? {title:"THIS SESSION", html: geLog.map((r,i)=>
+    `<div class="ri"><span class="tx">Round ${i+1} — ${r.err==null?"missed":fmtErr(r.err)+"% off"}</span><span style="font-size:18px">${r.hit?"✓":"✗"}</span></div>`
+  ).join("")} : null;
+  resultsSplash(geScore, best, S.goldeneyeBest>0?`Best score: ${S.goldeneyeBest}${accLine}`:"", recap);
+}
+$("#geBar").addEventListener("pointerdown", tapGoldenEye);
+$("#geEnd").onclick=()=>endGoldenEye();
+
+/* =========================================================
+   CHAMELEON (hidden-rule sorting / cognitive flexibility)
+   depends on: SW_COLORS, SW_SHAPES (defined in the SWITCH block above —
+   referenced only inside function bodies, so placement order doesn't matter
+   as long as this block lives in the same <script>)
+   ========================================================= */
+const CH_COUNTS=[1,2,3];
+let chScore=0,chCombo=0,chBestCombo=0,chCur=null,chLocked=false,chTimer=null,chSeed=null;
+let chRule=null,chRuleStreak=0,chSwitchAt=5,chAwaitingRecovery=false,chTrialsSinceSwitch=0,chRecoveryLog=[],chHits=0,chAttempts=0;
+function chOtherVal(dim,val,rng){ const ri=n=>Math.floor(rng()*n);
+  if(dim==="color"){ const o=SW_COLORS.filter(c=>c!==val); return o[ri(o.length)]; }
+  if(dim==="shape"){ const o=SW_SHAPES.filter(s=>s!==val); return o[ri(o.length)]; }
+  const o=CH_COUNTS.filter(n=>n!==val); return o[ri(o.length)]; }
+function chItem(a,sz){ const dots=Array.from({length:a.count}).map(()=>`<span class="shp shp-${a.shape}" style="width:${sz}px;height:${sz}px;background:${a.color.c}"></span>`).join("");
+  return `<span style="display:inline-flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap">${dots}</span>`; }
+function genChameleon(rng,rule){ const ri=n=>Math.floor(rng()*n);
+  const target={color:SW_COLORS[ri(SW_COLORS.length)], shape:SW_SHAPES[ri(SW_SHAPES.length)], count:CH_COUNTS[ri(CH_COUNTS.length)]};
+  const others=["color","shape","count"].filter(d=>d!==rule);
+  const correct={...target}; others.forEach(d=>correct[d]=chOtherVal(d,target[d],rng));
+  const lureA={...target}; lureA[rule]=chOtherVal(rule,target[rule],rng); lureA[others[1]]=chOtherVal(others[1],target[others[1]],rng);
+  const lureB={...target}; lureB[rule]=chOtherVal(rule,target[rule],rng); lureB[others[0]]=chOtherVal(others[0],target[others[0]],rng);
+  const distractor={color:chOtherVal("color",target.color,rng), shape:chOtherVal("shape",target.shape,rng), count:chOtherVal("count",target.count,rng)};
+  return {target, opts:shuffle([{...correct,ok:1},{...lureA,ok:0},{...lureB,ok:0},{...distractor,ok:0}],rng)}; }
+function startChameleon(opts={}){
+  chScore=0;chCombo=0;chBestCombo=0;chHits=0;chAttempts=0;chRecoveryLog=[];
+  chRuleStreak=0;chSwitchAt=4+Math.floor(Math.random()*4);chAwaitingRecovery=false;chTrialsSinceSwitch=0;
+  playLen=S.len; chSeed=opts.daily?mulberry32(hashStr("chameleon"+todayKey())):null;
+  const rng0=chSeed||Math.random; const dims=["color","shape","count"]; chRule=dims[Math.floor(rng0()*dims.length)];
+  updateChHUD(); show("chameleon"); loadChameleon();
+  clearInterval(chTimer); chTimer=runTimer(null,$("#chTime"),$("#chBarFill"),$("#chBarWrap"),()=>endChameleon()); }
+function loadChameleon(){ const rng=chSeed||Math.random; chSeed=null;
+  chCur=genChameleon(rng,chRule); chLocked=false;
+  $("#chTarget").innerHTML=chItem(chCur.target,56);
+  $("#chOpts").innerHTML=chCur.opts.map(o=>`<button class="oddtile chtile" data-ok="${o.ok}">${chItem(o,32)}</button>`).join("");
+  $$("#chOpts button").forEach(b=>b.onclick=()=>tapChameleon(b)); const fb=$("#chFb"); fb.className="lk-feedback"; fb.textContent=""; }
+function updateChHUD(){ $("#chScoreEl").textContent=chScore; comboEl($("#chCombo"),chCombo); }
+function tapChameleon(btn){ if(chLocked||!chCur) return; chLocked=true; chAttempts++;
+  const wasAwaiting=chAwaitingRecovery; if(wasAwaiting) chTrialsSinceSwitch++;
+  if(btn.dataset.ok==="1"){
+    btn.classList.add("ok"); chCombo++; if(chCombo>chBestCombo)chBestCombo=chCombo; chHits++;
+    const pts=100*chCombo; chScore+=pts; let extra="";
+    if(wasAwaiting){ chRecoveryLog.push(chTrialsSinceSwitch); chAwaitingRecovery=false;
+      extra = chTrialsSinceSwitch===1 ? "  🦎 caught it instantly!" : `  🦎 back on track (${chTrialsSinceSwitch} tries)`; }
+    const fb=$("#chFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ right!  +${pts}${chCombo>=2?"  (×"+chCombo+")":""}${extra}`;
+    beepUp(); updateChHUD();
+    chRuleStreak++;
+    if(chRuleStreak>=chSwitchAt){ const dims=["color","shape","count"].filter(d=>d!==chRule); chRule=dims[Math.floor(Math.random()*dims.length)];
+      chRuleStreak=0; chSwitchAt=4+Math.floor(Math.random()*4); chAwaitingRecovery=true; chTrialsSinceSwitch=0; }
+    setTimeout(loadChameleon,700);
+  } else {
+    btn.classList.add("bad");
+    $$("#chOpts button").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add("ok"); });
+    chCombo=0; chRuleStreak=0; updateChHUD();
+    const fb=$("#chFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not that one — watch what was right";
+    beep(); setTimeout(loadChameleon,900);
+  } }
+function endChameleon(){ clearInterval(chTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(chScore);
+  const best=chScore>(S.chameleonBest||0); if(best)S.chameleonBest=chScore;
+  if(chBestCombo>(S.chameleonBestCombo||0)) S.chameleonBestCombo=chBestCombo;
+  const avgRecovery = chRecoveryLog.length ? +(chRecoveryLog.reduce((a,b)=>a+b,0)/chRecoveryLog.length).toFixed(1) : null;
+  if(avgRecovery!=null && (S.chameleonBestRecovery==null || avgRecovery<S.chameleonBestRecovery)) S.chameleonBestRecovery=avgRecovery;
+  bumpStreak(); save();
+  const acc = chAttempts ? Math.round(100*chHits/chAttempts) : 0;
+  const recLine = S.chameleonBestRecovery!=null ? ` · fastest recovery ${S.chameleonBestRecovery} tries` : "";
+  const recap = chRecoveryLog.length ? {title:"RULE SHIFTS THIS ROUND", html: chRecoveryLog.map((n,i)=>
+    `<div class="ri"><span class="tx">Shift ${i+1} — ${n===1?"caught it instantly":`took ${n} tries to notice`}</span></div>`).join("")} : null;
+  resultsSplash(chScore, best, S.chameleonBest>0?`Best score: ${S.chameleonBest}${recLine} · ${acc}% accuracy this round`:"", recap); }
+$("#chEnd").onclick=()=>endChameleon();
+
+/* =========================================================
+   WHIPLASH (focus & follow-through — stacking constraints)
+   Self-injects its own screen markup at load time (same
+   pattern already used by GOLDEN EYE) — anchored right after
+   #screen-stats — so NO static-HTML edit is required. Uses
+   ZERO new CSS: every element reuses .linktop/.tbar/.card/
+   .pc-head/.badge/.gamesub/.nbrow/.nbbtn/.shp(+shpbig)/
+   .lk-feedback/.playbtns already defined for other games;
+   the only "new" styling is inline (a flex-wrap row for the
+   rule chips, and item centering).
+   ========================================================= */
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-whiplash">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="whScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="whCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="whTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="whBarWrap"><div class="fill" id="whBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">WHIPLASH</div><div class="badge" id="whCount">1 rule active</div></div>
+      <div id="whRules" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:12px 16px 2px"></div>
+      <div id="whAlert" style="text-align:center;min-height:18px;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--accent);margin-top:2px"></div>
+      <div class="gamesub">Keep it if it matches <b>every</b> rule above. Toss it if it breaks even one.</div>
+      <div style="text-align:center;padding:10px 0 18px" id="whItem"></div>
+      <div class="nbrow" id="whBtns">
+        <button class="nbbtn no" id="whToss">❌ Toss</button>
+        <button class="nbbtn match" id="whKeep">✅ Keep</button>
+      </div>
+    </div>
+    <div class="lk-feedback" id="whFb"></div>
+    <div class="playbtns"><button class="done" id="whEnd">End round</button></div>
+  </section>
+`);
+
+const WH_COLORS=[{n:"red",c:"#e23b2e"},{n:"blue",c:"#2f6db0"},{n:"green",c:"#3f9d52"},{n:"yellow",c:"#d99a1c"},{n:"purple",c:"#8e5cd1"}];
+const WH_SHAPES=["circle","square","triangle"];
+const WH_SIZES=["small","big"];
+const WH_FILLS=["filled","hollow"];
+const WH_DIMS=[
+  {key:"color", pool:WH_COLORS, badge:"scenario"}, // reuses .badge.scenario (blue) purely for its color, no semantic tie
+  {key:"shape", pool:WH_SHAPES, badge:"mashup"},    // .badge.mashup (violet)
+  {key:"size",  pool:WH_SIZES,  badge:"daily"},     // .badge.daily (gold)
+  {key:"fill",  pool:WH_FILLS,  badge:"uses"},      // .badge.uses (accent/ember)
+];
+let whScore=0,whCombo=0,whBestCombo=0,whRules=[],whDimQueue=[],whCur=null,whLocked=false,whTimer=null,whRuleTimer=null,whSeed=null,whFullFired=false,whAlertTO=null;
+
+function whDimPool(key){ return WH_DIMS.find(d=>d.key===key).pool; }
+function whLabel(dim,val){
+  if(dim==="color") return "🎨 "+val.n.toUpperCase();
+  if(dim==="shape") return "🔷 "+val.toUpperCase();
+  if(dim==="size")  return "📏 "+val.toUpperCase();
+  return "◐ "+val.toUpperCase(); // fill
+}
+function whItemHTML(it){
+  const big=it.size==="big"?" shpbig":"";
+  // "hollow" = same shape, faded (low-alpha tint) instead of a true border ring — .shp-triangle's
+  // clip-path would clip a border unevenly, so a tint is the safe cross-shape way to read as "empty".
+  const bg=it.fill==="filled" ? it.color.c : it.color.c+"35";
+  return `<span class="shp shp-${it.shape}${big}" style="background:${bg}"></span>`;
+}
+function whOtherVal(pool,val,rng){ const opts=pool.filter(v=>v!==val); return opts[Math.floor(rng()*opts.length)]; }
+function genWhItem(rng){
+  const ri=n=>Math.floor(rng()*n);
+  const item={color:WH_COLORS[ri(WH_COLORS.length)], shape:WH_SHAPES[ri(WH_SHAPES.length)], size:WH_SIZES[ri(WH_SIZES.length)], fill:WH_FILLS[ri(WH_FILLS.length)]};
+  const shouldMatch=rng()<0.5; let failDim=null;
+  if(shouldMatch){ whRules.forEach(r=>{ item[r.dim]=r.value; }); }
+  else { const failIdx=ri(whRules.length);
+    whRules.forEach((r,i)=>{ if(i===failIdx){ item[r.dim]=whOtherVal(whDimPool(r.dim),r.value,rng); failDim=r.dim; } else item[r.dim]=r.value; }); }
+  return {item, ok:shouldMatch, failDim};
+}
+function whAddRule(rng){
+  rng = rng||Math.random;
+  if(!whDimQueue.length){ clearInterval(whRuleTimer); return; }
+  const key=whDimQueue.shift(); const dim=WH_DIMS.find(d=>d.key===key);
+  const value=dim.pool[Math.floor(rng()*dim.pool.length)];
+  const isFirst=whRules.length===0;
+  whRules.push({dim:key, value, label:whLabel(key,value), badge:dim.badge});
+  renderWhRules();
+  if(!isFirst){
+    const al=$("#whAlert"); al.textContent="⚡ NEW RULE ADDED"; al.style.animation="none"; void al.offsetWidth; al.style.animation="pop .35s";
+    clearTimeout(whAlertTO); whAlertTO=setTimeout(()=>{ al.textContent=""; },1800);
+  }
+  if(whRules.length===WH_DIMS.length && !whFullFired){ whFullFired=true; confetti(); }
+}
+function renderWhRules(){
+  $("#whRules").innerHTML = whRules.map((r,i)=>`<span class="badge ${r.badge}"${i===whRules.length-1?' style="animation:pop .3s"':''}>${r.label}</span>`).join("");
+  $("#whCount").textContent = whRules.length+(whRules.length===1?" rule active":" rules active");
+}
+function startWhiplash(opts={}){
+  whScore=0;whCombo=0;whBestCombo=0;whRules=[];whFullFired=false; playLen=S.len;
+  whSeed=opts.daily?mulberry32(hashStr("whiplash"+todayKey())):null;
+  clearTimeout(whAlertTO); $("#whAlert").textContent="";
+  const rng=whSeed||Math.random;
+  whDimQueue=shuffle(WH_DIMS.map(d=>d.key),rng);
+  whAddRule(rng);
+  updateWhHUD(); show("whiplash"); loadWhiplash();
+  clearInterval(whTimer); whTimer=runTimer(null,$("#whTime"),$("#whBarFill"),$("#whBarWrap"),()=>endWhiplash());
+  clearInterval(whRuleTimer); whRuleTimer=setInterval(whAddRule,15000);
+}
+function loadWhiplash(){
+  const rng=whSeed||Math.random; whSeed=null;
+  whCur=genWhItem(rng); whLocked=false;
+  $("#whItem").innerHTML=whItemHTML(whCur.item);
+  $$("#whBtns button").forEach(b=>b.disabled=false);
+  const fb=$("#whFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+function updateWhHUD(){ $("#whScoreEl").textContent=whScore; comboEl($("#whCombo"),whCombo); }
+function tapWhiplash(saidKeep){
+  if(whLocked||!whCur) return; whLocked=true;
+  $$("#whBtns button").forEach(b=>b.disabled=true);
+  const correct=(saidKeep===whCur.ok); const fb=$("#whFb");
+  if(correct){
+    whCombo++; if(whCombo>whBestCombo)whBestCombo=whCombo;
+    const pts=(50+25*whRules.length)*whCombo; whScore+=pts;
+    fb.className="lk-feedback ok"; fb.textContent=`✓ right!  +${pts}${whCombo>=2?"  (×"+whCombo+")":""}`; beepUp();
+  } else {
+    whCombo=0; fb.className="lk-feedback bad";
+    if(whCur.ok) fb.textContent="✗ it matched every rule — should've kept it";
+    else { const rule=whRules.find(r=>r.dim===whCur.failDim); fb.textContent=`✗ broke the ${rule.label} rule — should've tossed it`; }
+    beep();
+  }
+  updateWhHUD();
+  setTimeout(loadWhiplash, correct?700:1000);
+}
+function endWhiplash(){
+  clearInterval(whTimer); clearInterval(whRuleTimer);
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(whScore);
+  const best=whScore>(S.whiplashBest||0); if(best)S.whiplashBest=whScore;
+  if(whBestCombo>(S.whiplashBestCombo||0))S.whiplashBestCombo=whBestCombo;
+  bumpStreak(); save();
+  resultsSplash(whScore, best, S.whiplashBest>0?`Best score: ${S.whiplashBest}`:"", null);
+}
+$("#whKeep").onclick=()=>tapWhiplash(true); $("#whToss").onclick=()=>tapWhiplash(false); $("#whEnd").onclick=()=>endWhiplash();
+
+/* =========================================================
+   RATION (delay of gratification — focus & follow-through)
+   Self-injects its own screen markup + a small stylesheet at
+   load time, so no edits to the static <style> block or the
+   .screen HTML sections are required. Anchors right after
+   #screen-stats (before <footer>) so it sits correctly inside
+   .wrap — same technique Golden Eye uses.
+   ========================================================= */
+document.head.insertAdjacentHTML("beforeend", `<style>
+.ratpot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin:16px auto 4px;width:min(70vw,260px);aspect-ratio:1;border-radius:28px;background:var(--paper-2);border:1.5px solid var(--line);cursor:pointer;transition:transform .08s ease,background .3s,border-color .3s,box-shadow .3s;padding:0 12px;font:inherit}
+.ratpot:active{transform:scale(.96)}
+.ratpot-n{font-size:clamp(38px,13vw,58px);font-weight:800;color:var(--ink);line-height:1}
+.ratpot-l{font-size:11px;letter-spacing:.4px;color:var(--ink-soft);text-align:center;font-weight:700}
+.ratpot.warm{border-color:var(--gold);box-shadow:0 0 0 3px rgba(224,164,41,.18)}
+.ratpot.hot{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow);animation:ratpulse 1s ease-in-out infinite}
+.ratpot.hot .ratpot-l{color:var(--accent-d)}
+.ratpot.banked{background:#e9f6ec;border-color:var(--green)}
+.ratpot.spoiled{background:#fbeae4;border-color:var(--accent);animation:shake .32s}
+@keyframes ratpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+</style>`);
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-ration">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="ratScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="ratCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="ratTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="ratBarWrap"><div class="fill" id="ratBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">BANK OR WAIT</div><div class="badge" id="ratMultBadge" style="background:var(--gold)">MULT 1.0×</div></div>
+      <div class="gamesub">Wait longer for a bigger multiplier — but a spoil can wipe the pot to zero.</div>
+      <button class="ratpot" id="ratPotBtn" type="button">
+        <span class="ratpot-n" id="ratPotVal">0</span>
+        <span class="ratpot-l" id="ratPotLabel">IN THE POT — TAP TO BANK</span>
+      </button>
+    </div>
+    <div class="lk-feedback" id="ratFb"></div>
+    <div class="playbtns"><button class="done" id="ratEnd">End round</button></div>
+  </section>
+`);
+
+const RAT_INTERVAL = 250;        // ms per tick (within the 200-400ms band)
+const RAT_TICK_BASE = 5;         // raw points added to the pot every tick (~20/sec)
+const RAT_MULT_STEP = 0.025;     // multiplier growth per tick waited
+const RAT_MULT_CAP_TICKS = 100;  // multiplier stops climbing after 100 ticks (~25s) -> caps at 3.5x
+const RAT_SPOIL_GRACE = 3;       // no spoil roll for the first few ticks of a fresh pot
+const RAT_SPOIL_BASE = 0.0015;   // per-tick spoil chance floor
+const RAT_SPOIL_RATE = 0.00055;  // per-tick spoil chance growth per tick waited
+const RAT_SPOIL_CAP = 0.14;      // hard ceiling on per-tick spoil chance
+const RAT_WARM_P = 0.03;         // live risk threshold -> "warm" visual state (~13s in)
+const RAT_HOT_P = 0.07;          // live risk threshold -> "hot" visual state (~31s in)
+const RAT_BANK_LINES = ["Locked in","Smart move","Safe and sound","Nice grab","Banked clean","Good call","In the bag","Wise choice","Secured","That'll count"];
+const RAT_SPOIL_LINES = ["Should've banked that one","So close","Greed strikes again","Ouch — gone","That one got away","Too long a wait","Ration wasted","Ice cold luck","Better luck this round","The pot turned on you"];
+
+function ratSpoilP(n){ return n<=RAT_SPOIL_GRACE ? 0 : Math.min(RAT_SPOIL_CAP, RAT_SPOIL_BASE+RAT_SPOIL_RATE*n); }
+function ratMultFor(n){ return 1+Math.min(n,RAT_MULT_CAP_TICKS)*RAT_MULT_STEP; }
+function ratBankable(){ return Math.round(ratPotRaw*ratMult); }
+
+let ratScore=0, ratCombo=0, ratBestCombo=0, ratBestBank=0, ratPotRaw=0, ratMult=1, ratWaitTicks=0, ratBusy=false, ratTimer=null, ratTickTimer=null, ratRng=Math.random;
+
+function startRation(opts={}){
+  ratScore=0; ratCombo=0; ratBestCombo=0; ratBestBank=0; playLen=S.len;
+  ratRng = opts.daily ? mulberry32(hashStr("ration"+todayKey())) : Math.random;
+  updateRatHUD(); show("ration"); loadRation();
+  $("#ratFb").textContent="Let it build, or bank it now — your call.";
+  clearInterval(ratTickTimer); ratTickTimer=setInterval(ratTick, RAT_INTERVAL);
+  clearInterval(ratTimer); ratTimer=runTimer(null,$("#ratTime"),$("#ratBarFill"),$("#ratBarWrap"),()=>endRation());
+}
+function loadRation(){
+  ratPotRaw=0; ratWaitTicks=0; ratMult=1; ratBusy=false;
+  $("#ratPotBtn").className="ratpot";
+  const fb=$("#ratFb"); fb.className="lk-feedback"; fb.textContent="";
+  updateRatPotDisplay(0);
+}
+function updateRatHUD(){ $("#ratScoreEl").textContent=ratScore; comboEl($("#ratCombo"),ratCombo); }
+function updateRatPotDisplay(pOverride){
+  $("#ratPotVal").textContent=ratBankable();
+  $("#ratMultBadge").textContent="MULT "+ratMult.toFixed(1)+"×";
+  const risk = pOverride!=null ? pOverride : ratSpoilP(ratWaitTicks);
+  const el=$("#ratPotBtn"); el.classList.remove("warm","hot");
+  const lab=$("#ratPotLabel");
+  if(risk>=RAT_HOT_P){ el.classList.add("hot"); lab.textContent="IN THE POT — BANK NOW?"; }
+  else if(risk>=RAT_WARM_P){ el.classList.add("warm"); lab.textContent="IN THE POT — GETTING RISKY…"; }
+  else lab.textContent="IN THE POT — TAP TO BANK";
+}
+function ratTick(){
+  if(!$("#screen-ration").classList.contains("active")) return;
+  if(ratBusy) return;
+  ratWaitTicks++; ratPotRaw+=RAT_TICK_BASE; ratMult=ratMultFor(ratWaitTicks);
+  const p=ratSpoilP(ratWaitTicks);
+  if(ratRng()<p){ spoilRation(); return; }
+  updateRatPotDisplay(p);
+}
+function tapBankRation(){
+  if(ratBusy) return; const amt=ratBankable(); if(amt<=0) return;
+  ratBusy=true; ratScore+=amt; ratCombo++; if(ratCombo>ratBestCombo)ratBestCombo=ratCombo; if(amt>ratBestBank)ratBestBank=amt;
+  const el=$("#ratPotBtn"); el.classList.remove("spoiled","warm","hot"); void el.offsetWidth; el.classList.add("banked");
+  const fb=$("#ratFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ ${rand(RAT_BANK_LINES)} +${amt}${ratCombo>=2?"  (×"+ratCombo+")":""}`;
+  beepUp(); updateRatHUD();
+  setTimeout(loadRation,420);
+}
+function spoilRation(){
+  ratBusy=true; ratCombo=0; const lost=ratBankable();
+  const el=$("#ratPotBtn"); el.classList.remove("banked","warm","hot"); void el.offsetWidth; el.classList.add("spoiled");
+  const fb=$("#ratFb"); fb.className="lk-feedback bad"; fb.textContent = lost>0 ? `💥 Spoiled! ${rand(RAT_SPOIL_LINES)} — lost ${lost}` : "💥 Spoiled!";
+  beep(); if(navigator.vibrate)navigator.vibrate([90,50,90]);
+  updateRatHUD();
+  setTimeout(loadRation,420);
+}
+function endRation(){
+  clearInterval(ratTimer); clearInterval(ratTickTimer);
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(ratScore);
+  if(ratPotRaw>0 && !ratBusy) toast(`⏳ Time's up — ${ratBankable()} left unbanked.`);
+  const best=ratBestBank>(S.rationBest||0); if(best)S.rationBest=ratBestBank;
+  if(ratBestCombo>(S.rationBestCombo||0))S.rationBestCombo=ratBestCombo;
+  bumpStreak(); save();
+  resultsSplash(ratScore, best, S.rationBest>0?`Best single bank: ${S.rationBest}`:"", null);
+}
+$("#ratPotBtn").onclick=tapBankRation;
+$("#ratEnd").onclick=()=>endRation();
+
+/* =========================================================
+   MIRROR (bilateral symmetry — Make Something Beautiful)
+   Self-injects its own screen markup + a small stylesheet at
+   load time, same technique as GOLDEN EYE above, so no edits
+   to the static <style> block or the .screen HTML sections are
+   required. Anchors right after #screen-stats (before <footer>)
+   so it sits correctly inside .wrap.
+   ========================================================= */
+document.head.insertAdjacentHTML("beforeend", `<style>
+.mirgrid{display:grid;gap:6px;padding:10px 14px 6px}
+.mirtile{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:9px;background:var(--paper-2);border:1.5px solid var(--line);transition:.12s}
+.mirtile.mirfixed{background:var(--card)}
+.mirtile.mirblank{border-style:dashed;color:var(--ink-soft)}
+.mirtile.mirblank.active{border-color:var(--accent);border-style:solid;box-shadow:0 0 0 3px var(--accent-glow);animation:mirpulse 1.1s ease-in-out infinite}
+.mirtile.ok{background:#e9f6ec;border-color:var(--green);border-style:solid;animation:none;box-shadow:none}
+.mirtile.mirseam{border-right:2px dashed var(--accent)}
+@keyframes mirpulse{0%,100%{opacity:1}50%{opacity:.5}}
+.oddtile.mirt{font-size:clamp(30px,10vw,42px)}
+</style>`);
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-mirror">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="mirScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="mirCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="mirTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="mirBarWrap"><div class="fill" id="mirBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">MIRROR</div><div class="badge" style="background:var(--violet)">complete the symmetry</div></div>
+      <div class="gamesub" id="mirSub">Round 1 · <b>0</b> left to mirror</div>
+      <div class="mirgrid" id="mirGrid"></div>
+      <div class="oddgrid" id="mirOpts" style="padding-top:4px"></div>
+    </div>
+    <div class="lk-feedback" id="mirFb"></div>
+    <div class="playbtns">
+      <button class="new" id="mirPass" title="Pass — reveals the match">⤼</button>
+      <button class="done" id="mirEnd">End round</button>
+    </div>
+  </section>
+`);
+
+/* register with the shared rank/unit lookups (plain object property adds — safe, RANK_TABLES/GAME_UNIT already exist by the time this runs) */
+RANK_TABLES.mirror = [[0,"Warming up"],[300,"Finding the seam"],[800,"Symmetry eye"],[1500,"Mirror master"],[2600,"Perfect symmetry ✨"]];
+GAME_UNIT.mirror = "POINTS";
+
+/* content pool: 6 visually-coherent emoji palettes, 6 tokens each (36 total) */
+const MIRROR_SETS = [
+  ["🟥","🟧","🟨","🟩","🟦","🟪"], // stained glass panes
+  ["💎","🔷","🔶","⭐","✨","🔺"], // facets & gems
+  ["🌸","🌼","🌻","🌺","🌷","🪷"], // garden petals
+  ["❤️","🧡","💛","💚","💙","💜"], // colored hearts
+  ["🔴","🟠","🟡","🟢","🔵","🟣"], // pure color dots
+  ["🔺","🔻","🔶","🔷","🔸","🔹"], // faceted shapes
+];
+/* grid grows every 2 rounds; cols always even so the mirror line falls cleanly between two columns */
+const MIRROR_SIZES = [{r:2,c:2},{r:2,c:4},{r:3,c:4},{r:3,c:6},{r:4,c:6},{r:4,c:8}];
+function mirrorSizeFor(round){ return MIRROR_SIZES[Math.min(MIRROR_SIZES.length-1, Math.floor((round-1)/2))]; }
+function mirrorFontFor(cols){ return cols<=2?56:cols<=4?42:cols<=6?32:24; }
+
+let mirScore=0, mirCombo=0, mirBestCombo=0, mirRound=0, mirCur=null, mirBlankIdx=0, mirLocked=false, mirTimer=null, mirSeed=null;
+
+/* builds one round's full symmetric truth-grid + the blank (right-half) solve order + a
+   precomputed 4-option answer set per blank (all drawn from the same rng so daily mode is
+   fully deterministic — not just the layout, but the exact decoys shown for every blank). */
+function genMirror(rng, round){
+  const {r:rows, c:cols} = mirrorSizeFor(round); const half = cols/2;
+  const setPool = MIRROR_SETS[Math.floor(rng()*MIRROR_SETS.length)];
+  const k = Math.min(setPool.length, 4+Math.floor(rng()*2)); // 4 or 5 distinct tokens — keeps fourOpts fed with real (non-synthetic) distractors
+  const palette = shuffle(setPool, rng).slice(0,k);
+  const cells = [];
+  for(let r=0;r<rows;r++){
+    const row = new Array(cols);
+    for(let c=0;c<half;c++){ const v=palette[Math.floor(rng()*palette.length)]; row[c]=v; row[cols-1-c]=v; }
+    cells.push(row);
+  }
+  const blanks = []; for(let r=0;r<rows;r++) for(let c=half;c<cols;c++) blanks.push({r,c});
+  const optionsByBlank = blanks.map(({r,c})=>fourOpts(cells[r][c], palette.filter(x=>x!==cells[r][c]), rng));
+  return {rows, cols, half, cells, blanks, palette, optionsByBlank};
+}
+
+function startMirror(opts={}){
+  mirScore=0; mirCombo=0; mirBestCombo=0; mirRound=0; playLen=S.len;
+  mirSeed = opts.daily ? mulberry32(hashStr("mirror"+todayKey())) : null;
+  updateMirHUD(); show("mirror"); loadMirror();
+  clearInterval(mirTimer); mirTimer=runTimer(null,$("#mirTime"),$("#mirBarFill"),$("#mirBarWrap"),()=>endMirror());
+}
+
+function loadMirror(){
+  if(!$("#screen-mirror").classList.contains("active")) return;
+  mirRound++; const rng=mirSeed||Math.random; mirSeed=null;
+  mirCur=genMirror(rng,mirRound); mirBlankIdx=0; mirLocked=false;
+  renderMirrorGrid(); markActive(0); updateMirSub(); loadMirrorOptions();
+  const fb=$("#mirFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+
+function renderMirrorGrid(){
+  const g=$("#mirGrid"); g.style.gridTemplateColumns=`repeat(${mirCur.cols},1fr)`;
+  const fpx=mirrorFontFor(mirCur.cols); let html="";
+  for(let r=0;r<mirCur.rows;r++){
+    for(let c=0;c<mirCur.cols;c++){
+      const seam = c===mirCur.half-1 ? " mirseam" : "";
+      if(c<mirCur.half) html+=`<div class="mirtile mirfixed${seam}" style="font-size:${fpx}px">${mirCur.cells[r][c]}</div>`;
+      else{ const bi=r*mirCur.half+(c-mirCur.half); html+=`<div class="mirtile mirblank" data-bi="${bi}" style="font-size:${fpx}px"></div>`; }
+    }
+  }
+  g.innerHTML=html;
+}
+function markActive(bi){ const t=$(`#mirGrid [data-bi="${bi}"]`); if(t) t.classList.add("active"); }
+
+function loadMirrorOptions(){
+  if(!$("#screen-mirror").classList.contains("active")) return;
+  const opts=mirCur.optionsByBlank[mirBlankIdx];
+  $("#mirOpts").innerHTML=opts.map(o=>`<button class="oddtile mirt" data-v="${esc(o)}">${o}</button>`).join("");
+  $$("#mirOpts .mirt").forEach(b=>b.onclick=()=>tapMirror(b));
+  mirLocked=false;
+}
+
+function updateMirHUD(){ $("#mirScoreEl").textContent=mirScore; comboEl($("#mirCombo"),mirCombo); }
+function updateMirSub(){
+  const left=mirCur ? mirCur.blanks.length-mirBlankIdx : 0;
+  $("#mirSub").innerHTML = left>0 ? `Round ${mirRound} · <b>${left}</b> left to mirror` : `Round ${mirRound} · mirror complete!`;
+}
+
+function tapMirror(btn){
+  if(mirLocked || !mirCur) return; const v=btn.dataset.v; const fb=$("#mirFb");
+  const {r,c}=mirCur.blanks[mirBlankIdx]; const answer=mirCur.cells[r][c];
+  if(v===answer){
+    mirLocked=true; btn.classList.add("ok");
+    mirCombo++; if(mirCombo>mirBestCombo)mirBestCombo=mirCombo;
+    const pts=(50+mirCur.blanks.length*4)*mirCombo; mirScore+=pts;
+    const tile=$(`#mirGrid [data-bi="${mirBlankIdx}"]`);
+    if(tile){ tile.textContent=answer; tile.classList.add("ok"); tile.classList.remove("active"); }
+    fb.className="lk-feedback ok"; fb.textContent=`✓ matches — +${pts}${mirCombo>=2?"  (×"+mirCombo+")":""}`;
+    beepUp(); updateMirHUD(); mirBlankIdx++;
+    if(mirBlankIdx>=mirCur.blanks.length){
+      const bonus=40+mirCur.blanks.length*6; mirScore+=bonus; updateMirHUD();
+      fb.textContent+=`  · mirror complete! +${bonus}`; confetti();
+      updateMirSub(); setTimeout(loadMirror,1100);
+    } else {
+      markActive(mirBlankIdx); updateMirSub(); setTimeout(loadMirrorOptions,550);
+    }
+  } else {
+    btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad");
+    mirCombo=0; updateMirHUD();
+    fb.className="lk-feedback bad"; fb.textContent="✗ not its mirror — try again"; beep();
+  }
+}
+
+function passMirror(){
+  if(mirLocked || !mirCur) return; mirLocked=true; const fb=$("#mirFb");
+  const {r,c}=mirCur.blanks[mirBlankIdx]; const answer=mirCur.cells[r][c];
+  $$("#mirOpts .mirt").forEach(b=>{ if(b.dataset.v===answer) b.classList.add("ok"); });
+  const tile=$(`#mirGrid [data-bi="${mirBlankIdx}"]`);
+  if(tile){ tile.textContent=answer; tile.classList.add("ok"); tile.classList.remove("active"); }
+  mirCombo=0; updateMirHUD();
+  fb.className="lk-feedback bad"; fb.textContent=`↷ it mirrors ${answer}`;
+  mirBlankIdx++;
+  if(mirBlankIdx>=mirCur.blanks.length){ updateMirSub(); setTimeout(loadMirror,1100); }
+  else { markActive(mirBlankIdx); updateMirSub(); setTimeout(loadMirrorOptions,900); }
+}
+
+function endMirror(){
+  clearInterval(mirTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(mirScore);
+  const best=mirScore>(S.mirrorBest||0); if(best)S.mirrorBest=mirScore; if(mirBestCombo>(S.mirrorBestCombo||0))S.mirrorBestCombo=mirBestCombo; bumpStreak(); save();
+  resultsSplash(mirScore, best, S.mirrorBest>0?`Best score: ${S.mirrorBest}`:"", null);
+}
+$("#mirPass").onclick=passMirror; $("#mirEnd").onclick=()=>endMirror();
+
+/* =========================================================
+   WEB (idea & association — hop the concept graph, beat par)
+   ========================================================= */
+(function(){
+  var webScreenHtml = `
+ <section class="screen" id="screen-web">
+  <div class="linktop">
+   <div class="lt-stat"><div class="v" id="webScoreEl">0</div><div class="l">SCORE</div></div>
+   <div class="lt-combo dim" id="webCombo">×1</div>
+   <div class="lt-stat"><div class="v" id="webTime">1:30</div><div class="l">TIME</div></div>
+  </div>
+  <div class="tbar" id="webBarWrap"><div class="fill" id="webBarFill"></div></div>
+  <div class="card">
+   <div class="pc-head"><div class="pc-kind mono">WEB</div><div class="badge" id="webParBadge">0 hops · par 0</div></div>
+   <div class="gamesub" id="webRoute">Get from <b>—</b> to <b>—</b></div>
+   <div class="gamebig" id="webCurBig">🕸️</div>
+   <div class="trail" id="webTrail"></div>
+   <div class="oddgrid" id="webGrid"></div>
+  </div>
+  <div class="lk-feedback" id="webFb"></div>
+  <div class="playbtns">
+   <button class="new" id="webPass" title="Skip — reveals one valid path">⤼</button>
+   <button class="done" id="webEnd">End round</button>
+  </div>
+ </section>`;
+  document.querySelector(".wrap").insertAdjacentHTML("beforeend", webScreenHtml);
+})();
+
+/* ---------- Web content: a small hand-authored concept graph ---------- */
+const WEB_NODES = [
+ {id:"psalm",     e:"📜", n:"Psalm"},
+ {id:"harp",      e:"🎻", n:"Harp"},
+ {id:"choir",     e:"🎤", n:"Choir"},
+ {id:"prayer",    e:"🙏", n:"Prayer"},
+ {id:"candle",    e:"🕯️", n:"Candle"},
+ {id:"king",      e:"👑", n:"King"},
+ {id:"castle",    e:"🏰", n:"Castle"},
+ {id:"chess",     e:"♟️", n:"Chess"},
+ {id:"mirror",    e:"🪞", n:"Mirror"},
+ {id:"moon",      e:"🌙", n:"Moon"},
+ {id:"tide",      e:"🌊", n:"Tide"},
+ {id:"compass",   e:"🧭", n:"Compass"},
+ {id:"map",       e:"🗺️", n:"Map"},
+ {id:"star",      e:"⭐", n:"Star"},
+ {id:"satellite", e:"🛰️", n:"Satellite"},
+ {id:"antenna",   e:"📡", n:"Antenna"},
+ {id:"radio",     e:"📻", n:"Radio"},
+ {id:"music",     e:"🎶", n:"Music"},
+ {id:"clock",     e:"🕰️", n:"Clock"},
+ {id:"gear",      e:"⚙️", n:"Gear"},
+];
+
+const WEB_EDGES = [
+ ["psalm","harp"],["psalm","prayer"],["psalm","choir"],["psalm","king"],
+ ["harp","music"],["harp","choir"],["harp","king"],
+ ["choir","music"],["choir","prayer"],["choir","candle"],
+ ["prayer","candle"],
+ ["candle","mirror"],["candle","clock"],
+ ["king","castle"],["king","chess"],
+ ["castle","chess"],["castle","map"],
+ ["chess","mirror"],
+ ["mirror","moon"],["mirror","star"],
+ ["moon","tide"],["moon","star"],["moon","satellite"],
+ ["tide","compass"],["tide","map"],
+ ["compass","map"],["compass","star"],
+ ["map","satellite"],
+ ["star","satellite"],
+ ["satellite","antenna"],
+ ["antenna","radio"],["antenna","clock"],
+ ["radio","music"],["radio","clock"],
+ ["music","gear"],
+ ["clock","gear"],
+];
+
+/* curated start/end pairs — every one verified (via BFS, see notes) to sit at a real
+   3-6 hop shortest path, and each jumps between clearly different domains */
+const WEB_PAIRS = [
+ {a:"king",b:"radio"},{a:"prayer",b:"gear"},{a:"candle",b:"satellite"},{a:"mirror",b:"gear"},
+ {a:"harp",b:"antenna"},{a:"choir",b:"antenna"},{a:"psalm",b:"gear"},{a:"king",b:"satellite"},
+ {a:"psalm",b:"satellite"},{a:"choir",b:"satellite"},{a:"harp",b:"satellite"},{a:"chess",b:"gear"},
+ {a:"castle",b:"gear"},{a:"moon",b:"gear"},{a:"prayer",b:"satellite"},
+ {a:"tide",b:"music"},{a:"compass",b:"gear"},{a:"tide",b:"gear"},
+];
+
+const WEB_MAP = Object.fromEntries(WEB_NODES.map(nd=>[nd.id,nd]));
+const WEB_ADJ = (()=>{ const m={}; WEB_NODES.forEach(nd=>m[nd.id]=[]); WEB_EDGES.forEach(([a,b])=>{ m[a].push(b); m[b].push(a); }); return m; })();
+
+function webBFS(start){
+ const dist={[start]:0}, prev={}, q=[start];
+ while(q.length){ const u=q.shift(); for(const v of WEB_ADJ[u]){ if(!(v in dist)){ dist[v]=dist[u]+1; prev[v]=u; q.push(v); } } }
+ return {dist, prev};
+}
+function webPar(a,b){ return webBFS(a).dist[b]; }
+function webShortestPath(a,b){ const {prev}=webBFS(a); const path=[b]; let cur=b; while(cur!==a){ cur=prev[cur]; path.push(cur); } return path.reverse(); }
+
+/* ---------- Web state ---------- */
+let webScore=0, webCombo=0, webBestCombo=0, webCur=null, webPath=[], webLocked=false, webTimer=null, webPairQueue=[], webPairIdx=0, webLog=[];
+
+function startWeb(opts={}){
+ const rng = opts.daily ? mulberry32(hashStr("web"+todayKey())) : null;
+ webPairQueue = shuffle(WEB_PAIRS, rng); webPairIdx = 0;
+ webScore=0; webCombo=0; webBestCombo=0; webLog=[]; playLen=S.len;
+ updateWebHUD(); show("web"); loadWeb();
+ clearInterval(webTimer); webTimer=runTimer(null,$("#webTime"),$("#webBarFill"),$("#webBarWrap"),()=>endWeb());
+}
+function loadWeb(){
+ if(webPairIdx>=webPairQueue.length){ webPairQueue=shuffle(WEB_PAIRS); webPairIdx=0; }
+ const p=webPairQueue[webPairIdx++];
+ webCur={a:p.a, b:p.b, par:webPar(p.a,p.b)};
+ webPath=[p.a]; webLocked=false;
+ renderWeb();
+}
+function renderWeb(){
+ const a=WEB_MAP[webCur.a], b=WEB_MAP[webCur.b];
+ const cur=WEB_MAP[webPath[webPath.length-1]];
+ const hops=webPath.length-1;
+ $("#webRoute").innerHTML=`Get from <b>${a.e} ${esc(a.n)}</b> to <b>${b.e} ${esc(b.n)}</b>`;
+ $("#webParBadge").textContent=`${hops} hop${hops===1?"":"s"} · par ${webCur.par}`;
+ $("#webCurBig").innerHTML=`${cur.e}<div style="font-size:15px;font-weight:600;letter-spacing:.3px;color:var(--ink-soft);margin-top:4px">${esc(cur.n).toUpperCase()}</div>`;
+ $("#webTrail").innerHTML=webPath.map((id,i)=>{ const nd=WEB_MAP[id];
+   return `<span class="${i===webPath.length-1?'cur':''}">${nd.e} ${esc(nd.n)}</span>${i<webPath.length-1?'<span class="arr">→</span>':''}`; }).join(" ");
+ const neighbors=WEB_ADJ[cur.id]||[];
+ $("#webGrid").innerHTML=neighbors.map(id=>{ const nd=WEB_MAP[id];
+   return `<button class="oddtile" data-id="${id}">${nd.e}<div style="font-size:12px;font-weight:600;letter-spacing:.2px;color:var(--ink-soft);margin-top:3px">${esc(nd.n)}</div></button>`; }).join("");
+ $$("#webGrid .oddtile").forEach(btn=>btn.onclick=()=>tapWeb(btn));
+}
+function updateWebHUD(){ $("#webScoreEl").textContent=webScore; comboEl($("#webCombo"),webCombo); }
+function tapWeb(btn){
+ if(webLocked) return;
+ const id=btn.dataset.id;
+ webPath.push(id);
+ const hops=webPath.length-1;
+ if(id===webCur.b){
+   webLocked=true;
+   const extra=hops-webCur.par;
+   const atPar=extra<=0;
+   if(atPar){ webCombo++; } else { webCombo=0; }
+   if(webCombo>webBestCombo) webBestCombo=webCombo;
+   const pts=Math.max(20,100-extra*30)*Math.max(1,webCombo);
+   webScore+=pts;
+   webLog.push({a:webCur.a,b:webCur.b,hops,par:webCur.par});
+   updateWebHUD(); renderWeb();
+   const fb=$("#webFb"); fb.className="lk-feedback ok";
+   fb.textContent = atPar ? `✓ solved in ${hops} — right at par!  +${pts}${webCombo>=2?"  (×"+webCombo+")":""}` : `✓ solved in ${hops} (par ${webCur.par})  +${pts}`;
+   beepUp(); if(atPar) confetti();
+   setTimeout(loadWeb,900);
+ } else {
+   renderWeb();
+ }
+}
+function passWeb(){
+ if(webLocked||!webCur) return;
+ webLocked=true; webCombo=0; updateWebHUD();
+ webLog.push({a:webCur.a,b:webCur.b,hops:null,par:webCur.par});
+ const path=webShortestPath(webCur.a,webCur.b);
+ const fb=$("#webFb"); fb.className="lk-feedback bad";
+ fb.textContent=`↷ one path: ${path.map(id=>WEB_MAP[id].n).join(" → ")}`;
+ setTimeout(loadWeb,1700);
+}
+function endWeb(){
+ clearInterval(webTimer);
+ if(S.mode==="party" && partyTurn!=null) return endParticipantRound(webScore);
+ S.webRounds=(S.webRounds||0)+1;
+ const best=webScore>(S.webBest||0); if(best) S.webBest=webScore;
+ if(webBestCombo>(S.webBestCombo||0)) S.webBestCombo=webBestCombo;
+ bumpStreak(); save();
+ const recap = webLog.length ? {title:"THIS ROUND", html: webLog.map(e=>`<div class="ri"><span class="tx">${esc(WEB_MAP[e.a].n)} → ${esc(WEB_MAP[e.b].n)}</span><span style="font-size:13px;color:var(--ink-soft)">${e.hops!=null?`${e.hops} hop${e.hops===1?"":"s"} (par ${e.par})`:"skipped"}</span></div>`).join("")} : null;
+ resultsSplash(webScore, best, S.webBest>0?`Best score: ${S.webBest}`:"", recap);
+}
+$("#webPass").onclick=passWeb;
+$("#webEnd").onclick=()=>endWeb();
+/* =========================================================
+   RULE FORGE (Idea & Association — author-your-own-round)
+   Self-injects its own screen markup at load time (same
+   technique as other recently-added games): anchors right
+   after #screen-stats so no static-HTML edit is required.
+   Uses ZERO new CSS — every element reuses .linktop/.tbar/
+   .card/.pc-head/.badge/.gamesub/.oddgrid/.oddtile/.h(+.on)/
+   .lk-feedback/.playbtns/.done/.new already defined for other
+   games; the only "new" styling is inline (grid + flex-wrap
+   rows), same pattern WHIPLASH/RATION use.
+
+   Two-phase flow: SETUP (pick exactly 2 of 6 constraint tiles)
+   -> PLAY (a spot-the-misfit drill, reusing ODD_GROUPS content,
+   with both chosen tiles applied as real gameplay modifiers).
+   Rarer/harder tile pairs multiply every point scored.
+   ========================================================= */
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-ruleforge">
+    <div id="rfSetup">
+      <div class="card">
+        <div class="pc-head"><div class="pc-kind mono">RULE FORGE</div><div class="badge">author your round</div></div>
+        <div class="gamesub">Tap exactly 2 rules to build today's round. Rarer, harder combos score a bigger multiplier.</div>
+        <div id="rfTiles" class="heat" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 16px 8px;margin:0"></div>
+        <div id="rfMultPreview" style="text-align:center;font-size:13.5px;color:var(--ink-soft);min-height:34px;padding:0 16px 14px">Pick exactly 2 rules to see your multiplier.</div>
+      </div>
+      <div class="playbtns"><button class="done" id="rfBegin" disabled style="opacity:.45">Play this round ▶</button></div>
+    </div>
+    <div id="rfPlay" style="display:none">
+      <div class="linktop">
+        <div class="lt-stat"><div class="v" id="rfScoreEl">0</div><div class="l">SCORE</div></div>
+        <div class="lt-combo dim" id="rfCombo">×1</div>
+        <div class="lt-stat"><div class="v" id="rfTime">1:30</div><div class="l">TIME</div></div>
+      </div>
+      <div class="tbar" id="rfBarWrap"><div class="fill" id="rfBarFill"></div></div>
+      <div class="card">
+        <div class="pc-head"><div class="pc-kind mono">RULE FORGE</div><div class="badge" id="rfMultBadge" style="background:var(--gold)">×1.00</div></div>
+        <div id="rfActiveBadges" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px 16px 2px"></div>
+        <div class="gamesub" id="rfGamesub">Tap the one that doesn't belong.</div>
+        <div class="oddgrid" id="rfGrid"></div>
+      </div>
+      <div class="lk-feedback" id="rfFb"></div>
+      <div class="playbtns"><button class="new" id="rfPass" title="Pass">⤼</button><button class="done" id="rfEnd">End round</button></div>
+    </div>
+  </section>
+`);
+
+const RF_TILES = [
+  {id:"norepeat",   name:"🔁 No Repeats",       desc:"a category never repeats this round", weight:1.2},
+  {id:"fewerhints", name:"🤐 Fewer Hints",       desc:"no category name given",              weight:1.3},
+  {id:"combo",      name:"⛓️ Combo Required",    desc:"no points until 2 correct in a row",  weight:1.6},
+  {id:"blind",      name:"🙈 Blind First Few",   desc:"first 3 rounds start covered",        weight:1.7},
+  {id:"speed",      name:"⏱️ 2× Time Pressure", desc:"half the clock",                      weight:1.9},
+  {id:"reverse",    name:"🔄 Reverse Order",     desc:"tap what belongs, not the misfit",    weight:2.1},
+];
+const RF_BLIND_ROUNDS = 3;   // how many opening rounds start covered when "blind" is active
+const RF_BLIND_MS = 900;     // how long the field stays covered before it reveals
+
+let rfSelected=[], rfActiveTiles=[], rfMult=1, rfScore=0, rfCombo=0, rfBestCombo=0,
+    rfCur=null, rfLocked=false, rfTimer=null, rfSeed=null, rfRoundIdx=0, rfUsedCats=[];
+
+function rfHasTile(id){ return rfActiveTiles.some(t=>t.id===id); }
+function rfComputeMult(a,b){ return +(((a.weight+b.weight)/2).toFixed(2)); }
+
+function renderRfTiles(){
+  $("#rfTiles").innerHTML = RF_TILES.map(t=>
+    `<div class="h${rfSelected.includes(t.id)?" on":""}" data-tile="${t.id}"><div class="k">${t.name}</div><div class="d">${t.desc}</div></div>`
+  ).join("");
+  updateRfBeginState();
+}
+function updateRfBeginState(){
+  const ok = rfSelected.length===2;
+  const btn=$("#rfBegin"); btn.disabled=!ok; btn.style.opacity=ok?"1":".45";
+  const prev=$("#rfMultPreview");
+  if(ok){
+    const [a,b]=rfSelected.map(id=>RF_TILES.find(t=>t.id===id));
+    prev.innerHTML = `<b style="color:var(--accent);font-size:16px">×${rfComputeMult(a,b).toFixed(2)}</b><br>${a.name} + ${b.name}`;
+  } else prev.textContent = "Pick exactly 2 rules to see your multiplier.";
+}
+function toggleRfTile(id){
+  const i=rfSelected.indexOf(id);
+  if(i>=0) rfSelected.splice(i,1);
+  else { if(rfSelected.length>=2){ toast("Only 2 rules — tap one to swap it out"); return; } rfSelected.push(id); }
+  renderRfTiles();
+}
+
+function buildRfRound(rng){
+  let groups = ODD_GROUPS.filter(g=>g.items.length>=4);
+  if(rfHasTile("norepeat")){
+    const fresh = groups.filter(g=>!rfUsedCats.includes(g.cat));
+    if(fresh.length) groups=fresh; else rfUsedCats.length=0;
+  }
+  const G = groups[Math.floor(rng()*groups.length)];
+  if(rfHasTile("norepeat")) rfUsedCats.push(G.cat);
+  const belong = shuffle(G.items,rng).slice(0,3);
+  let odd=null, guard=0;
+  while(!odd && guard++<60){ const H=ODD_GROUPS[Math.floor(rng()*ODD_GROUPS.length)]; if(H===G) continue; const c=H.items[Math.floor(rng()*H.items.length)]; if(!G.items.includes(c) && !belong.includes(c)) odd=c; }
+  const reverse = rfHasTile("reverse");
+  const opts = shuffle([...belong.map(e=>({e,ok:reverse?1:0})), {e:odd,ok:reverse?0:1}], rng);
+  return {cat:G.cat, odd, belong, opts};
+}
+function renderRfOptions(covered){
+  $("#rfGrid").innerHTML = rfCur.opts.map(o=>
+    `<button class="oddtile" data-ok="${o.ok}"${covered?' style="pointer-events:none;opacity:.5"':""}>${covered?"❔":o.e}</button>`
+  ).join("");
+  if(!covered) $$("#rfGrid button").forEach(b=>b.onclick=()=>tapRuleForge(b));
+}
+
+function startRuleForge(opts={}){
+  rfSelected=[]; rfSeed = opts.daily ? mulberry32(hashStr("ruleforge"+todayKey())) : null;
+  renderRfTiles();
+  $("#rfSetup").style.display=""; $("#rfPlay").style.display="none";
+  show("ruleforge");
+}
+function beginRuleForge(){
+  if(rfSelected.length!==2) return;
+  rfActiveTiles = rfSelected.map(id=>RF_TILES.find(t=>t.id===id));
+  rfMult = rfComputeMult(rfActiveTiles[0], rfActiveTiles[1]);
+  rfScore=0; rfCombo=0; rfBestCombo=0; rfRoundIdx=0; rfUsedCats=[];
+  $("#rfGamesub").textContent = rfHasTile("reverse") ? "Tap one of the three that belong — not the misfit." : "Tap the one that doesn't belong.";
+  $("#rfMultBadge").textContent = "×"+rfMult.toFixed(2);
+  $("#rfActiveBadges").innerHTML =
+    `<span class="badge" style="background:var(--blue)">${rfActiveTiles[0].name}</span>`+
+    `<span class="badge" style="background:var(--violet)">${rfActiveTiles[1].name}</span>`;
+  $("#rfSetup").style.display="none"; $("#rfPlay").style.display="";
+  playLen = (rfHasTile("speed") && S.len>0) ? Math.max(15, Math.round(S.len/2)) : S.len;
+  updateRfHUD(); loadRuleForge();
+  clearInterval(rfTimer); rfTimer=runTimer(null,$("#rfTime"),$("#rfBarFill"),$("#rfBarWrap"),()=>endRuleForge());
+  if(rfMult>=1.9) confetti();
+}
+function loadRuleForge(){
+  const rng=rfSeed||Math.random; rfSeed=null;
+  rfCur=buildRfRound(rng); rfLocked=false;
+  const myCur=rfCur;
+  const blind = rfHasTile("blind") && rfRoundIdx<RF_BLIND_ROUNDS;
+  renderRfOptions(blind);
+  const fb=$("#rfFb");
+  if(blind){
+    fb.className="lk-feedback"; fb.textContent="👀 memorize the field…";
+    setTimeout(()=>{ if(rfCur!==myCur) return; renderRfOptions(false); fb.textContent=""; }, RF_BLIND_MS);
+  } else { fb.className="lk-feedback"; fb.textContent=""; }
+  rfRoundIdx++;
+}
+function updateRfHUD(){ $("#rfScoreEl").textContent=rfScore; comboEl($("#rfCombo"),rfCombo); }
+function tapRuleForge(btn){
+  if(rfLocked) return;
+  if(btn.dataset.ok==="1"){
+    rfLocked=true; btn.classList.add("ok"); rfCombo++; if(rfCombo>rfBestCombo) rfBestCombo=rfCombo;
+    const comboReq = rfHasTile("combo");
+    let pts = Math.round(100*rfCombo*rfMult);
+    if(comboReq && rfCombo<2) pts=0;
+    rfScore+=pts;
+    const fewerHints = rfHasTile("fewerhints"), reverse = rfHasTile("reverse");
+    const why = fewerHints ? "✓ correct!" : (reverse ? `✓ that one is ${rfCur.cat}` : `✓ the others are all ${rfCur.cat}`);
+    const fb=$("#rfFb"); fb.className="lk-feedback ok";
+    fb.textContent = pts>0 ? `${why}  +${pts}${rfCombo>=2?"  (×"+rfCombo+")":""}` : `${why}  chain one more for points (×${rfCombo})`;
+    beepUp(); updateRfHUD(); setTimeout(loadRuleForge,850);
+  } else {
+    btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); rfCombo=0; updateRfHUD();
+    const fb=$("#rfFb"); fb.className="lk-feedback bad";
+    fb.textContent = rfHasTile("reverse") ? "✗ that's the misfit — tap one that belongs" : "✗ not the odd one — look again";
+    beep();
+  }
+}
+function passRuleForge(){
+  if(rfLocked||!rfCur) return; rfLocked=true; rfCombo=0; updateRfHUD();
+  $$("#rfGrid .oddtile").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add("ok"); });
+  const fb=$("#rfFb"); fb.className="lk-feedback bad";
+  fb.textContent = rfHasTile("fewerhints") ? "↷ moving on" : (rfHasTile("reverse") ? `↷ needed one that belongs — others were ${rfCur.cat}` : `↷ the odd one was the misfit — others are ${rfCur.cat}`);
+  setTimeout(loadRuleForge,1000);
+}
+function endRuleForge(){
+  clearInterval(rfTimer);
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(rfScore);
+  const best = rfScore>(S.ruleforgeBest||0); if(best) S.ruleforgeBest=rfScore;
+  if(rfBestCombo>(S.ruleforgeBestCombo||0)) S.ruleforgeBestCombo=rfBestCombo;
+  if(rfMult>(S.ruleforgeBestMult||0)) S.ruleforgeBestMult=rfMult;
+  bumpStreak(); save();
+  resultsSplash(rfScore, best, S.ruleforgeBest>0?`Best score: ${S.ruleforgeBest} · toughest multiplier ×${(S.ruleforgeBestMult||1).toFixed(2)}`:"", null);
+}
+$("#rfTiles").onclick=e=>{ const h=e.target.closest(".h"); if(!h) return; toggleRfTile(h.dataset.tile); };
+$("#rfBegin").onclick=beginRuleForge;
+$("#rfPass").onclick=passRuleForge;
+$("#rfEnd").onclick=()=>endRuleForge();
+
+/* =========================================================
+   GHOST (compete & master — race your own best-ever run)
+   Wraps the Patterns "what comes next" drill (reuses genPattern()
+   and its data pools verbatim — PAT_PALETTES/CLOCKS/MOONS/ARROWS,
+   already defined earlier in this file; no new question content)
+   in a live replay: every answer this run is timestamped, and on
+   later runs a translucent 👻 marker replays your best-ever run's
+   timestamps alongside your live line so you can watch yourself
+   pull ahead or fall behind in real time. The overlay pattern here
+   (record {t,correct} trace -> persist best -> replay-on-a-clock
+   against the live run) is written to be reusable by any other
+   tap-to-answer mode later, per spec.
+   ========================================================= */
+let ghScore=0, ghCombo=0, ghBestCombo=0, ghCur=null, ghLocked=false, ghTimer=null, ghSeed=null;
+let ghTrace=[], ghStart=0, ghTicker=null;
+let ghGhostTrace=[], ghGhostPtr=0, ghGhostScore=0, ghGhostCombo=0, ghGhostFinal=0, ghHasGhost=false;
+
+function startGhost(opts={}){
+  ghScore=0; ghCombo=0; ghBestCombo=0; playLen=S.len; ghSeed=opts.daily?mulberry32(hashStr("ghost"+todayKey())):null;
+  ghTrace=[]; ghStart=Date.now();
+  // freeze a snapshot of the saved best-ever trace for this run — S.ghostTrace
+  // itself is only overwritten at endGhost() if this run beats it.
+  ghGhostTrace=Array.isArray(S.ghostTrace)?S.ghostTrace:[]; ghHasGhost=ghGhostTrace.length>0;
+  ghGhostPtr=0; ghGhostScore=0; ghGhostCombo=0; ghGhostFinal=S.ghostBest||0;
+  $("#ghRaceWrap").style.display=ghHasGhost?"flex":"none";
+  $("#ghEmptyNote").style.display=ghHasGhost?"none":"block";
+  updateGhHUD(); updateGhostRace(); show("ghost"); loadGhost();
+  clearInterval(ghTimer); ghTimer=runTimer(null,$("#ghTime"),$("#ghBarFill"),$("#ghBarWrap"),()=>endGhost());
+  clearInterval(ghTicker); ghTicker = ghHasGhost ? setInterval(tickGhost,200) : null;
+}
+// Advances the ghost independently of the player's own taps, on the same
+// wall-clock the original run was played on — this is what makes it feel
+// like a live replay rather than a static "beat this number" target.
+function tickGhost(){
+  if(!ghHasGhost) return; const elapsed=Date.now()-ghStart; let moved=false;
+  while(ghGhostPtr<ghGhostTrace.length && ghGhostTrace[ghGhostPtr].t<=elapsed){
+    const e=ghGhostTrace[ghGhostPtr];
+    if(e.correct){ ghGhostCombo++; ghGhostScore+=100*ghGhostCombo; } else { ghGhostCombo=0; }
+    ghGhostPtr++; moved=true;
+  }
+  if(moved) updateGhostRace();
+}
+function updateGhostRace(){
+  if(!ghHasGhost) return;
+  $("#ghYouScoreEl").textContent=ghScore; $("#ghGhostScoreEl").textContent=ghGhostScore;
+  const ref=Math.max(ghGhostFinal,1);
+  $("#ghYouMark").style.left=Math.max(4,Math.min(96,100*ghScore/ref))+"%";
+  $("#ghGhostMark").style.left=Math.max(4,Math.min(96,100*ghGhostScore/ref))+"%";
+  const d=$("#ghDelta"), diff=ghScore-ghGhostScore;
+  if(diff>0){ d.textContent=`🔥 ahead of your ghost by ${diff}`; d.className="ghost-delta ahead"; }
+  else if(diff<0){ d.textContent=`👻 ${-diff} behind your ghost — catch up!`; d.className="ghost-delta behind"; }
+  else { d.textContent="neck and neck with your ghost"; d.className="ghost-delta"; }
+}
+function loadGhost(){
+  const rng=ghSeed||Math.random; ghSeed=null; ghCur=genPattern(rng); ghLocked=false;
+  $("#ghSeq").innerHTML=ghCur.seq.map(x=>`<span class="seqit">${x}</span>`).join("")+`<span class="seqit q">?</span>`;
+  $("#ghGrid").innerHTML=ghCur.options.map(o=>`<button class="oddtile patt" data-v="${esc(o)}">${o}</button>`).join("");
+  $$("#ghGrid .patt").forEach(b=>b.onclick=()=>tapGhost(b));
+  const fb=$("#ghFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+function updateGhHUD(){ $("#ghScoreEl").textContent=ghScore; comboEl($("#ghCombo"),ghCombo); }
+function tapGhost(btn){
+  if(ghLocked) return; const v=btn.dataset.v; const correct=(v===String(ghCur.answer));
+  ghTrace.push({t:Date.now()-ghStart, correct});
+  if(correct){
+    ghLocked=true; btn.classList.add("ok"); ghCombo++; if(ghCombo>ghBestCombo)ghBestCombo=ghCombo; const pts=100*ghCombo; ghScore+=pts;
+    const fb=$("#ghFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ that's the pattern!  +${pts}${ghCombo>=2?"  (×"+ghCombo+")":""}`; beepUp(); updateGhHUD(); updateGhostRace(); setTimeout(loadGhost,800);
+  } else {
+    btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); ghCombo=0; updateGhHUD(); updateGhostRace();
+    const fb=$("#ghFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not quite — read the rule again"; beep();
+  }
+}
+function passGhost(){
+  if(ghLocked||!ghCur) return; ghLocked=true; ghTrace.push({t:Date.now()-ghStart, correct:false}); ghCombo=0; updateGhHUD(); updateGhostRace();
+  $$("#ghGrid .patt").forEach(b=>{ if(b.dataset.v===String(ghCur.answer)) b.classList.add("ok"); });
+  const fb=$("#ghFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ it was ${ghCur.answer}`; setTimeout(loadGhost,1000);
+}
+function endGhost(){
+  clearInterval(ghTimer); clearInterval(ghTicker);
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(ghScore);
+  const best=ghScore>(S.ghostBest||0);
+  if(best){ S.ghostBest=ghScore; S.ghostBestLen=playLen; S.ghostTrace=ghTrace.slice(); }
+  if(ghBestCombo>(S.ghostBestCombo||0)) S.ghostBestCombo=ghBestCombo;
+  bumpStreak(); save();
+  resultsSplash(ghScore, best, S.ghostBest>0?`Best score: ${S.ghostBest}`:"", null);
+}
+$("#ghPass").onclick=passGhost; $("#ghEnd").onclick=()=>endGhost();
+/* =========================================================
+   FORK IN THE ROAD (reason & strategy — shortest-path puzzle)
+   ========================================================= */
+const FRK_TRIPLES = [
+  [["add",3],["mul",2],["add",-5]],   [["add",7],["mul",2],["add",-4]],   [["add",2],["mul",3],["add",-6]],
+  [["add",-3],["mul",2],["add",9]],   [["add",5],["mul",2],["add",-8]],   [["add",4],["add",-7],["mul",3]],
+  [["add",9],["mul",2],["add",-11]],  [["add",6],["mul",2],["add",-10]],  [["add",-2],["mul",3],["add",5]],
+  [["add",8],["add",-5],["mul",2]],   [["add",1],["mul",5],["add",-4]],   [["add",11],["add",-6],["mul",2]],
+  [["add",3],["mul",4],["add",-7]],   [["add",-4],["mul",3],["add",10]],  [["add",6],["add",-9],["mul",2]],
+  [["add",2],["mul",2],["add",-3]],   [["add",5],["mul",3],["add",-12]],  [["add",-6],["mul",2],["add",15]],
+  [["add",4],["mul",3],["add",-9]],   [["add",10],["add",-7],["mul",2]],  [["add",3],["add",-8],["mul",3]],
+  [["add",7],["mul",3],["add",-15]],  [["add",-5],["mul",2],["add",12]],  [["add",2],["mul",4],["add",-6]],
+  [["add",9],["add",-13],["mul",2]],  [["add",6],["mul",3],["add",-16]],  [["add",-3],["mul",3],["add",8]],
+  [["add",5],["add",-11],["mul",2]],  [["add",8],["mul",2],["add",-13]],  [["add",4],["mul",2],["add",-7]],
+];
+const FRK_LO=-60, FRK_HI=260, FRK_MAXNODES=20000, FRK_MAXDEPTH=5;
+function frkBuildOp(kind,n){
+  if(kind==="mul") return {label:"×"+n, fn:x=>x*n};
+  return {label:(n>=0?"+"+n:"−"+Math.abs(n)), fn:x=>x+n};
+}
+/* BFS from start using the 3 ops, up to FRK_MAXDEPTH taps — returns {dist,via}
+   dist: value -> minimal taps to reach it (the true "par")
+   via:  value -> {from, label} one step back, for reconstructing a real solution */
+function frkSolve(start, ops, maxDepth){
+  let frontier=new Map([[start,0]]);
+  const dist=new Map([[start,0]]);
+  const via=new Map();
+  let depth=0;
+  while(depth<maxDepth){
+    depth++;
+    const next=new Map();
+    for(const v of frontier.keys()){
+      for(const op of ops){
+        const nv=op.fn(v);
+        if(nv<FRK_LO||nv>FRK_HI) continue;
+        if(dist.has(nv)) continue;
+        dist.set(nv,depth); next.set(nv,depth); via.set(nv,{from:v,label:op.label});
+        if(dist.size>FRK_MAXNODES) return {dist,via};
+      }
+    }
+    frontier=next;
+    if(!frontier.size) break;
+  }
+  return {dist,via};
+}
+function frkReconstruct(via,start,target){
+  if(target===start) return [];
+  const path=[]; let cur=target;
+  while(cur!==start){ const step=via.get(cur); if(!step) return null; path.push(step.label); cur=step.from; }
+  return path.reverse();
+}
+function frkParRangeFor(round){
+  const steps=[[2,3],[2,4],[3,4],[3,5],[3,5]];
+  return steps[Math.min(steps.length-1, Math.floor((round-1)/2))];
+}
+function frkPickCandidate(rng, dist, start, parLo, parHi){
+  const ri=n=>Math.floor(rng()*n);
+  let cands=[...dist.entries()].filter(([v,d])=>d>=parLo&&d<=parHi&&v!==start);
+  if(!cands.length) cands=[...dist.entries()].filter(([v,d])=>d>=Math.max(1,parLo)&&v!==start);
+  const friendly=cands.filter(([v])=>Math.abs(v)<=120);
+  if(friendly.length) cands=friendly;
+  return cands.length ? cands[ri(cands.length)] : null;
+}
+/* generate one round: fresh curated triple + start, true par computed by bounded BFS.
+   Verified by simulation: 0 failures / 20000 generations, always succeeds on the first
+   random attempt in practice; the deterministic fallback below is unreachable in testing
+   but guarantees the function can never return a broken/null round. */
+function genForkInTheRoad(rng, round){
+  const ri=n=>Math.floor(rng()*n);
+  const [parLo,parHi]=frkParRangeFor(round);
+  for(let attempt=0; attempt<24; attempt++){
+    const trip=FRK_TRIPLES[ri(FRK_TRIPLES.length)];
+    const ops=trip.map(([k,n])=>frkBuildOp(k,n));
+    const start=1+ri(20);
+    const {dist,via}=frkSolve(start,ops,FRK_MAXDEPTH);
+    const pick=frkPickCandidate(rng,dist,start,parLo,parHi);
+    if(pick) return {start, target:pick[0], par:pick[1], ops, via};
+  }
+  /* guaranteed fallback — deterministic, always finds at least a par-1 target */
+  const ops=FRK_TRIPLES[0].map(([k,n])=>frkBuildOp(k,n));
+  const {dist,via}=frkSolve(5,ops,FRK_MAXDEPTH);
+  const pick=frkPickCandidate(rng,dist,5,1,FRK_MAXDEPTH);
+  return {start:5, target:pick[0], par:pick[1], ops, via};
+}
+
+let frkScore=0, frkCombo=0, frkBestCombo=0, frkCur=null, frkVal=0, frkPath=[], frkTapsUsed=0, frkLocked=false, frkTimer=null, frkSeed=null, frkRound=0;
+function frkFmtNum(n){ return n<0 ? "−"+Math.abs(n) : String(n); }
+function startForkInTheRoad(opts={}){
+  frkScore=0; frkCombo=0; frkBestCombo=0; frkRound=0; playLen=S.len;
+  frkSeed = opts.daily ? mulberry32(hashStr("forkintheroad"+todayKey())) : null;
+  updateFrkHUD(); show("forkintheroad"); loadForkInTheRoad();
+  clearInterval(frkTimer); frkTimer=runTimer(null,$("#frkTime"),$("#frkBarFill"),$("#frkBarWrap"),()=>endForkInTheRoad());
+}
+function loadForkInTheRoad(){
+  frkRound++; const rng=frkSeed||Math.random; frkSeed=null;
+  frkCur=genForkInTheRoad(rng, frkRound); frkVal=frkCur.start; frkPath=[]; frkTapsUsed=0; frkLocked=false;
+  $("#frkParBadge").textContent="PAR "+frkCur.par;
+  $("#frkGoalLine").innerHTML=`reach <b>${frkFmtNum(frkCur.target)}</b>`;
+  $("#frkOps").innerHTML=frkCur.ops.map((o,i)=>`<button class="oddtile patt" data-i="${i}">${esc(o.label)}</button>`).join("");
+  $("#frkOps").style.gridTemplateColumns="repeat(3,1fr)";
+  $$("#frkOps button").forEach(b=>b.onclick=()=>tapForkInTheRoad(b));
+  renderFrkState();
+  const fb=$("#frkFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+function renderFrkState(){
+  $("#frkCurVal").textContent=frkFmtNum(frkVal);
+  $("#frkTrail").innerHTML=frkPath.map((p,i)=>`<span class="${i===frkPath.length-1?"cur":""}">${esc(p.label)}</span>`).join('<span class="arr"> → </span>');
+}
+function updateFrkHUD(){ $("#frkScoreEl").textContent=frkScore; comboEl($("#frkCombo"),frkCombo); }
+function tapForkInTheRoad(btn){
+  if(frkLocked) return;
+  const op=frkCur.ops[+btn.dataset.i]; const prev=frkVal;
+  frkVal=op.fn(frkVal); frkPath.push({label:op.label, prev}); frkTapsUsed++;
+  renderFrkState();
+  if(frkVal===frkCur.target){
+    frkLocked=true; const optimal=frkTapsUsed===frkCur.par; const fb=$("#frkFb");
+    let pts;
+    if(optimal){ frkCombo++; if(frkCombo>frkBestCombo)frkBestCombo=frkCombo; pts=100*frkCombo;
+      fb.className="lk-feedback ok"; fb.textContent=`✓ par! solved in ${frkTapsUsed}  +${pts}${frkCombo>=2?"  (×"+frkCombo+")":""}`;
+    } else { frkCombo=0; pts=Math.max(15,Math.round(60*(frkCur.par/frkTapsUsed)));
+      fb.className="lk-feedback ok"; fb.textContent=`✓ reached it in ${frkTapsUsed} (par was ${frkCur.par})  +${pts}`;
+    }
+    frkScore+=pts; beepUp(); updateFrkHUD(); setTimeout(loadForkInTheRoad,1100);
+  }
+}
+function undoForkInTheRoad(){
+  if(frkLocked||!frkPath.length) return;
+  const last=frkPath.pop(); frkVal=last.prev; frkTapsUsed=Math.max(0,frkTapsUsed-1);
+  renderFrkState(); const fb=$("#frkFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+function passForkInTheRoad(){
+  if(frkLocked||!frkCur) return; frkLocked=true; frkCombo=0; updateFrkHUD();
+  const sol=frkReconstruct(frkCur.via, frkCur.start, frkCur.target)||[];
+  const fb=$("#frkFb"); fb.className="lk-feedback bad";
+  fb.textContent=sol.length ? `↷ par ${frkCur.par}: ${sol.join(" → ")}` : "↷ round skipped";
+  setTimeout(loadForkInTheRoad,1500);
+}
+function endForkInTheRoad(){
+  clearInterval(frkTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(frkScore);
+  const best=frkScore>(S.forkintheroadBest||0); if(best)S.forkintheroadBest=frkScore;
+  if(frkBestCombo>(S.forkintheroadBestCombo||0))S.forkintheroadBestCombo=frkBestCombo;
+  bumpStreak(); save();
+  resultsSplash(frkScore, best, S.forkintheroadBest>0?`Best score: ${S.forkintheroadBest}`:"", null);
+}
+$("#frkUndo").onclick=undoForkInTheRoad; $("#frkPass").onclick=passForkInTheRoad; $("#frkEnd").onclick=()=>endForkInTheRoad();
+/* =========================================================
+   BLINDFOLD (reason & strategy — spatial memory + planning)
+   A small grid flashes a numbered path, then hides completely.
+   Player has to plan + execute the whole route from memory —
+   no partial peeking, no do-overs mid-step.
+   ========================================================= */
+const BLINDFOLD_WATCH_LINES = ["👀 Watch closely…","🧠 Lock it in…","👁️ Trace it in your mind…","🔎 Study the path…","🧭 Memorize the route…","✨ Take a mental snapshot…"];
+
+/* grid size (NxN), path length, and flash duration all scale with round —
+   same "grid grows, reveal shrinks" curve the other Focus games use.
+   Grid caps at 5x5 (round 9+) so it always stays thumb-usable on phone;
+   path length keeps creeping up past that point for the harder rounds. */
+function blSizeFor(round){ const steps=[3,3,4,4,4,5,5,5,5]; return steps[Math.min(steps.length-1, round-1)]; }
+function blPathLenFor(round){ return Math.min(9, 3+Math.floor((round-1)/2)); }
+function blRevealFor(round){ return Math.max(900, 2600-(round-1)*150); }
+
+let blScore=0, blCombo=0, blBestCombo=0, blRound=0, blCur=null, blPlayerPath=[], blPhase="idle", blLocked=true, blTimer=null, blSeed=null;
+
+/* self-avoiding random walk on the NxN grid — gives a genuine connected
+   "maze path" feel (not just N random scattered cells). If it ever paints
+   itself into a corner it jumps to any remaining unvisited cell, so it
+   always reaches the target length (size*size is always well above
+   pathLen for every round this ever gets called with — see *For() above). */
+function genBlindfoldPath(rng, size, pathLen){
+  const idx=(r,c)=>r*size+c; const total=size*size; const visited=new Set(); const path=[];
+  let r=Math.floor(rng()*size), c=Math.floor(rng()*size);
+  path.push(idx(r,c)); visited.add(idx(r,c));
+  while(path.length<pathLen){
+    const dirs=shuffle([[0,1],[0,-1],[1,0],[-1,0]],rng); let moved=false;
+    for(const [dr,dc] of dirs){
+      const nr=r+dr, nc=c+dc;
+      if(nr>=0&&nr<size&&nc>=0&&nc<size&&!visited.has(idx(nr,nc))){ r=nr;c=nc; const k=idx(r,c); path.push(k); visited.add(k); moved=true; break; }
+    }
+    if(!moved){
+      const remaining=[]; for(let i=0;i<total;i++) if(!visited.has(i)) remaining.push(i);
+      if(!remaining.length) break;
+      const k=remaining[Math.floor(rng()*remaining.length)]; r=Math.floor(k/size); c=k%size; path.push(k); visited.add(k);
+    }
+  }
+  return path;
+}
+
+function startBlindfold(opts={}){
+  blScore=0; blCombo=0; blBestCombo=0; blRound=0; playLen=S.len;
+  blSeed=opts.daily?mulberry32(hashStr("blindfold"+todayKey())):null;
+  updateBlHUD(); show("blindfold"); loadBlindfold();
+  clearInterval(blTimer); blTimer=runTimer(null,$("#blTime"),$("#blBarFill"),$("#blBarWrap"),()=>endBlindfold());
+}
+
+function loadBlindfold(){
+  if(!$("#screen-blindfold").classList.contains("active")) return;
+  blRound++;
+  const rng=blSeed||Math.random;
+  const size=blSizeFor(blRound), revealMs=blRevealFor(blRound), pathLen=blPathLenFor(blRound);
+  blCur={size, revealMs, path:genBlindfoldPath(rng,size,pathLen)};
+  blPlayerPath=[]; blPhase="ready"; blLocked=true;
+  renderBlindfoldGrid();
+  $("#blStatus").innerHTML=`Get ready — <b>${blCur.path.length}</b> ${blCur.path.length===1?"step":"steps"}`;
+  const fb=$("#blFb"); fb.className="lk-feedback unsure"; fb.textContent="eyes up…";
+  setTimeout(flashBlindfoldPath,550);
+}
+
+function renderBlindfoldGrid(){
+  const g=$("#blGrid");
+  g.style.gridTemplateColumns=`repeat(${blCur.size},1fr)`;
+  g.style.gap = blCur.size>=5 ? "6px" : (blCur.size===4 ? "9px" : "12px");
+  g.innerHTML=Array.from({length:blCur.size*blCur.size},(_,i)=>`<button class="oddtile bltile" data-i="${i}" disabled></button>`).join("");
+  $$("#blGrid .bltile").forEach(b=>b.onclick=()=>tapBlindfold(+b.dataset.i,b));
+}
+
+function flashBlindfoldPath(){
+  if(!$("#screen-blindfold").classList.contains("active")) return;
+  blPhase="watch";
+  blCur.path.forEach((cellIdx,step)=>{ const b=$(`#blGrid .bltile[data-i="${cellIdx}"]`); if(b) b.textContent=String(step+1); });
+  const fb=$("#blFb"); fb.className="lk-feedback unsure"; fb.textContent=rand(BLINDFOLD_WATCH_LINES);
+  setTimeout(hideBlindfoldPath, blCur.revealMs);
+}
+
+function hideBlindfoldPath(){
+  if(!$("#screen-blindfold").classList.contains("active")) return;
+  $$("#blGrid .bltile").forEach(b=>{ b.textContent=""; b.disabled=false; });
+  blPhase="recall"; blLocked=false;
+  $("#blStatus").innerHTML=`🙈 Your turn — tap the <b>${blCur.path.length}</b> cells in order`;
+  const fb=$("#blFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+
+function updateBlHUD(){ $("#blScoreEl").textContent=blScore; comboEl($("#blCombo"),blCombo); }
+
+function tapBlindfold(i,btn){
+  if(blLocked||blPhase!=="recall") return;
+  const expected=blCur.path[blPlayerPath.length];
+  if(i===expected){
+    blPlayerPath.push(i); btn.classList.add("ok"); btn.textContent=String(blPlayerPath.length); btn.disabled=true;
+    if(blPlayerPath.length===blCur.path.length){
+      blLocked=true; blPhase="done";
+      blCombo++; if(blCombo>blBestCombo) blBestCombo=blCombo;
+      const pts=(60+blCur.path.length*25)*blCombo; blScore+=pts;
+      updateBlHUD();
+      const fb=$("#blFb"); fb.className="lk-feedback ok"; fb.textContent=`✓ nailed the path — +${pts}${blCombo>=2?" (×"+blCombo+")":""}`;
+      beepUp();
+      setTimeout(loadBlindfold,950);
+    }
+  } else {
+    blLocked=true; blPhase="reveal"; btn.classList.add("bad");
+    blCur.path.forEach((cellIdx,step)=>{ const b=$(`#blGrid .bltile[data-i="${cellIdx}"]`); if(b&&cellIdx!==i){ b.textContent=String(step+1); if(step<blPlayerPath.length) b.classList.add("ok"); } });
+    $$("#blGrid .bltile").forEach(b=>b.disabled=true);
+    blCombo=0; updateBlHUD();
+    const fb=$("#blFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not quite — here's the path"; beep();
+    setTimeout(loadBlindfold,1300);
+  }
+}
+
+function passBlindfold(){
+  if(blLocked||blPhase!=="recall") return;
+  blLocked=true; blPhase="reveal";
+  blCur.path.forEach((cellIdx,step)=>{ const b=$(`#blGrid .bltile[data-i="${cellIdx}"]`); if(b){ b.textContent=String(step+1); if(step<blPlayerPath.length) b.classList.add("ok"); } });
+  $$("#blGrid .bltile").forEach(b=>b.disabled=true);
+  blCombo=0; updateBlHUD();
+  const fb=$("#blFb"); fb.className="lk-feedback bad"; fb.textContent="↷ here's the path";
+  setTimeout(loadBlindfold,1200);
+}
+
+function endBlindfold(){
+  clearInterval(blTimer);
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(blScore);
+  const best=blScore>(S.blindfoldBest||0); if(best)S.blindfoldBest=blScore; if(blBestCombo>(S.blindfoldBestCombo||0))S.blindfoldBestCombo=blBestCombo; bumpStreak(); save();
+  resultsSplash(blScore, best, S.blindfoldBest>0?`Best score: ${S.blindfoldBest}`:"", null);
+}
+
+$("#blPass").onclick=passBlindfold; $("#blEnd").onclick=()=>endBlindfold();
+
+/* =========================================================
+   ICONOGRAPHY (saints & symbols — teach-on-wrong / Leitner-lite)
+   ========================================================= */
+const ICON_SAINTS = [
+  {e:"🔑",it:"Crossed keys",saint:"St. Peter",hook:"the keys of the kingdom (Mt 16:19)."},
+  {e:"⚙️",it:"Spiked wheel",saint:"St. Catherine of Alexandria",hook:"the wheel broke before it broke her."},
+  {e:"🍳",it:"Gridiron",saint:"St. Lawrence",hook:"roasted alive — legend says he joked \"turn me over.\""},
+  {e:"🏹",it:"Arrows",saint:"St. Sebastian",hook:"shot through, survived — martyred later anyway."},
+  {e:"⚜️",it:"Lily",saint:"St. Joseph",hook:"purity — the lily of the foster-father of Christ."},
+  {e:"🌙",it:"Crescent moon",saint:"Our Lady",hook:"\"clothed with the sun... the moon under her feet\" (Rev 12:1)."},
+  {e:"🗡️",it:"Sword",saint:"St. Paul",hook:"beheaded — also \"the sword of the Spirit\" (Eph 6:17)."},
+  {e:"🦅",it:"Eagle",saint:"St. John the Evangelist",hook:"his Gospel soars highest of the four."},
+  {e:"🐦",it:"Birds",saint:"St. Francis",hook:"preached to them as fellow creatures of God."},
+  {e:"👶",it:"The Christ Child",saint:"St. Anthony of Padua",hook:"the Infant Jesus appeared cradled in his arms."},
+  {e:"⚖️",it:"Sword and scales",saint:"St. Michael",hook:"the archangel who weighs souls and fights evil."},
+  {e:"✨",it:"Flame above the head",saint:"St. Jude",hook:"Pentecost zeal — the \"forgotten\" apostle, patron of lost causes."},
+];
+let icoScore=0, icoCombo=0, icoBestCombo=0, icoTimer=null, icoAdvT=null, icoLocked=false, icoPhase="quiz", icoCur=null, icoQStart=0, icoQueue=[], icoTaught=null, icoMastery=[];
+function genIcoOpts(idx,rng){ const target=ICON_SAINTS[idx]; const pool=ICON_SAINTS.filter((_,i)=>i!==idx); const others=shuffle(pool,rng).slice(0,3);
+  return shuffle([{name:target.saint,ok:1},...others.map(o=>({name:o.saint,ok:0}))],rng); }
+function startIconography(opts={}){ icoScore=0;icoCombo=0;icoBestCombo=0; playLen=S.len;
+  const rng = opts.daily ? mulberry32(hashStr("iconography"+todayKey())) : Math.random;
+  icoQueue = shuffle(ICON_SAINTS.map((_,i)=>i), rng); icoTaught=new Set(); icoMastery=new Array(ICON_SAINTS.length).fill(0); icoLocked=false;
+  updateIcoHUD(); show("iconography"); loadIconography();
+  clearInterval(icoTimer); icoTimer=runTimer(null,$("#icoTime"),$("#icoBarFill"),$("#icoBarWrap"),()=>endIconography()); }
+function loadIconography(){
+  clearTimeout(icoAdvT); icoLocked=false; const fb=$("#icoFb"); fb.className="lk-feedback"; fb.textContent="";
+  if(!icoQueue.length) return endIconography(true);
+  const idx=icoQueue[0], masteredCt=icoMastery.filter(m=>m>=2).length;
+  if(!icoTaught.has(idx)){ icoTaught.add(idx); icoPhase="teach";
+    const s=ICON_SAINTS[idx];
+    $("#icoBadge").textContent=`new symbol · ${masteredCt}/${ICON_SAINTS.length} mastered`;
+    $("#icoCard").innerHTML=`<div class="symbig">${s.e}</div><div class="symq big">LEARN IT FIRST</div><div class="symq" style="padding-top:0">${esc(s.it)} → <b>${esc(s.saint)}</b></div><div class="lk-feedback ok" style="margin:2px 0 0">${esc(s.hook)}</div>`;
+    $("#icoOpts").className="optlist"; $("#icoOpts").innerHTML=`<button class="optbtn" id="icoTeachGo">Got it — quiz me →</button>`;
+    $("#icoTeachGo").onclick=()=>{ clearTimeout(icoAdvT); loadIconography(); };
+    icoAdvT=setTimeout(loadIconography,3200); return; }
+  icoPhase="quiz"; icoCur=idx; icoQStart=Date.now(); const s=ICON_SAINTS[idx];
+  $("#icoBadge").textContent=`who's this? · ${masteredCt}/${ICON_SAINTS.length} mastered`;
+  $("#icoCard").innerHTML=`<div class="symbig">${s.e}</div><div class="symq">Whose traditional symbol is this?</div>`;
+  const opts=genIcoOpts(idx,Math.random);
+  $("#icoOpts").className="optlist"; $("#icoOpts").innerHTML=opts.map(o=>`<button class="optbtn" data-ok="${o.ok}">${esc(o.name)}</button>`).join("");
+  $$("#icoOpts button").forEach(b=>b.onclick=()=>tapIconography(b));
+}
+function updateIcoHUD(){ $("#icoScoreEl").textContent=icoScore; comboEl($("#icoCombo"),icoCombo); }
+function tapIconography(btn){ if(icoLocked||icoPhase!=="quiz") return; icoLocked=true;
+  const idx=icoCur, s=ICON_SAINTS[idx], ok=btn.dataset.ok==="1", elapsed=Date.now()-icoQStart, fb=$("#icoFb");
+  icoQueue.shift();
+  if(ok){
+    btn.classList.add("okopt"); icoCombo++; if(icoCombo>icoBestCombo) icoBestCombo=icoCombo;
+    const speed=elapsed<1200?40:elapsed<2500?20:0, pts=100*icoCombo+speed; icoScore+=pts; icoMastery[idx]=(icoMastery[idx]||0)+1;
+    fb.className="lk-feedback ok"; fb.textContent=`✓ ${s.saint}  +${pts}${speed>0?" ⚡":""}${icoCombo>=2?"  (×"+icoCombo+")":""}`;
+    beepUp();
+    if(icoMastery[idx]<2){ const back=Math.min(icoQueue.length,4+Math.floor(Math.random()*3)); icoQueue.splice(back,0,idx); }
+    updateIcoHUD(); icoAdvT=setTimeout(loadIconography,900);
+  } else {
+    btn.classList.add("badopt"); $$("#icoOpts button").forEach(b=>{ if(b.dataset.ok==="1") b.classList.add("okopt"); });
+    icoCombo=0; icoMastery[idx]=0; const back=Math.min(icoQueue.length,1+Math.floor(Math.random()*2)); icoQueue.splice(back,0,idx);
+    fb.className="lk-feedback bad"; fb.textContent=`✗ ${s.it} → ${s.saint} — ${s.hook}`;
+    beep(); updateIcoHUD(); icoAdvT=setTimeout(loadIconography,2400);
+  }
+}
+function endIconography(mastered){ clearInterval(icoTimer); clearTimeout(icoAdvT);
+  if(mastered) icoScore+=200;
+  if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(icoScore);
+  const best=icoScore>(S.iconographyBest||0); if(best)S.iconographyBest=icoScore;
+  if(icoBestCombo>(S.iconographyBestCombo||0))S.iconographyBestCombo=icoBestCombo;
+  bumpStreak(); save();
+  resultsSplash(icoScore, best, S.iconographyBest>0?`Best score: ${S.iconographyBest}`:"", null); }
+$("#icoEnd").onclick=()=>endIconography();
+
+/* =========================================================
+   VESTMENTS (Faith & Wisdom — liturgical color, TEACH-ON-WRONG)
+   Self-contained: injects its own CSS + screen HTML at load
+   time (same technique as MIRROR/WEB above), so no edits to
+   the static <style> block or the .screen HTML sections are
+   required. Anchors at the end of .wrap.
+   ========================================================= */
+(function(){
+  var vestmentsHtml = `
+ <section class="screen" id="screen-vestments">
+  <div class="linktop">
+   <div class="lt-stat"><div class="v" id="vesScoreEl">0</div><div class="l">SCORE</div></div>
+   <div class="lt-combo dim" id="vesCombo">×1</div>
+   <div class="lt-stat"><div class="v" id="vesTime">1:30</div><div class="l">TIME</div></div>
+  </div>
+  <div class="tbar" id="vesBarWrap"><div class="fill" id="vesBarFill"></div></div>
+  <div class="card">
+   <div class="pc-head"><div class="pc-kind mono">VESTMENTS</div><div class="badge" id="vesBadge">guess the color</div></div>
+   <div id="vesCard"></div>
+   <div id="vesOpts" class="vestgrid"></div>
+  </div>
+  <div class="lk-feedback" id="vesFb"></div>
+  <div class="playbtns">
+   <button class="new" id="vesPass" title="Pass — reveals the answer">⤼</button>
+   <button class="done" id="vesEnd">End round</button>
+  </div>
+ </section>`;
+  document.querySelector(".wrap").insertAdjacentHTML("beforeend", vestmentsHtml);
+})();
+
+document.head.insertAdjacentHTML("beforeend", `<style>
+.vestgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px 16px 16px}
+.vestbtn{font:inherit;font-size:15px;font-weight:700;letter-spacing:.3px;text-align:center;padding:20px 10px;border:1.5px solid var(--line);border-radius:13px;cursor:pointer;transition:.12s;text-transform:uppercase}
+.vestbtn:active{transform:scale(.97)}
+.vestbtn:disabled{cursor:default}
+.vestbtn.vok{box-shadow:0 0 0 3px var(--green) inset}
+.vestbtn.vbad{box-shadow:0 0 0 3px var(--accent-d) inset;animation:shake .32s}
+.vestbtn.vfull{grid-column:1/-1;max-width:calc(50% - 5px);margin:0 auto}
+.vc-purple{background:#6a3fa0;color:#fff;border-color:#6a3fa0}
+.vc-red{background:#a92330;color:#fff;border-color:#a92330}
+.vc-white{background:#fffaf0;color:#3a3226;border-color:var(--gold)}
+.vc-green{background:#3f9d52;color:#fff;border-color:#3f9d52}
+.vc-rose{background:#d99cb0;color:#4a2030;border-color:#d99cb0}
+.vesteach{text-align:center;padding:6px 18px 4px}
+.vesteach .vfeast{font-size:19px;font-weight:700;padding-bottom:10px;line-height:1.3}
+.vesteach .vswatch{display:inline-block;padding:8px 22px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.vesteach .vhook{font-size:14px;color:var(--ink-soft);line-height:1.4;padding:0 6px}
+.vesgo{display:block;width:100%;background:var(--green);color:#fff;border:0;border-radius:13px;padding:15px;font:inherit;font-weight:700;font-size:16px;cursor:pointer;margin-top:14px}
+.vesgo:active{transform:scale(.98)}
+.vesq{text-align:center;font-size:19px;font-weight:700;padding:20px 18px 4px;line-height:1.3}
+</style>`);
+
+/* register with the shared rank/unit lookups (plain object property adds — safe, RANK_TABLES/GAME_UNIT already exist by the time this runs) */
+RANK_TABLES.vestments = [[0,"Warming up"],[300,"Learning the colors"],[800,"Sacristan's eye"],[1500,"Vestments master"],[2600,"Master of Ceremonies 🎗️"]];
+GAME_UNIT.vestments = "POINTS";
+
+/* ---------- content pool: 12 cards, all five liturgical colors ---------- */
+const VESTMENTS = [
+  {f:"Advent", c:"purple", hook:"Advent → PURPLE — penance & preparation, awaiting the Lord."},
+  {f:"A weekday Mass in Lent", c:"purple", hook:"Lent → PURPLE — penance & the 40 days in the desert."},
+  {f:"Christmas Day", c:"white", hook:"Christmas → WHITE — joy: the birth of Christ."},
+  {f:"Easter Sunday", c:"white", hook:"Easter → WHITE — joy: the Resurrection."},
+  {f:"The Assumption of Mary", c:"white", hook:"A feast of Our Lady → WHITE — joy, not sacrifice."},
+  {f:"Pentecost Sunday", c:"red", hook:"Pentecost → RED — the fire of the Holy Spirit."},
+  {f:"Palm Sunday", c:"red", hook:"Passion Sunday → RED — Christ's Passion, His blood."},
+  {f:"The Feast of St. Stephen", c:"red", hook:"A martyr's feast → RED — blood & sacrifice (Apostles too)."},
+  {f:"A Sunday in Ordinary Time", c:"green", hook:"Ordinary Time → GREEN — the Church's everyday growth."},
+  {f:"A weekday Mass in July", c:"green", hook:"No special feast → GREEN — plain Ordinary Time."},
+  {f:"Gaudete Sunday (3rd Advent)", c:"rose", hook:"Gaudete → ROSE — joy breaking through the purple, just once."},
+  {f:"Laetare Sunday (4th Lent)", c:"rose", hook:"Laetare → ROSE — joy breaking through the purple, just once."},
+];
+const VES_COLORS = [
+  {c:"purple", label:"Purple"}, {c:"red", label:"Red"}, {c:"white", label:"White"},
+  {c:"green", label:"Green"}, {c:"rose", label:"Rose"},
+];
+const VES_LABEL = Object.fromEntries(VES_COLORS.map(o=>[o.c,o.label]));
+
+/* ---------- session state (Leitner-lite: miss→near queue, correct twice→retired) ---------- */
+let vesScore=0, vesCombo=0, vesBestCombo=0, vesTimer=null;
+let vesOrder=[], vesNextNew=0, vesQueue=[], vesStreak={}, vesRetired=new Set();
+let vesCur=null, vesLocked=false, vesShownAt=0, vesLog=[];
+
+function startVestments(opts={}){
+  vesScore=0; vesCombo=0; vesBestCombo=0; playLen=S.len;
+  const seedRng = opts.daily ? mulberry32(hashStr("vestments"+todayKey())) : Math.random;
+  vesOrder = shuffle([...Array(VESTMENTS.length).keys()], seedRng);
+  vesNextNew=0; vesQueue=[]; vesStreak={}; vesRetired=new Set(); vesLog=[];
+  updateVesHUD(); show("vestments"); loadVestments();
+  clearInterval(vesTimer); vesTimer=runTimer(null,$("#vesTime"),$("#vesBarFill"),$("#vesBarWrap"),()=>endVestments());
+}
+
+/* decide the next step: due review (quiz) vs never-seen item (teach) */
+function vesNextStep(){
+  const dueSoon = vesQueue.length>=3 || vesNextNew>=vesOrder.length;
+  if(vesQueue.length && (dueSoon || Math.random()<0.55)){
+    const idx=vesQueue.shift(); return {idx, card:VESTMENTS[idx], mode:"quiz"};
+  }
+  if(vesNextNew<vesOrder.length){
+    const idx=vesOrder[vesNextNew++]; vesStreak[idx]=0; return {idx, card:VESTMENTS[idx], mode:"teach"};
+  }
+  if(vesQueue.length){ const idx=vesQueue.shift(); return {idx, card:VESTMENTS[idx], mode:"quiz"}; }
+  /* whole pool taught + retired but the clock's still running — recycle a random card as a bonus-round quiz */
+  const idx = Math.floor(Math.random()*VESTMENTS.length);
+  return {idx, card:VESTMENTS[idx], mode:"quiz"};
+}
+
+function loadVestments(){
+  if(!$("#screen-vestments").classList.contains("active")) return;
+  const fb=$("#vesFb"); fb.className="lk-feedback"; fb.textContent=""; fb.onclick=null; fb.style.cursor="";
+  vesCur=vesNextStep(); vesLocked=false;
+  if(vesCur.mode==="teach") renderVesTeach(vesCur);
+  else { renderVesQuiz(vesCur); vesShownAt=Date.now(); }
+}
+
+function renderVesTeach(step){
+  const card=step.card;
+  const badge=$("#vesBadge"); badge.textContent="learn it"; badge.style.background="var(--gold)";
+  $("#vesCard").innerHTML = `<div class="vesteach">
+    <div class="vfeast">${esc(card.f)}</div>
+    <div class="vswatch vc-${card.c}">${VES_LABEL[card.c]}</div>
+    <div class="vhook">${esc(card.hook)}</div>
+  </div>`;
+  $("#vesOpts").className="optlist";
+  $("#vesOpts").innerHTML = `<button class="vesgo" id="vesGo">Got it →</button>`;
+  $("#vesGo").onclick=()=>{ if(vesLocked)return; vesLocked=true; vesQueue.push(step.idx); loadVestments(); };
+}
+
+function renderVesQuiz(step){
+  const card=step.card;
+  const badge=$("#vesBadge"); badge.textContent="guess the color"; badge.style.background="var(--blue)";
+  $("#vesCard").innerHTML = `<div class="vesq">${esc(card.f)}</div>`;
+  const opts=shuffle(VES_COLORS);
+  $("#vesOpts").className="vestgrid";
+  $("#vesOpts").innerHTML = opts.map((o,i)=>{
+    const wide = i===opts.length-1 ? " vfull" : "";
+    return `<button class="vestbtn vc-${o.c}${wide}" data-c="${o.c}">${o.label}</button>`;
+  }).join("");
+  $$("#vesOpts .vestbtn").forEach(b=>b.onclick=()=>tapVestments(b));
+}
+
+function updateVesHUD(){ $("#vesScoreEl").textContent=vesScore; comboEl($("#vesCombo"),vesCombo); }
+
+function tapVestments(btn){
+  if(vesLocked || !vesCur || vesCur.mode!=="quiz") return;
+  const card=vesCur.card, idx=vesCur.idx; const fb=$("#vesFb"); const elapsed=Date.now()-vesShownAt;
+  if(btn.dataset.c===card.c){
+    vesLocked=true; btn.classList.add("vok");
+    vesCombo++; if(vesCombo>vesBestCombo) vesBestCombo=vesCombo;
+    const speedBonus = elapsed<1200?40:elapsed<2500?15:0;
+    const pts=(60+speedBonus)*vesCombo; vesScore+=pts;
+    vesStreak[idx]=(vesStreak[idx]||0)+1;
+    if(vesStreak[idx]>=2) vesRetired.add(idx); else vesQueue.push(idx);
+    vesLog.push({f:card.f,c:card.c,ok:true});
+    fb.className="lk-feedback ok"; fb.textContent=`✓ ${card.f} → ${VES_LABEL[card.c]}  +${pts}${vesCombo>=2?"  (×"+vesCombo+")":""}`;
+    beepUp(); updateVesHUD(); setTimeout(loadVestments,900);
+  } else {
+    vesLocked=true; btn.classList.add("vbad");
+    const rightBtn=$$("#vesOpts .vestbtn").find(b=>b.dataset.c===card.c); if(rightBtn) rightBtn.classList.add("vok");
+    $$("#vesOpts .vestbtn").forEach(b=>b.disabled=true);
+    vesCombo=0; vesStreak[idx]=0; vesQueue.splice(Math.min(2,vesQueue.length),0,idx);
+    vesLog.push({f:card.f,c:card.c,ok:false});
+    updateVesHUD(); beep();
+    fb.className="lk-feedback bad"; fb.textContent=`✗ ${card.hook}  ·  tap to continue`; fb.style.cursor="pointer";
+    fb.onclick=()=>{ fb.onclick=null; fb.style.cursor=""; loadVestments(); };
+  }
+}
+
+function passVestments(){
+  if(vesLocked || !vesCur) return;
+  if(vesCur.mode==="teach"){ vesLocked=true; vesQueue.push(vesCur.idx); loadVestments(); return; }
+  const card=vesCur.card, idx=vesCur.idx; vesLocked=true;
+  const rightBtn=$$("#vesOpts .vestbtn").find(b=>b.dataset.c===card.c); if(rightBtn) rightBtn.classList.add("vok");
+  $$("#vesOpts .vestbtn").forEach(b=>b.disabled=true);
+  vesCombo=0; vesStreak[idx]=0; vesQueue.splice(Math.min(2,vesQueue.length),0,idx);
+  updateVesHUD();
+  const fb=$("#vesFb"); fb.className="lk-feedback bad"; fb.textContent=`↷ ${card.hook}`;
+  setTimeout(loadVestments,1300);
+}
+
+function endVestments(){
+  clearInterval(vesTimer);
+  if(S.mode==="party" && partyTurn!=null) return endParticipantRound(vesScore);
+  const best=vesScore>(S.vestmentsBest||0); if(best) S.vestmentsBest=vesScore;
+  if(vesBestCombo>(S.vestmentsBestCombo||0)) S.vestmentsBestCombo=vesBestCombo;
+  bumpStreak(); save();
+  const recap = vesLog.length ? {title:"THIS SESSION", html: vesLog.map(e=>`<div class="ri"><span class="tx">${esc(e.f)} → <b>${VES_LABEL[e.c]}</b></span><span style="font-size:18px">${e.ok?"✓":"✗"}</span></div>`).join("")} : null;
+  const masteredLine = vesRetired.size ? ` · learned ${vesRetired.size}/${VESTMENTS.length} colors` : "";
+  resultsSplash(vesScore, best, (S.vestmentsBest>0?`Best score: ${S.vestmentsBest}`:"")+masteredLine, recap);
+}
+$("#vesPass").onclick=passVestments; $("#vesEnd").onclick=()=>endVestments();
+
+/* =========================================================
+   ROSE WINDOW (rotational symmetry — Faith & Wisdom)
+   Self-injects its own screen markup + a small stylesheet at
+   load time, same technique as MIRROR/GOLDEN EYE above, so no
+   edits to the static <style> block or the .screen HTML
+   sections are required. Anchors right after #screen-stats
+   (before <footer>) so it sits correctly inside .wrap.
+   Purely perceptual (no teach-on-wrong loop): a cathedral rose
+   window is built from N identical radial panes repeated with
+   full rotational symmetry — one pane is blanked, and the true
+   match is simply whatever every OTHER pane already shows.
+   ========================================================= */
+document.head.insertAdjacentHTML("beforeend", `<style>
+.rosewheel{position:relative;width:min(72vw,280px);aspect-ratio:1;margin:10px auto 6px;border-radius:50%;background:var(--card);box-shadow:0 0 0 6px var(--line),0 6px 22px rgba(0,0,0,.14)}
+.rwring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%}
+.rwspokes,.rwpulse{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;pointer-events:none}
+.rwpulse{animation:rwpulse 1.1s ease-in-out infinite}
+@keyframes rwpulse{0%,100%{opacity:.9}50%{opacity:.3}}
+.rwhub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:15%;height:15%;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;box-shadow:0 0 0 2px var(--card),0 2px 6px rgba(0,0,0,.25)}
+.oddtile.rwopt{display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:10px;aspect-ratio:1.5;cursor:pointer}
+.rwchip{flex:1;border-radius:6px;min-height:14px}
+</style>`);
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-rosewindow">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="rwScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="rwCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="rwTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="rwBarWrap"><div class="fill" id="rwBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">ROSE WINDOW</div><div class="badge" style="background:var(--gold)">match the rotation</div></div>
+      <div class="gamesub" id="rwSub">Round 1 · <b>6</b> panes · <b>2</b> rings</div>
+      <div class="rosewheel" id="rwWheel"></div>
+      <div class="oddgrid" id="rwOpts" style="padding-top:4px"></div>
+    </div>
+    <div class="lk-feedback" id="rwFb"></div>
+    <div class="playbtns">
+      <button class="new" id="rwPass" title="Pass — reveals the match">⤼</button>
+      <button class="done" id="rwEnd">End round</button>
+    </div>
+  </section>
+`);
+
+/* register with the shared rank/unit lookups (plain object property adds — safe, RANK_TABLES/GAME_UNIT already exist by the time this runs) */
+RANK_TABLES.rosewindow = [[0,"Warming up"],[300,"Finding the pattern"],[800,"Symmetry eye"],[1600,"Cathedral eye"],[2800,"Rose master ✨"]];
+GAME_UNIT.rosewindow = "POINTS";
+
+/* content pool: 4 stained-glass jewel-tone palettes, 6 hues each */
+const ROSE_PALETTES = [
+  ["#c2273d","#1f6fb2","#e0a429","#3f9d52","#6c3fa8","#c8461a"],
+  ["#8e1e3c","#2a4d8f","#d4af37","#245a3e","#5b2a86","#b0472a"],
+  ["#e0334c","#2f6db0","#f0c419","#2e8b57","#8e5cd1","#d6457e"],
+  ["#a11d33","#1c5a94","#c9962c","#337a4e","#6a3593","#a8395c"],
+];
+/* wedge count (n) and ring count (bands) grow every 2 rounds; option count eases in at 3 before settling at 4 */
+const ROSE_LEVELS = [
+  {n:6,  bands:2, opts:3},
+  {n:6,  bands:3, opts:3},
+  {n:8,  bands:3, opts:4},
+  {n:8,  bands:4, opts:4},
+  {n:10, bands:4, opts:4},
+  {n:12, bands:4, opts:4},
+];
+/* diameter % per ring layer, outer→inner, keyed by band count — stacking full circles
+   largest-first (painted at the back) creates the concentric "petal" bands for free */
+const ROSE_RING_PCT = {2:[100,52], 3:[100,70,42], 4:[100,80,58,34]};
+function roseLevelFor(round){ return ROSE_LEVELS[Math.min(ROSE_LEVELS.length-1, Math.floor((round-1)/2))]; }
+/* one ring's conic-gradient: n equal solid wedges of bandColor, with blankIndex swapped to blankColor
+   (blankIndex=-1 means "nothing's blank" — used to redraw the healed/completed wheel) */
+function roseRingGradient(bandColor, n, fromDeg, blankIndex, blankColor){
+  const step=360/n; const stops=[];
+  for(let i=0;i<n;i++){ const c = i===blankIndex ? blankColor : bandColor; stops.push(`${c} ${fromDeg+i*step}deg ${fromDeg+(i+1)*step}deg`); }
+  return `conic-gradient(${stops.join(",")})`;
+}
+/* candidate completing segments: the true recipe, a reversed (chirality-flipped) decoy, then
+   single-band color swaps until `count` distinct options exist — mirrors fourOpts' dedupe+guard style */
+function buildRoseOptions(recipe, decoyPool, count, rng){
+  const seen=new Set(); const opts=[];
+  const key=a=>a.join("|");
+  const add=(colors,correct)=>{ const k=key(colors); if(seen.has(k)) return; seen.add(k); opts.push({colors,correct}); };
+  add(recipe.slice(), true);
+  if(recipe.length>=2) add([...recipe].reverse(), false);
+  let guard=0;
+  while(opts.length<count && guard++<40){
+    const mutant=recipe.slice(); const i=Math.floor(rng()*mutant.length);
+    const pool=decoyPool.length?decoyPool:recipe; const swap=pool[Math.floor(rng()*pool.length)];
+    if(swap===mutant[i]) continue;
+    mutant[i]=swap; add(mutant,false);
+  }
+  return shuffle(opts,rng);
+}
+/* builds one round: which palette, which n/bands, the true per-ring recipe (shared by every
+   pane — that's the rotational symmetry), which pane is blank, and the precomputed option set */
+function genRoseWindow(rng, round){
+  const level=roseLevelFor(round);
+  const palette=shuffle(ROSE_PALETTES[Math.floor(rng()*ROSE_PALETTES.length)], rng);
+  const recipe=palette.slice(0, level.bands);
+  const decoyPool=palette.slice(level.bands);
+  const blankIndex=Math.floor(rng()*level.n);
+  const fromDeg=Math.floor(rng()*360);
+  const options=buildRoseOptions(recipe, decoyPool, level.opts, rng);
+  const correctIdx=options.findIndex(o=>o.correct);
+  return {n:level.n, bands:level.bands, fromDeg, recipe, blankIndex, options, correctIdx};
+}
+
+let rwScore=0, rwCombo=0, rwBestCombo=0, rwRound=0, rwCur=null, rwLocked=false, rwTimer=null, rwSeed=null;
+
+function startRoseWindow(opts={}){
+  rwScore=0; rwCombo=0; rwBestCombo=0; rwRound=0; playLen=S.len;
+  rwSeed = opts.daily ? mulberry32(hashStr("rosewindow"+todayKey())) : null;
+  updateRoseHUD(); show("rosewindow"); loadRoseWindow();
+  clearInterval(rwTimer); rwTimer=runTimer(null,$("#rwTime"),$("#rwBarFill"),$("#rwBarWrap"),()=>endRoseWindow());
+}
+
+function loadRoseWindow(){
+  if(!$("#screen-rosewindow").classList.contains("active")) return;
+  rwRound++; const rng=rwSeed||Math.random; rwSeed=null;
+  rwCur=genRoseWindow(rng,rwRound); rwLocked=false;
+  renderRoseWheel(); renderRoseOptions(); updateRoseSub();
+  const fb=$("#rwFb"); fb.className="lk-feedback"; fb.textContent="";
+}
+
+function renderRoseWheel(){
+  const {n, bands, fromDeg, recipe, blankIndex} = rwCur;
+  const pcts=ROSE_RING_PCT[bands]; let html="";
+  for(let b=0;b<bands;b++){
+    const grad=roseRingGradient(recipe[b], n, fromDeg, blankIndex, "var(--paper-2)");
+    html+=`<div class="rwring" style="width:${pcts[b]}%;height:${pcts[b]}%;background:${grad}"></div>`;
+  }
+  const step=360/n;
+  html+=`<div class="rwspokes" style="background:repeating-conic-gradient(from ${fromDeg}deg, rgba(0,0,0,.32) 0deg 1deg, transparent 1deg ${step}deg)"></div>`;
+  const pulseGrad=roseRingGradient("transparent", n, fromDeg, blankIndex, "var(--accent-glow)");
+  html+=`<div class="rwpulse" style="background:${pulseGrad}"></div>`;
+  html+=`<div class="rwhub">✦</div>`;
+  $("#rwWheel").innerHTML=html;
+}
+
+function renderRoseOptions(){
+  if(!$("#screen-rosewindow").classList.contains("active")) return;
+  $("#rwOpts").innerHTML=rwCur.options.map((o,i)=>
+    `<button class="oddtile rwopt" data-i="${i}">${o.colors.map(c=>`<span class="rwchip" style="background:${c}"></span>`).join("")}</button>`
+  ).join("");
+  $$("#rwOpts .rwopt").forEach(b=>b.onclick=()=>tapRoseWindow(b));
+  rwLocked=false;
+}
+
+function updateRoseHUD(){ $("#rwScoreEl").textContent=rwScore; comboEl($("#rwCombo"),rwCombo); }
+function updateRoseSub(){ $("#rwSub").innerHTML=`Round ${rwRound} · <b>${rwCur.n}</b> panes · <b>${rwCur.bands}</b> rings`; }
+
+function tapRoseWindow(btn){
+  if(rwLocked || !rwCur) return; const i=+btn.dataset.i; const fb=$("#rwFb");
+  if(i===rwCur.correctIdx){
+    rwLocked=true; btn.classList.add("ok");
+    rwCombo++; if(rwCombo>rwBestCombo){ rwBestCombo=rwCombo; confetti(); }
+    const pts=(40+rwCur.n*5+rwCur.bands*15)*rwCombo; rwScore+=pts;
+    rwCur.blankIndex=-1; renderRoseWheel(); // heal the wheel — the reveal IS the teaching
+    fb.className="lk-feedback ok"; fb.textContent=`✓ the window is whole — +${pts}${rwCombo>=2?"  (×"+rwCombo+")":""}`;
+    beepUp(); updateRoseHUD();
+    setTimeout(loadRoseWindow, 900);
+  } else {
+    btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad");
+    rwCombo=0; updateRoseHUD();
+    fb.className="lk-feedback bad"; fb.textContent="✗ doesn't complete the pattern — try again"; beep();
+  }
+}
+
+function passRoseWindow(){
+  if(rwLocked || !rwCur) return; rwLocked=true; const fb=$("#rwFb");
+  $$("#rwOpts .rwopt").forEach((b,i)=>{ if(i===rwCur.correctIdx) b.classList.add("ok"); });
+  rwCur.blankIndex=-1; renderRoseWheel();
+  rwCombo=0; updateRoseHUD();
+  fb.className="lk-feedback bad"; fb.textContent="↷ revealed";
+  setTimeout(loadRoseWindow, 900);
+}
+
+function endRoseWindow(){
+  clearInterval(rwTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(rwScore);
+  const best=rwScore>(S.rosewindowBest||0); if(best)S.rosewindowBest=rwScore;
+  if(rwBestCombo>(S.rosewindowBestCombo||0))S.rosewindowBestCombo=rwBestCombo;
+  bumpStreak(); save();
+  resultsSplash(rwScore, best, S.rosewindowBest>0?`Best score: ${S.rosewindowBest}`:"", null);
+}
+$("#rwPass").onclick=passRoseWindow; $("#rwEnd").onclick=()=>endRoseWindow();
+
+/* =========================================================
+   ILLUMINATION (Faith & Wisdom — perceptual symbol-search)
+   Self-injects its own screen markup + a small stylesheet at
+   load time, same technique as GOLDEN EYE / MIRROR above, so
+   no edits to the static <style> block or the .screen HTML
+   sections are required. Anchors right after #screen-stats
+   (before <footer>) so it sits correctly inside .wrap.
+   Convention match: same shape as NEEDLE (search-field grid,
+   density-by-round, stopwatch + PB-time chase) — this is
+   Needle's engine wearing a gilded-manuscript skin, with a
+   one-line reward flash on find instead of a bare "found it".
+   ========================================================= */
+document.head.insertAdjacentHTML("beforeend", `<style>
+.illumgrid{display:grid;gap:4px;padding:8px 10px 14px;background:linear-gradient(160deg,var(--paper-2),var(--card));border-radius:10px}
+.illumtile{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:5px;background:var(--paper-2);border:1px solid var(--line);transition:transform .08s}
+.illumtile:active{transform:scale(.94)}
+.illumtile .glyph{display:block;line-height:1;filter:sepia(.85) saturate(2.4) hue-rotate(-8deg) contrast(1.05) brightness(.92)}
+.illumtile.hit{background:#f7ecc4;box-shadow:0 0 0 2px var(--gold) inset}
+.illumtile.hit .glyph{filter:none}
+.illumtile.miss{animation:shake .32s}
+.aoglyph{display:block;font-size:.56em;line-height:.82;font-weight:700;font-family:Georgia,serif}
+</style>`);
+document.querySelector("#screen-stats").insertAdjacentHTML("afterend", `
+  <section class="screen" id="screen-illumination">
+    <div class="linktop">
+      <div class="lt-stat"><div class="v" id="illumScoreEl">0</div><div class="l">SCORE</div></div>
+      <div class="lt-combo dim" id="illumCombo">×1</div>
+      <div class="lt-stat"><div class="v" id="illumTime">1:30</div><div class="l">TIME</div></div>
+    </div>
+    <div class="tbar" id="illumBarWrap"><div class="fill" id="illumBarFill"></div></div>
+    <div class="card">
+      <div class="pc-head"><div class="pc-kind mono">FIND THE SACRED SYMBOL</div><div class="badge" id="illumBadge" style="background:var(--gold)">round 1</div></div>
+      <div class="needmeta"><span id="illumStopwatch">0.0s</span><span id="illumPbLine"></span></div>
+      <div class="illumgrid" id="illumGrid"></div>
+    </div>
+    <div class="lk-feedback" id="illumFb"></div>
+    <div class="playbtns"><button class="new" id="illumPass" title="Reveal — new round">⤼</button><button class="done" id="illumEnd">End round</button></div>
+  </section>
+`);
+
+/* register with the shared rank/unit lookups (plain object property adds — safe, RANK_TABLES/GAME_UNIT already exist by the time this runs) */
+RANK_TABLES.illumination=[[0,"Warming up"],[600,"Sharp eye"],[1800,"Illuminator"],[4000,"Manuscript master"],[8000,"Scriptorium sage 📜"]];
+GAME_UNIT.illumination="POINTS";
+
+/* the 6 sacred symbols — each carries its one-line reward, shown ONLY on find/reveal (never a correction, never requeued) */
+const ILLUM_SYMBOLS=[
+  {e:"☧",n:"Chi-Rho",reward:"Christ — the first two Greek letters of His name."},
+  {e:"🐟",n:"Ichthys",reward:"ΙΧΘΥΣ — early code for ‘Jesus Christ, Son of God, Savior.’"},
+  {e:"🐑",n:"the Lamb",reward:"Agnus Dei — the Lamb of God."},
+  {e:"🕊️",n:"the Dove",reward:"The Holy Spirit, descending like a dove."},
+  {e:"<span class=\"aoglyph\">Α<br>Ω</span>",n:"Alpha & Omega",reward:"The Beginning and the End — Christ’s own words."},
+  {e:"⚓",n:"the Anchor",reward:"Hope — an anchor for the soul, firm and secure."},
+];
+/* pure ornamental filler — gilded flourishes, never one of the 6 target meanings above, so a find is unambiguous */
+const ILLUM_DECOYS=["⚜️","✨","⭐","🌟","💫","🔶","🔷","🔸","🔹","💠","🕯️","📿","🍇","🌾"];
+
+let illumScore=0, illumCombo=0, illumBestCombo=0, illumRound=1, illumSessionBest=Infinity, illumCur=null, illumLocked=false, illumStart=0, illumTimer=null, illumStopTimer=null, illumSeed=null;
+function illumFmt(ms){ return (ms/1000).toFixed(2); }
+function illumPick(arr,rng){ return arr[Math.floor(rng()*arr.length)]; }
+function genIllumination(rng,round){
+  const gridN=Math.min(9,4+Math.ceil(round/2)); const total=gridN*gridN; // same density-by-round curve as Needle — reused verbatim per spec
+  const target=illumPick(ILLUM_SYMBOLS,rng); const targetIdx=Math.floor(rng()*total);
+  const tiles=[]; for(let i=0;i<total;i++) tiles.push(i===targetIdx?target.e:illumPick(ILLUM_DECOYS,rng));
+  return {gridN,total,target,targetIdx,tiles};
+}
+function startIllumination(opts={}){ illumScore=0;illumCombo=0;illumBestCombo=0;illumRound=1;illumSessionBest=Infinity; playLen=S.len; illumSeed=opts.daily?mulberry32(hashStr("illumination"+todayKey())):null;
+  updateIllumHUD(); show("illumination"); loadIllumination(); clearInterval(illumTimer); illumTimer=runTimer(null,$("#illumTime"),$("#illumBarFill"),$("#illumBarWrap"),()=>endIllumination()); }
+function loadIllumination(){ const rng=illumSeed||Math.random; illumSeed=null; illumCur=genIllumination(rng,illumRound); illumLocked=false; illumStart=Date.now();
+  const g=$("#illumGrid"); g.style.gridTemplateColumns=`repeat(${illumCur.gridN},1fr)`; g.style.gap=illumCur.gridN>=8?"2px":"4px";
+  const fsz=illumCur.gridN>=8?"15px":illumCur.gridN>=7?"18px":illumCur.gridN>=6?"21px":"26px";
+  let html=""; for(let i=0;i<illumCur.total;i++){ html+=`<div class="illumtile" data-i="${i}"><span class="glyph" style="font-size:${fsz}">${illumCur.tiles[i]}</span></div>`; }
+  g.innerHTML=html; $$("#illumGrid .illumtile").forEach(t=>t.onclick=()=>tapIllumination(t));
+  $("#illumBadge").textContent="round "+illumRound;
+  $("#illumPbLine").textContent = S.illuminationBest ? "PB "+illumFmt(S.illuminationBest)+"s" : "no PB yet";
+  $("#illumStopwatch").textContent="0.0s"; clearInterval(illumStopTimer);
+  illumStopTimer=setInterval(()=>{ $("#illumStopwatch").textContent=illumFmt(Date.now()-illumStart)+"s"; },100);
+  const fb=$("#illumFb"); fb.className="lk-feedback"; fb.textContent=""; }
+function updateIllumHUD(){ $("#illumScoreEl").textContent=illumScore; comboEl($("#illumCombo"),illumCombo); }
+function tapIllumination(tile){ if(illumLocked||!illumCur) return; const i=+tile.dataset.i;
+  if(i===illumCur.targetIdx){ illumLocked=true; clearInterval(illumStopTimer); const elapsed=Date.now()-illumStart;
+    tile.classList.add("hit"); $("#illumStopwatch").textContent=illumFmt(elapsed)+"s";
+    illumCombo++; if(illumCombo>illumBestCombo)illumBestCombo=illumCombo; if(elapsed<illumSessionBest)illumSessionBest=elapsed;
+    const pts=Math.round(Math.max(30,260-elapsed/12))*illumCombo; illumScore+=pts; updateIllumHUD();
+    const fb=$("#illumFb"); fb.className="lk-feedback ok";
+    fb.innerHTML=`✨ <b>${illumCur.target.n}</b> — ${illumCur.target.reward}<br><span style="opacity:.75">${illumFmt(elapsed)}s  +${pts}${illumCombo>=2?"  (×"+illumCombo+")":""}</span>`;
+    beepUp();
+    setTimeout(()=>{ illumRound++; loadIllumination(); },1700); // longer pause than Needle's 550ms — this beat is for reading the reward line, not just re-arming
+  } else { tile.classList.remove("miss"); void tile.offsetWidth; tile.classList.add("miss"); illumCombo=0; updateIllumHUD();
+    const fb=$("#illumFb"); fb.className="lk-feedback bad"; fb.textContent="✗ not it — keep looking"; beep(); } } // perceptual find-not-know: a miss ONLY breaks combo, never ends/requeues/corrects — the round just keeps going
+function passIllumination(){ if(illumLocked||!illumCur) return; illumLocked=true; illumCombo=0; updateIllumHUD(); clearInterval(illumStopTimer);
+  const tiles=$$("#illumGrid .illumtile"); const t=tiles[illumCur.targetIdx]; if(t) t.classList.add("hit");
+  const fb=$("#illumFb"); fb.className="lk-feedback bad"; fb.innerHTML=`↷ <b>${illumCur.target.n}</b> — ${illumCur.target.reward}`; setTimeout(loadIllumination,1700); }
+function endIllumination(){ clearInterval(illumTimer); clearInterval(illumStopTimer); if(S.mode==="party"&&partyTurn!=null) return endParticipantRound(illumScore);
+  const gotPB = illumSessionBest<Infinity && (!S.illuminationBest || illumSessionBest<S.illuminationBest); if(gotPB) S.illuminationBest=Math.round(illumSessionBest);
+  if(illumBestCombo>(S.illuminationBestCombo||0)) S.illuminationBestCombo=illumBestCombo; bumpStreak(); save();
+  const bestLine = S.illuminationBest ? `Best time: ${illumFmt(S.illuminationBest)}s` : "";
+  resultsSplash(illumScore, gotPB, bestLine, null); }
+$("#illumPass").onclick=passIllumination; $("#illumEnd").onclick=()=>endIllumination();
+
 /* =========================================================
    DISPATCH / NAV / STATS
    ========================================================= */
-function startCurrentGame(){ ({sparks:startRound,link:startLink,odd:startOdd,chain:startChain,rhyme:startRhyme,pattern:startPattern,symbol:startSymbol,nback:startNback,stroop:startStroop,switch:startSwitch})[S.game]({}); }
+function startCurrentGame(){ ({sparks:startRound,link:startLink,odd:startOdd,chain:startChain,rhyme:startRhyme,pattern:startPattern,symbol:startSymbol,nback:startNback,stroop:startStroop,switch:startSwitch,driftwatch:startDriftwatch,cairn:startCairn,needle:startNeedle,goldeneye:startGoldenEye,chameleon:startChameleon,whiplash:startWhiplash,ration:startRation,mirror:startMirror,web:startWeb,ruleforge:startRuleForge,ghost:startGhost,forkintheroad:startForkInTheRoad,blindfold:startBlindfold,iconography:startIconography,vestments:startVestments,rosewindow:startRoseWindow,illumination:startIllumination})[S.game]({}); }
 function soloResultButtons(){ const again=$("#againBtn"), home=$("#resHome"); again.textContent="Go again ⚡"; again.onclick=startCurrentGame; home.textContent="← Home"; home.onclick=goHome; }
 $("#againBtn").onclick=startCurrentGame;
 
@@ -1283,14 +3675,48 @@ const HOME_COPY = {
   nback:{h1:"Hold it<br>in mind.", sub:"Symbols appear one at a time. Decide whether each matches the one from 2 steps back. Pure working-memory training.", how:'<b>How to play:</b> for each symbol, tap <b>Match</b> if it\'s the same as the one <b>2 back</b>, else <b>No match</b>. You have to keep the last couple in your head and update constantly — that\'s the workout. Correct answers build a 🔥 combo.'},
   stroop:{h1:"Don\'t read it —<br>see it.", sub:"A color word appears in a different ink. Tap the INK color, not the word. Trains the brain\'s brake — stopping the automatic response.", how:'<b>How to play:</b> the word <b>RED</b> might be printed in blue — tap <b>blue</b> (the ink) and ignore what it says. Your brain wants to read the word; beating that urge is the training. Right taps build a 🔥 combo; a slip resets it.'},
   switch:{h1:"Switch<br>the rule.", sub:"Sometimes match by color, sometimes by shape — and the rule keeps changing. Trains mental flexibility and set-shifting.", how:'<b>How to play:</b> each turn shows a target and a rule — <b>MATCH THE COLOR</b> or <b>MATCH THE SHAPE</b>. Tap the option that matches on the current rule. The rule flips without warning, so you can\'t autopilot — that\'s the flexibility workout.'},
+  driftwatch:{h1:"Tap it all —<br>except one.", sub:"A steady stream of icons drifts by — tap every one, except the rare icon you're told to leave alone. Trains sustained attention and impulse control.", how:"<b>How to play:</b> icons drift by one at a time on a steady beat — tap the tile for every one that appears. One icon each round is off-limits (shown up top, like 🦈) — leave that one alone. Tap it, or miss a real one, and your streak breaks. Stay locked in; a 🔥 combo rewards a clean run."},
+  cairn:{h1:"Remember which<br>stone hides it.", sub:"Each stone flashes what's underneath, then they all lower and cover at once. Hold the target in mind through the flash and the pause after — then tap the one stone that hid it. Grid grows and the look shrinks each round.", how:"<b>How to play:</b> you're told the target first — say <b>🍌 a banana</b>. Watch closely: every stone flashes its object at the same instant, then all cover back up together. Wait a beat, then tap the single stone that was hiding it. Right taps build a 🔥 combo and score more on bigger grids; a miss (or a pass) reveals exactly where it was and resets your streak."},
+  needle:{h1:"Find the<br>needle, fast.", sub:"A field of near-identical shapes hides one subtle outlier — find it and tap before the field grows. Trains focused visual search and sustained attention.", how:"<b>How to play:</b> dozens of identical shapes fill the screen — one is rotated, shaded, or sized just a hair differently. Tap it fast. Each find grows the field for the next round and builds your 🔥 combo; a wrong tap breaks the combo but the round keeps going. Chase your fastest find — beat your personal best time."},
+  goldeneye:{h1:"Trust your<br>eye.", sub:"A bar flashes — tap the exact point where it splits at the golden ratio (≈61.8%) before your two seconds run out. Trains your eye for the proportion painters and architects have leaned on for centuries.", how:"<b>How to play:</b> a plain bar appears with no marks — somewhere along it is the golden ratio split, about 61.8% of the way across. Tap it before your 2 seconds run out. The closer you land, the more it's worth; a clean hit builds a 🔥 combo, a miss or a timeout resets it."},
+  chameleon:{h1:"There's a rule.<br>Nobody's saying it.", sub:"Sort each item — right or wrong is your only clue why. Settle into a rhythm and the rule can silently shift on you; noticing fast, and re-adapting, is its own score.", how:"<b>How to play:</b> a sample appears up top, four options below — tap the one that matches it, though you're never told how. Get it right and your combo climbs; get it wrong and the true match flashes so you can learn from it. Once you've locked onto the pattern it can flip without warning — your combo breaks and you have to read the feedback fresh. How fast you catch the switch is tracked as its own stat, right alongside your accuracy."},
+  whiplash:{h1:"Sort it —<br>the rules keep stacking.", sub:"One rule to start — but every ~15 seconds another stacks on top, and the old ones don't go away. By the end you could be juggling four at once. Trains focus and follow-through as the load builds.", how:"<b>How to play:</b> each item has a color, shape, size, and fill — tap <b>Keep</b> if it matches every rule shown up top, <b>Toss</b> if it breaks even one. You start with one rule; every ~15 seconds another stacks on and stays live, so the list keeps growing — but it's always shown, so you're never guessing, just keeping track. Right calls build a 🔥 combo and score more the more rules are stacked; a miss breaks the streak."},
+  ration:{h1:"Bank it<br>before it spoils.", sub:"A pot fills on its own — the longer you wait, the bigger the multiplier. But a random spoil can wipe it to zero any second. Bank when you're ready, or push your luck for more. Trains delayed gratification — knowing exactly when to walk away.", how:"<b>How to play:</b> the pot ticks up by itself — tap it any time to bank whatever's inside and lock in the points. Wait longer and the multiplier climbs (watch the badge), but so do the odds of a <b>Spoiled!</b> event that zeroes the pot and resets your streak. Bank often for steady points, or hold your nerve for a bigger score. Your best single bank ever is the record to chase."},
+  mirror:{h1:"Mirror the<br>missing half.", sub:"A pattern fills half the grid — the mirrored half is blank. Tap the tile that completes the symmetry correctly. Grid grows bigger each round. Build a 🔥 combo.", how:"<b>How to play:</b> one half of the grid is filled in with colors; the mirrored half is blank. One blank glows at a time — tap the option below that's its mirror-image twin on the other side. Fill every blank to complete the picture, then a bigger grid loads. Right taps build a 🔥 combo; a miss just resets it."},
+  web:{h1:"Thread the<br>idea web.", sub:"You get a start idea and a target — tap a connected concept, then the next, building a path between them. Fewer hops beats more; match the par for a big bonus.", how:"<b>How to play:</b> you start on one idea (say <b>Psalm</b>) and need to reach another (say <b>Satellite</b>). Tap any connected card to step toward it — chain your way from start to target in as few hops as possible. Every pair has a par (the shortest real path); land it exactly and your combo grows, go over and it resets. Stuck? Skip a pair to see one valid route."},
+  ruleforge:{h1:"Forge your<br>own rules.", sub:"Tap 2 constraint tiles to build today's round, then play what you made. Rarer, harder combos multiply your score.", how:'<b>How to play:</b> pick exactly 2 of 6 rule tiles — No Repeats, 2× Time Pressure, Reverse Order, Blind First Few, Combo Required, Fewer Hints — to author your round. Tap "Play this round" and the drill runs under both at once. The tougher (and rarer) the pair you choose, the bigger the multiplier on every point you score.'},
+  ghost:{h1:"Race your<br>own ghost.", sub:"The same what-comes-next drill as Patterns — but a translucent ghost of your best-ever run plays alongside you in real time. Pull ahead, or watch yourself fall behind.", how:"<b>How to play:</b> read the sequence and tap what comes next, same as Patterns. Once you've got a best run banked, a faint 👻 races it back at you on the same clock it was set on — watch the two scores and the track to see who's ahead. Beat your ghost and it becomes the new one to chase."},
+  forkintheroad:{h1:"Find the<br>shortest path.", sub:"A start number, a target, and three operations. Chain taps to land exactly on the target — the fewer taps you use, the more it's worth. Build a 🔥 combo, beat the true par.", how:"<b>How to play:</b> you start at a number like <b>12</b> and need to reach a target like <b>16</b> — you've got three moves to work with, say <b>+2</b>, <b>×4</b>, <b>−6</b>, and you can tap any of them in any order, as many times as you like. Land exactly on the target and the round's solved. But every puzzle has one true shortest path (the <b>par</b> badge tells you the number to beat) — hit it in that many taps and it pays off big, growing your 🔥 combo. Go over and you still score, just smaller, and the streak resets. Made a bad tap? ↺ undoes it; ⤼ reveals a real solution and moves on."},
+  blindfold:{h1:"Watch it once.<br>Walk it blind.", sub:"A grid flashes a numbered path, then goes completely blank — no peeking, no do-overs. Plan the whole route in your head, then tap it out from memory. The grid grows and the flash gets shorter as you go.", how:"<b>How to play:</b> a grid lights up with a numbered path — 1, 2, 3… — then vanishes completely. Tap the cells in that exact order, purely from memory. Nail the whole path to build a 🔥 combo and score more on bigger grids; one wrong tap reveals where the path really went and resets your streak."},
+  iconography:{h1:"Know the<br>saint by sight.", sub:"A saint's traditional symbol flashes — pick who it belongs to. Anything you've never seen teaches itself first; miss one later and you get the one-line answer before it comes back around.", how:"<b>How to play:</b> a symbol appears — crossed keys, an eagle, a gridiron — tap the saint it belongs to. The first time you meet one it teaches itself with a quick card before you're ever quizzed on it. Get it right and your combo climbs with a speed bonus; miss and the correct saint flashes with one memorable line, breaking your combo and sending it back into the round soon after. Answer an item right twice in a row and it retires for the session — clear the whole set of a dozen for a bonus, and beat your score next time."},
+  vestments:{h1:"Know the<br>right color.", sub:"A feast or season flashes — tap the correct liturgical color before you've thought about it. New ones are taught first; a miss makes the rule stick.", how:"<b>How to play:</b> a feast or season appears — tap PURPLE, RED, WHITE, GREEN, or ROSE. Anything you've never seen is taught first (the feast, the color, and why) before you're ever quizzed on it. Get it right and it's one step closer to retired for the session; miss it and the rule flashes on screen — read it, then it comes back around later. Right answers build a 🔥 combo and score a speed bonus; a miss breaks the streak and forces the read."},
+  rosewindow:{h1:"Complete the<br>rose window.", sub:"One radial pane of a cathedral rose window is missing — pick the piece that keeps the pattern spinning true. More panes and rings join as you go.", how:"<b>How to play:</b> a stained-glass rose window fills the screen with one wedge blanked out — every pane repeats the same ring-colors in a perfect circle, so the missing piece has to match. Tap the swatch below that completes it; get it right and the window heals whole. Watch for the trap: a reversed order or a swapped shade looks close but won't fit. More panes and rings join every couple of rounds. Build a 🔥 combo; a miss just resets it."},
+  illumination:{h1:"Find the<br>gilded symbol.", sub:"A dense, gold-leaf manuscript page hides one sacred symbol — a fish, a lamb, a chi-rho — among the flourishes. Spot it fast and the page flashes you its meaning as a reward. Density grows each round; race your best time.", how:"<b>How to play:</b> a page fills with small gilded ornaments — one of them is a real Christian symbol: ☧ chi-rho, 🐟 ichthys, 🐑 lamb, 🕊️ dove, ΑΩ alpha-omega, ⚓ anchor. Find it and tap it fast — the page flashes what it means (Agnus Dei, Ichthys, and more) as your reward, no quiz, no penalty. A miss just breaks your combo and the search keeps going. Pages grow denser each round — chase your fastest find."},
 };
-function getBest(){ return {sparks:[S.best,"best round"],link:[S.linkBest,"best score"],odd:[S.oddBest,"best score"],chain:[S.chainBest,"longest chain"],rhyme:[S.rhymeBest,"most rhymes"],pattern:[S.patternBest,"best score"],symbol:[S.symbolBest,"best score"],nback:[S.nbackBest,"best score"],stroop:[S.stroopBest,"best score"],switch:[S.switchBest,"best score"]}[S.game]; }
+function getBest(){ return {sparks:[S.best,"best round"],link:[S.linkBest,"best score"],odd:[S.oddBest,"best score"],chain:[S.chainBest,"longest chain"],rhyme:[S.rhymeBest,"most rhymes"],pattern:[S.patternBest,"best score"],symbol:[S.symbolBest,"best score"],nback:[S.nbackBest,"best score"],stroop:[S.stroopBest,"best score"],switch:[S.switchBest,"best score"],driftwatch:[S.driftwatchBest,"best score"],cairn:[S.cairnBest,"best score"],needle:[S.needleBest?+(S.needleBest/1000).toFixed(2):0,"best time"],goldeneye:[S.goldeneyeBest,"best score"],chameleon:[S.chameleonBest,"best score"],whiplash:[S.whiplashBest,"best score"],ration:[S.rationBest,"best single bank"],mirror:[S.mirrorBest,"best score"],web:[S.webBest,"best score"],ruleforge:[S.ruleforgeBest,"best score"],ghost:[S.ghostBest,"best score"],forkintheroad:[S.forkintheroadBest,"best score"],blindfold:[S.blindfoldBest,"best score"],iconography:[S.iconographyBest,"best score"],vestments:[S.vestmentsBest,"best score"],rosewindow:[S.rosewindowBest,"best score"],illumination:[S.illuminationBest?+(S.illuminationBest/1000).toFixed(2):0,"best time"]}[S.game]; }
 function goHome(){ clearTimers(); partyTurn=null; soloResultButtons(); refreshHome(); show("home"); }
-function bestOf(id){ return ({sparks:S.best,link:S.linkBest,odd:S.oddBest,chain:S.chainBest,rhyme:S.rhymeBest,pattern:S.patternBest,symbol:S.symbolBest,nback:S.nbackBest,stroop:S.stroopBest,switch:S.switchBest})[id]||0; }
+function bestOf(id){ return ({sparks:S.best,link:S.linkBest,odd:S.oddBest,chain:S.chainBest,rhyme:S.rhymeBest,pattern:S.patternBest,symbol:S.symbolBest,nback:S.nbackBest,stroop:S.stroopBest,switch:S.switchBest,driftwatch:S.driftwatchBest,cairn:S.cairnBest,needle:S.needleBest?+(S.needleBest/1000).toFixed(2):0,goldeneye:S.goldeneyeBest,chameleon:S.chameleonBest,whiplash:S.whiplashBest,ration:S.rationBest,mirror:S.mirrorBest,web:S.webBest,ruleforge:S.ruleforgeBest,ghost:S.ghostBest,forkintheroad:S.forkintheroadBest,blindfold:S.blindfoldBest,iconography:S.iconographyBest,vestments:S.vestmentsBest,rosewindow:S.rosewindowBest,illumination:S.illuminationBest?+(S.illuminationBest/1000).toFixed(2):0})[id]||0; }
+const CATEGORIES = [
+  {name:"Idea & Word Generation", trains:"Generate ideas & words to a constraint", ids:["sparks","chain","rhyme"]},
+  {name:"Association & Insight", trains:"Find the hidden connection", ids:["link","web"]},
+  {name:"Reasoning & Problem-Solving", trains:"Infer the rule, plan the path", ids:["odd","pattern","ruleforge","forkintheroad","ghost"]},
+  {name:"Working Memory", trains:"Hold it in mind & update", ids:["nback","blindfold","cairn"]},
+  {name:"Attention & Speed", trains:"Stay locked on, search fast", ids:["needle","illumination","driftwatch"]},
+  {name:"Executive Control", trains:"Suppress the urge & switch gears", ids:["stroop","switch","chameleon","whiplash"]},
+  {name:"Visuospatial", trains:"Space, symmetry & proportion", ids:["mirror","goldeneye","rosewindow"]},
+  {name:"Knowledge & Memory", trains:"Learn & recognize meaning", ids:["symbol","iconography","vestments"]},
+  {name:"Risk & Impulse", trains:"Bank it or risk it", ids:["ration"]},
+];
 function renderGrid(){
-  const cards = GAMES.map(g=>{ const b=bestOf(g.id);
-    return `<button class="gcard" data-game="${g.id}"><div class="gi">${g.icon}</div><div class="gnm">${g.name}</div><div class="gtag">${g.tag}</div>${b>0?`<div class="gbest">best ${b}</div>`:''}</button>`; }).join("");
-  $("#gameGrid").innerHTML = cards + `<button class="gcard rnd" data-game="__random"><div class="gi">🎲</div><div class="gnm">Surprise me</div><div class="gtag">random game</div></button>`;
+  const byId = Object.fromEntries(GAMES.map(g=>[g.id,g]));
+  const tile = g => { const b=bestOf(g.id);
+    return `<button class="gcard" data-game="${g.id}"><div class="gi">${g.icon}</div><div class="gnm">${g.name}</div><div class="gtag">${g.tag}</div>${b>0?`<div class="gbest">best ${b}</div>`:''}</button>`; };
+  const blocks = CATEGORIES.map(c=>{
+    const tiles = c.ids.map(id=>byId[id]).filter(Boolean).map(tile).join("");
+    return `<section class="catblock"><div class="cat-h"><span class="cat-n">${c.name}</span><span class="cat-t">${c.trains}</span></div><div class="gamegrid">${tiles}</div></section>`;
+  }).join("");
+  const surprise = `<section class="catblock"><div class="gamegrid"><button class="gcard rnd" data-game="__random"><div class="gi">🎲</div><div class="gnm">Surprise me</div><div class="gtag">random game</div></button></div></section>`;
+  $("#gameGrid").innerHTML = blocks + surprise;
 }
 function refreshHome(){
   renderGrid();
@@ -1326,7 +3752,7 @@ $("#startBtn").onclick=()=>{ if(S.mode==="party"){ openParty(); } else { startCu
 $("#dailyBtn").onclick=()=>{
   if(S.mode==="party"){ toast("Switch to Solo for the Daily"); return; }
   if(S.game==="sparks"){ const p=makePrompt({daily:true}); p.isDaily=true; startRound({prompt:p}); }
-  else ({link:startLink,odd:startOdd,chain:startChain,rhyme:startRhyme,pattern:startPattern,symbol:startSymbol,nback:startNback,stroop:startStroop,switch:startSwitch})[S.game]({daily:true});
+  else ({link:startLink,odd:startOdd,chain:startChain,rhyme:startRhyme,pattern:startPattern,symbol:startSymbol,nback:startNback,stroop:startStroop,switch:startSwitch,driftwatch:startDriftwatch,cairn:startCairn,needle:startNeedle,goldeneye:startGoldenEye,chameleon:startChameleon,whiplash:startWhiplash,ration:startRation,mirror:startMirror,web:startWeb,ruleforge:startRuleForge,ghost:startGhost,forkintheroad:startForkInTheRoad,blindfold:startBlindfold,iconography:startIconography,vestments:startVestments,rosewindow:startRoseWindow,illumination:startIllumination})[S.game]({daily:true});
 };
 $("#statsBtn").onclick=openStats;
 function openStats(){
@@ -1342,6 +3768,23 @@ function openStats(){
     nback:[[S.nbackBest||0,"BEST SCORE"],["×"+(S.nbackBestCombo||0),"BEST COMBO"],false],
     stroop:[[S.stroopBest||0,"BEST SCORE"],["×"+(S.stroopBestCombo||0),"BEST COMBO"],false],
     switch:[[S.switchBest||0,"BEST SCORE"],["×"+(S.switchBestCombo||0),"BEST COMBO"],false],
+    driftwatch:[[S.driftwatchBest||0,"BEST SCORE"],["×"+(S.driftwatchBestCombo||0),"BEST COMBO"],false],
+    cairn:[[S.cairnBest||0,"BEST SCORE"],["×"+(S.cairnBestCombo||0),"BEST COMBO"],false],
+    needle:[[S.needleBest?needFmt(S.needleBest)+"s":"—","BEST TIME"],["×"+(S.needleBestCombo||0),"BEST COMBO"],false],
+    goldeneye:[[S.goldeneyeBest||0,"BEST SCORE"],[S.goldeneyeBestErr!=null?fmtErr(S.goldeneyeBestErr)+"% off":"—","BEST ACCURACY"],false],
+    chameleon:[[S.chameleonBest||0,"BEST SCORE"],[S.chameleonBestRecovery!=null?S.chameleonBestRecovery+" tries":"—","FASTEST RECOVERY"],false],
+    whiplash:[[S.whiplashBest||0,"BEST SCORE"],["×"+(S.whiplashBestCombo||0),"BEST COMBO"],false],
+    ration:[[S.rationBest||0,"BEST SINGLE BANK"],["×"+(S.rationBestCombo||0),"BEST COMBO"],false],
+    mirror:[[S.mirrorBest||0,"BEST SCORE"],["×"+(S.mirrorBestCombo||0),"BEST COMBO"],false],
+    web:[[S.webBest||0,"BEST SCORE"],["×"+(S.webBestCombo||0),"BEST COMBO"],false],
+    ruleforge:[[S.ruleforgeBest||0,"BEST SCORE"],["×"+(S.ruleforgeBestMult||1).toFixed(2),"BEST MULTIPLIER"],false],
+    ghost:[[S.ghostBest||0,"BEST SCORE"],["×"+(S.ghostBestCombo||0),"BEST COMBO"],false],
+    forkintheroad:[[S.forkintheroadBest||0,"BEST SCORE"],["×"+(S.forkintheroadBestCombo||0),"BEST COMBO"],false],
+    blindfold:[[S.blindfoldBest||0,"BEST SCORE"],["×"+(S.blindfoldBestCombo||0),"BEST COMBO"],false],
+    iconography:[[S.iconographyBest||0,"BEST SCORE"],["×"+(S.iconographyBestCombo||0),"BEST COMBO"],false],
+    vestments:[[S.vestmentsBest||0,"BEST SCORE"],["×"+(S.vestmentsBestCombo||0),"BEST COMBO"],false],
+    rosewindow:[[S.rosewindowBest||0,"BEST SCORE"],["×"+(S.rosewindowBestCombo||0),"BEST COMBO"],false],
+    illumination:[[S.illuminationBest?illumFmt(S.illuminationBest)+"s":"—","BEST TIME"],["×"+(S.illuminationBestCombo||0),"BEST COMBO"],false],
   }[g];
   $("#stBest").textContent=cfg[0][0]; $("#stBestL").textContent=cfg[0][1];
   $("#stMid").textContent=cfg[1][0]; $("#stMidL").textContent=cfg[1][1];
@@ -1357,12 +3800,14 @@ function openStats(){
 $("#statsBack").onclick=goHome;
 
 /* ---------- settings ---------- */
-$("#settingsBtn").onclick=()=>{ $$("#lenSeg button").forEach(b=>b.classList.toggle("on",+b.dataset.l===S.len)); $$("#soundSeg button").forEach(b=>b.classList.toggle("on",b.dataset.s===S.sound)); $("#sheetBg").classList.add("show"); };
+$("#settingsBtn").onclick=()=>{ $$("#lenSeg button").forEach(b=>b.classList.toggle("on",+b.dataset.l===S.len)); $$("#soundSeg button").forEach(b=>b.classList.toggle("on",b.dataset.s===S.sound)); $$("#themeSeg button").forEach(b=>b.classList.toggle("on",b.dataset.t===S.theme)); $$("#accentSeg button").forEach(b=>b.classList.toggle("on",b.dataset.a===S.accent)); $("#sheetBg").classList.add("show"); };
 $("#closeSheet").onclick=()=>$("#sheetBg").classList.remove("show");
 $("#sheetBg").onclick=e=>{ if(e.target.id==="sheetBg") $("#sheetBg").classList.remove("show"); };
 $("#lenSeg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; S.len=+b.dataset.l; save(); $$("#lenSeg button").forEach(x=>x.classList.toggle("on",x===b)); refreshLaunch(); };
 $("#soundSeg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; S.sound=b.dataset.s; save(); $$("#soundSeg button").forEach(x=>x.classList.toggle("on",x===b)); };
-$("#clearData").onclick=()=>{ if(confirm("Clear ALL stats, streaks and your spark book?")){ Object.assign(S,{best:0,rounds:0,favs:[],linkBest:0,linkBestCombo:0,oddBest:0,oddBestCombo:0,chainBest:0,chainRounds:0,rhymeBest:0,rhymeBestCombo:0,patternBest:0,patternBestCombo:0,symbolBest:0,symbolBestCombo:0,nbackBest:0,nbackBestCombo:0,stroopBest:0,stroopBestCombo:0,switchBest:0,switchBestCombo:0,streak:0,lastDay:null}); save(); toast("Cleared"); $("#sheetBg").classList.remove("show"); refreshHome(); } };
+$("#themeSeg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; S.theme=b.dataset.t; save(); applyTheme(S.theme); $$("#themeSeg button").forEach(x=>x.classList.toggle("on",x===b)); };
+$("#accentSeg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; S.accent=b.dataset.a; save(); applyAccent(S.accent); $$("#accentSeg button").forEach(x=>x.classList.toggle("on",x===b)); };
+$("#clearData").onclick=()=>{ if(confirm("Clear ALL stats, streaks and your spark book?")){ Object.assign(S,{best:0,rounds:0,favs:[],linkBest:0,linkBestCombo:0,oddBest:0,oddBestCombo:0,chainBest:0,chainRounds:0,rhymeBest:0,rhymeBestCombo:0,patternBest:0,patternBestCombo:0,symbolBest:0,symbolBestCombo:0,nbackBest:0,nbackBestCombo:0,stroopBest:0,stroopBestCombo:0,switchBest:0,switchBestCombo:0,driftwatchBest:0,driftwatchBestCombo:0,cairnBest:0,cairnBestCombo:0,needleBest:0,needleBestCombo:0,goldeneyeBest:0,goldeneyeBestCombo:0,goldeneyeBestErr:null,chameleonBest:0,chameleonBestCombo:0,chameleonBestRecovery:null,whiplashBest:0,whiplashBestCombo:0,rationBest:0,rationBestCombo:0,mirrorBest:0,mirrorBestCombo:0,webBest:0,webBestCombo:0,webRounds:0,ruleforgeBest:0,ruleforgeBestCombo:0,ruleforgeBestMult:0,ghostBest:0,ghostBestCombo:0,ghostBestLen:0,ghostTrace:[],forkintheroadBest:0,forkintheroadBestCombo:0,blindfoldBest:0,blindfoldBestCombo:0,iconographyBest:0,iconographyBestCombo:0,vestmentsBest:0,vestmentsBestCombo:0,rosewindowBest:0,rosewindowBestCombo:0,illuminationBest:0,illuminationBestCombo:0,streak:0,lastDay:null,theme:"light",accent:"ember"}); save(); applyTheme(S.theme); applyAccent(S.accent); $$("#themeSeg button").forEach(x=>x.classList.toggle("on",x.dataset.t===S.theme)); $$("#accentSeg button").forEach(x=>x.classList.toggle("on",x.dataset.a===S.accent)); toast("Cleared"); $("#sheetBg").classList.remove("show"); refreshHome(); } };
 
 /* ---------- sound ---------- */
 let _lastBeep=0, _ac=null;
@@ -1383,6 +3828,7 @@ function confetti(big){
 }
 
 /* ---------- boot ---------- */
+applyTheme(S.theme); applyAccent(S.accent);
 soloResultButtons();
 refreshHome();
 </script>

@@ -23,13 +23,13 @@
 <meta name="twitter:description" content="Bolt a prefab prompt onto the end of your query — built from real mistakes, so you skip them.">
 <meta name="twitter:image" content="og.png">
 <title>Boilerplate — the Prompt Engine</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  @font-face{font-family:'Cinzel';font-style:normal;font-weight:600 700;font-display:swap;src:url('fonts/cinzel-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/space-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/space-mono-700.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
   :root{
     --bg1:#1b140d; --bg2:#120d08; --card:#241a10; --card-2:#2b2013;
-    --ink:#f0e0c0; --ink-soft:#b8a684; --ink-faint:#8a795e;
+    --ink:#f0e0c0; --ink-soft:#b8a684; --ink-faint:#998668;
     --brass:#c9982e; --copper:#b8733a; --verdigris:#5a8a72;
     --line:#4a3820; --line-lo:#3a2c18;
     --shadow:0 18px 34px -20px rgba(0,0,0,.7),0 4px 12px -6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,220,160,.05);
@@ -46,7 +46,7 @@
   }
   .wrap{max-width:760px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
   .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .home{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;text-decoration:none;font-size:18px;
+  .home{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;text-decoration:none;font-size:18px;
     background:var(--card);border:1px solid var(--line);color:var(--brass);box-shadow:var(--shadow)}
   header{text-align:center;margin-bottom:22px}
   header .mk{width:72px;height:72px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;font-size:38px;
@@ -72,7 +72,7 @@
   .selectedRow{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
   .selectedRow .chip{display:flex;align-items:center;gap:5px;background:var(--card-2);border:1px solid var(--copper);color:var(--ink);
     border-radius:999px;padding:4px 10px 4px 12px;font-size:12px}
-  .selectedRow .chip button{all:unset;cursor:pointer;color:var(--ink-faint);font-weight:700;padding:0 2px}
+  .selectedRow .chip button{all:unset;cursor:pointer;color:var(--ink-faint);font-weight:700;min-width:28px;min-height:28px;display:inline-flex;align-items:center;justify-content:center}
   .selectedRow .empty{color:var(--ink-faint);font-size:12.5px;font-style:italic}
 
   #preview{width:100%;min-height:70px;background:var(--bg1);border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);
@@ -96,7 +96,7 @@
 
   .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
   .catchip{cursor:pointer;user-select:none;background:var(--card-2);border:1px solid var(--line-lo);color:var(--ink-soft);
-    border-radius:999px;padding:6px 12px;font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+    border-radius:999px;padding:6px 12px;min-height:44px;font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:.12s}
   .catchip.on{background:color-mix(in srgb,var(--copper) 25%,var(--card-2));border-color:var(--copper);color:var(--ink)}
   .catchip:active{transform:scale(.96)}
 
@@ -114,7 +114,7 @@
   .card .plate{background:var(--bg1);border:1px solid var(--line-lo);border-radius:10px;padding:11px 12px;font-size:13px;
     line-height:1.55;color:var(--ink);white-space:pre-wrap;word-break:break-word;margin-bottom:10px}
   .card .row{display:flex;gap:8px;flex-wrap:wrap}
-  .card button.sm{cursor:pointer;border-radius:10px;padding:8px 12px;font-family:var(--font-mono);font-size:12.5px;font-weight:700;
+  .card button.sm{cursor:pointer;border-radius:10px;padding:8px 12px;min-height:44px;font-family:var(--font-mono);font-size:12.5px;font-weight:700;
     border:1px solid var(--line);background:var(--card-2);color:var(--ink-soft);display:inline-flex;align-items:center;gap:6px}
   .card button.sm.copy{color:var(--brass);border-color:var(--copper)}
   .card button.sm.add.on{background:var(--copper);color:#241608;border-color:var(--copper)}

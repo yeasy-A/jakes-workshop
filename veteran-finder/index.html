@@ -23,10 +23,11 @@
 <meta name="twitter:description" content="Find the nonprofits that can help veterans & families — by need, era, and keyword, or a 4-question matched shortlist.">
 <meta name="twitter:image" content="og.png">
 <title>FM 4-VET — Veteran Support Resource Locator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Oswald:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:300 700;font-display:swap;src:url('fonts/oswald-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Special Elite';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/special-elite-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Stardos Stencil';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/stardos-stencil-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Stardos Stencil';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/stardos-stencil-700.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
   :root{
     --paper:#d7cdad;
     --paper-2:#cbc09c;
@@ -66,7 +67,7 @@
   .home{
     position:fixed;z-index:30;
     top:calc(8px + env(safe-area-inset-top));left:8px;
-    display:inline-flex;align-items:center;gap:6px;
+    display:inline-flex;align-items:center;gap:6px;min-height:44px;
     font-family:var(--font-head);text-transform:uppercase;font-weight:600;
     letter-spacing:.12em;font-size:11px;text-decoration:none;
     color:var(--paper);background:var(--od-deep);
@@ -141,7 +142,7 @@
     font-size:11.5px;font-weight:600;color:var(--stamp-ink);
   }
   .crisis .b{font-family:var(--font-stencil);font-weight:700;letter-spacing:.04em;}
-  .crisis a{color:var(--stamp-ink);text-decoration:underline;text-underline-offset:2px;font-weight:700;display:inline-block;padding:4px 3px;}
+  .crisis a{color:var(--stamp-ink);text-decoration:underline;text-underline-offset:2px;font-weight:700;display:inline-flex;align-items:center;padding:6px 8px;margin:0 -8px;min-height:44px;box-sizing:border-box;}
   .crisis a:hover,.crisis a:focus{color:var(--stamp);}
 
   /* ===== SECTION HEADERS ===== */
@@ -172,7 +173,7 @@
   .field select,.field input{
     width:100%;font-family:var(--font-body);font-size:16px;color:var(--ink);
     background:var(--paper);border:2px solid var(--od-deep);border-radius:0;
-    padding:9px 10px;appearance:none;
+    padding:9px 10px;appearance:none;min-height:44px;box-sizing:border-box;
   }
   .field select{
     background-image:linear-gradient(45deg,transparent 50%,var(--od-deep) 50%),linear-gradient(135deg,var(--od-deep) 50%,transparent 50%);
@@ -215,7 +216,8 @@
   .match-banner .chips{display:flex;gap:6px;flex-wrap:wrap;}
   .match-banner .chip{border:1px solid var(--paper);padding:2px 8px;font-size:10.5px;letter-spacing:.08em;}
   .match-banner .clear{margin-left:auto;background:var(--stamp);border:1px solid var(--stamp);color:var(--paper);
-    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:11px;padding:5px 11px;cursor:pointer;}
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:11px;padding:5px 11px;cursor:pointer;
+    min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;}
   .match-banner .clear:hover{background:var(--stamp-ink);}
 
   /* ===== ROSTER / CARDS ===== */
@@ -259,13 +261,13 @@
     font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:500;
     font-size:9.5px;color:var(--od-deep);border:1px solid var(--rule);padding:2px 6px;
   }
-  .actions{display:flex;border-top:2px solid var(--od-deep);margin-top:12px;}
+  .actions{display:flex;gap:8px;border-top:2px solid var(--od-deep);margin-top:12px;padding-top:8px;}
   .actions a{
     flex:1;text-align:center;text-decoration:none;
     font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:600;
     font-size:11px;color:var(--od-deep);padding:0 6px;min-height:44px;
     display:flex;align-items:center;justify-content:center;
-    border-right:1px solid var(--rule);transition:background .12s,color .12s;
+    border-radius:8px;transition:background .12s,color .12s;
   }
   .actions a:last-child{border-right:none;}
   .actions a:hover,.actions a:focus{background:var(--od-deep);color:var(--paper);outline:none;}
@@ -283,6 +285,7 @@
   .crisis-card .lines a{
     font-family:var(--font-head);text-transform:uppercase;font-weight:700;letter-spacing:.08em;font-size:13px;
     text-decoration:none;color:var(--paper);background:var(--stamp);padding:9px 14px;
+    min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;
   }
   .crisis-card .lines a:hover{background:var(--stamp-ink);}
 
@@ -313,7 +316,7 @@
   .wiz-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px double var(--od-deep);padding-bottom:12px;margin-bottom:6px;}
   .wiz-head .t{font-family:var(--font-stencil);font-weight:700;font-size:20px;color:var(--ink);line-height:1;}
   .wiz-head .code{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:var(--od);margin-top:6px;font-weight:600;}
-  .wiz-close{background:none;border:2px solid var(--od-deep);color:var(--od-deep);font-family:var(--font-head);font-weight:700;font-size:15px;line-height:1;width:32px;height:32px;cursor:pointer;flex:0 0 auto;}
+  .wiz-close{background:none;border:2px solid var(--od-deep);color:var(--od-deep);font-family:var(--font-head);font-weight:700;font-size:15px;line-height:1;width:44px;height:44px;cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;}
   .wiz-close:hover{background:var(--stamp);border-color:var(--stamp);color:var(--paper);}
   .wiz-progress{display:flex;gap:6px;margin:14px 0 4px;}
   .wiz-progress span{flex:1;height:5px;background:var(--paper-3);border:1px solid var(--rule);}
@@ -351,7 +354,7 @@
   .foot .note b{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;color:var(--od-deep);}
   .foot .sig{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:var(--od-deep);text-align:right;}
   .wm{display:block;text-align:center;margin-top:20px;font-family:var(--font-head);text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--od);opacity:.75;}
-  .wm a{color:var(--od);text-decoration:none;}
+  .wm a{color:var(--od);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:14px 8px;margin:-14px -8px;min-height:44px;box-sizing:border-box;}
   .wm a:hover{color:var(--stamp);}
 
   a:focus-visible,button:focus-visible,.home:focus-visible,.btn-o:focus-visible,.wiz-launch:focus-visible,.wiz-opt:focus-visible,.wiz-close:focus-visible,.actions a:focus-visible,.match-banner .clear:focus-visible,.crisis a:focus-visible{
@@ -364,6 +367,9 @@
     .actions{flex-wrap:wrap;}
     .actions a{flex:1 0 40%;border-bottom:1px solid var(--rule);}
     .stamp{position:static;display:inline-block;transform:rotate(-4deg);margin-top:12px;}
+    .sec-head{flex-wrap:wrap;row-gap:6px;}
+    .sec-head .fill{display:none;}
+    .sec-head .code{flex:0 0 100%;padding-left:46px;}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;}
@@ -486,10 +492,9 @@
 </div>
 
 <script>
-  /* ===== DATA (edit this array to add/remove organizations) =====
-     Fields: code, name, ein (string "NN-NNNNNNN" or null — NEVER fabricated),
-     cats (primary first), scope, states, era, desc, elig, tags, site */
-  /* ORGS:START — generated from ~/veteran-finder/data/orgs.json by scripts/build-app.py; do not hand-edit between the markers */
+  /* ===== ORGS DATA =====
+     Fields: code, name, ein (string "NN-NNNNNNN" or null), cats (primary first),
+     scope, states, era, desc, elig, tags, site */
   const ORGS = [
     {
       "code": "BEN-01",
@@ -2074,7 +2079,6 @@
       "site": "https://www.uso.org"
     }
   ];
-  /* ORGS:END */
 
   const CAT_LABEL = {BEN:"Claims & Benefits",MH:"Mental Health",HSG:"Housing",FIN:"Financial",EMP:"Employment",EDU:"Education",K9:"Service Dogs",REC:"Recreation",FAM:"Family/Caregiver",SUR:"Survivors",LEG:"Legal Aid",PUR:"Purpose",POP:"Population-Specific",MOR:"Morale"};
   const NEED_LABEL = {BEN:"Claims & Benefits",MH:"Mental Health & Suicide Prevention",HSG:"Housing & Homelessness",FIN:"Financial Assistance",EMP:"Employment & Career",EDU:"Education & Scholarships",K9:"Service Dogs",REC:"Recreation & Healing",FAM:"Family & Caregiver",SUR:"Survivors / Gold Star",LEG:"Legal Aid",PUR:"Purpose After Service",POP:"Population-Specific",MOR:"Morale & Tickets"};

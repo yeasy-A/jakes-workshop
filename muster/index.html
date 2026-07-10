@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Muster — a free, independent VA disability calculator, claim deadline tracker, PACT Act reference, and federal benefits guide for veterans. Not affiliated with the U.S. Department of Veterans Affairs." />
+<title>Muster — a free field desk for veterans' benefits</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0F2B46">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Muster — a free field desk for veterans' benefits">
+<meta property="og:description" content="Free, independent, built by a disabled veteran. Calculator, claim deadlines, PACT Act, benefits, the 100% P&T stack, and guides — nothing you enter leaves your browser. Not affiliated with the VA.">
+<meta property="og:image" content="og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* ==================================================================
+   FONTS — self-hosted, no CDN. SIL OFL. font-display: swap.
+   ================================================================== */
+@font-face{font-family:"Charis SIL";src:url("vendor/fonts/charis-sil-400.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"Charis SIL";src:url("vendor/fonts/charis-sil-700.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:"Charis SIL";src:url("vendor/fonts/charis-sil-400italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:"IBM Plex Mono";src:url("vendor/fonts/ibm-plex-mono-400.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"IBM Plex Mono";src:url("vendor/fonts/ibm-plex-mono-600.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap;}
+
+/* ==================================================================
+   TOKENS — every value here is a spec token
+   ================================================================== */
+:root{
+  color-scheme:light;
+  /* paper / surfaces */
+  --page:#F6F1E7;
+  --sheet:#FFFDF8;
+  --sheet-border:#D8CCB4;
+  --recess:#EFE7D8;
+  --shadow:0 1px 2px rgba(36,31,26,.06),0 4px 14px rgba(36,31,26,.07);
+  --radius:6px;
+  --radius-lg:10px;
+  --radius-pill:999px;
+  --maxw:1080px;
+  --measure:70ch;
+
+  /* ink */
+  --ink:#241F1A;
+  --ink-2:#534A3E;
+  --navy:#0F2B46;
+  --navy-2:#1C3D5A;
+  --brass:#9A6F2E;
+  --brass-deep:#7C5820;
+  --link:#2A4D8C;
+  --hairline:#D8CCB4;
+  --paper-lit:#F3EEDE;
+  --gold-tint:#F4E9CD;
+  --stripe:#FBF8F1;
+
+  /* the Notice — live nowhere else */
+  --notice-bg:#F1E4BE;
+  --notice-border:#C7A544;
+  --notice-ink:#3B2E12;
+
+  /* status tiers */
+  --tier-sage-bg:#DCE7DD;    --tier-sage-ink:#1F3D2A;
+  --tier-gold-bg:#F1E0B8;    --tier-gold-ink:#4A3610;    --tier-gold-border:#C9A227;
+  --tier-terracotta-bg:#E8CDBB; --tier-terracotta-ink:#5C2A15;
+  --tier-info-bg:#EAF0F6;    --tier-info-ink:#2C465E;
+  --tier-verified-bg:#DCEAE6; --tier-verified-ink:#163D34; --tier-verified-border:#2F6E5C;
+
+  /* type */
+  --font-doc:"Charis SIL",Charter,"Bitstream Charter",Georgia,serif;
+  --font-clerk:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-reg:"IBM Plex Mono",ui-monospace,monospace;
+
+  /* motion */
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --dur-tab:400ms;
+  --dur-reveal:500ms;
+  --dur-stagger:90ms;
+  --dur-badge:320ms;
+  --dur-hover:150ms;
+  --dur-count:600ms;
+}
+
+/* ==================================================================
+   RESET + BASE
+   ================================================================== */
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--page);color:var(--ink);
+  font-family:var(--font-doc);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;min-height:100%;
+}
+img,svg{max-width:100%}
+h1,h2,h3,h4{margin:0}
+p{margin:0 0 1em}
+ul,ol{margin:0 0 1em;padding-left:1.2em}
+a{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+button{font-family:inherit;cursor:pointer}
+.reg{font-family:var(--font-reg);font-variant-numeric:tabular-nums}
+.clerk{font-family:var(--font-clerk)}
+.measure{max-width:var(--measure)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ==================================================================
+   FOCUS / A11Y
+   ================================================================== */
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:3px}
+
+/* ==================================================================
+   LAYOUT SHELL
+   ================================================================== */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 max(18px,env(safe-area-inset-right)) 0 max(18px,env(safe-area-inset-left))}
+
+/* ---- Masthead ---- */
+.masthead{background:var(--navy);width:100%}
+.masthead .wrap{display:flex;align-items:center;min-height:56px;padding-top:10px;padding-bottom:10px}
+@media (max-width:560px){.masthead .wrap{min-height:48px}}
+.wordmark-block{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 14px}
+.wordmark{
+  font-family:var(--font-doc);font-weight:700;font-size:28px;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--paper-lit);
+}
+.tagline{font-family:var(--font-doc);font-style:italic;font-size:13px;color:var(--paper-lit);opacity:.6}
+
+/* ---- The Notice ---- */
+.notice{background:var(--notice-bg);border-top:1px solid var(--notice-border);border-bottom:1px solid var(--notice-border);width:100%}
+.notice .wrap{display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+.notice-stamp{
+  flex:none;font-family:var(--font-clerk);font-weight:700;font-size:13px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--notice-ink);border:1.5px solid var(--notice-ink);
+  padding:3px 8px;border-radius:3px;
+}
+.notice-text{flex:1;min-width:240px;font-family:var(--font-doc);font-size:15px;line-height:1.5;color:var(--notice-ink);max-width:var(--measure);margin:0}
+.notice-text a{color:var(--notice-ink);text-decoration-thickness:1px}
+
+/* ---- Tab rail ---- */
+.tabrail{position:sticky;top:0;z-index:20;background:var(--page);border-bottom:1px solid var(--hairline);display:flex;align-items:stretch;width:100%}
+.tabrail .wrap{display:flex;align-items:stretch;width:100%;padding-left:max(18px,env(safe-area-inset-left));padding-right:0}
+.tabrail-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1;min-width:0}
+.tabrail-scroll::-webkit-scrollbar{display:none}
+.tabrail-scroll button{
+  flex:none;font-family:var(--font-clerk);font-weight:600;font-size:14.5px;letter-spacing:.06em;
+  color:var(--ink-2);background:transparent;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;
+  padding:14px 16px 11px;white-space:nowrap;transition:color var(--dur-hover) var(--ease),border-color var(--dur-hover) var(--ease);
+}
+.tabrail-scroll button:hover{color:var(--ink)}
+.tabrail-scroll button.on{color:var(--navy);border-bottom-color:var(--navy)}
+.tabrail-echo{flex:none;align-self:center;padding:0 18px 0 12px;font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);white-space:nowrap}
+@media (max-width:640px){.tabrail-echo{display:none}}
+@media (max-width:640px){.tabrail .wrap{padding-right:max(14px,env(safe-area-inset-right))}.tabrail::after{content:"";position:absolute;top:0;right:0;bottom:0;width:20px;pointer-events:none;background:linear-gradient(to right,transparent,var(--page));z-index:2}}
+
+/* ---- Main / part-wrap section headers ---- */
+main{display:block}
+.panel{display:none}
+.panel.on{display:block;animation:viewIn var(--dur-tab) var(--ease)}
+@keyframes viewIn{from{transform:translateY(8px)}to{transform:none}}
+.panel-inner{padding:22px 0 56px}
+
+.part-wrap{border-top:3px solid var(--navy);border-bottom:1px solid var(--hairline);padding:14px 0 12px;margin:0 0 20px}
+.part-wrap .pkicker{font-family:var(--font-clerk);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-deep);margin:0 0 4px}
+.part-wrap .pnum{font-family:var(--font-clerk);font-weight:700;font-size:14.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.part-wrap .pdesc{font-family:var(--font-doc);font-style:italic;font-size:15px;color:var(--ink-2);margin:6px 0 0;max-width:var(--measure)}
+
+/* content reveal stagger — translateY only, never hides content: the tool
+   must be usable at first paint even if an animation never advances. */
+.panel.on .card,.panel.on .bcard,.panel.on .result,.panel.on .tool-panel{animation:cardIn var(--dur-reveal) var(--ease)}
+.panel.on .card:nth-child(1),.panel.on .bcard:nth-child(1),.panel.on .result:nth-child(1),.panel.on .tool-panel:nth-child(1){animation-delay:0ms}
+.panel.on .card:nth-child(2),.panel.on .bcard:nth-child(2),.panel.on .result:nth-child(2),.panel.on .tool-panel:nth-child(2){animation-delay:90ms}
+.panel.on .card:nth-child(3),.panel.on .bcard:nth-child(3),.panel.on .result:nth-child(3),.panel.on .tool-panel:nth-child(3){animation-delay:180ms}
+.panel.on .card:nth-child(n+4),.panel.on .bcard:nth-child(n+4),.panel.on .result:nth-child(n+4),.panel.on .tool-panel:nth-child(n+4){animation-delay:270ms}
+@keyframes cardIn{from{transform:translateY(6px)}to{transform:none}}
+
+/* ==================================================================
+   CARDS & TOOL PANELS
+   ================================================================== */
+.card,.tool-panel,.result{
+  background:var(--sheet);border:1px solid var(--sheet-border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px 22px;margin-bottom:14px;
+}
+.tool-panel,.result{border-radius:var(--radius-lg)}
+.card h3,.tool-panel h3{font-family:var(--font-clerk);font-weight:700;font-size:22px;color:var(--navy);margin:0 0 8px}
+.card p,.tool-panel p,.bcard p{font-family:var(--font-doc);font-size:15px;line-height:1.55;color:var(--ink)}
+.card p:last-child,.tool-panel p:last-child{margin-bottom:0}
+.card .fine,.tool-panel .fine{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);line-height:1.5}
+.card ul,.tool-panel ul{font-family:var(--font-doc);font-size:15px;color:var(--ink);line-height:1.55}
+
+/* ---- benefit / reference card anatomy ---- */
+.bcard{
+  background:var(--sheet);border:1px solid var(--sheet-border);border-left:4px solid var(--brass);
+  border-radius:var(--radius);padding:16px 22px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.bcard.met{background:var(--gold-tint)}
+.bhead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.bhead h4{font-family:var(--font-clerk);font-weight:700;font-size:17px;color:var(--navy);margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bcard .metline{font-family:var(--font-clerk);font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--tier-verified-ink);margin:8px 0 0}
+
+.vbadge{flex:none;display:flex;flex-direction:column;align-items:flex-end;text-align:right}
+.vbadge .vnum{font-family:var(--font-reg);font-variant-numeric:tabular-nums;font-weight:600;font-size:19px;color:var(--navy);line-height:1.15}
+.vbadge .vnum.txt{font-family:var(--font-clerk);font-variant-numeric:normal}
+.vbadge .vunit{font-family:var(--font-clerk);font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+@media (max-width:480px){.vbadge{align-items:flex-start;text-align:left}}
+
+/* ---- callouts ---- */
+.callout{border-radius:var(--radius);padding:10px 14px;margin:10px 0;font-family:var(--font-clerk);font-size:15px;line-height:1.5;border:1px solid}
+.callout .ctag{display:block;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:11px;margin-bottom:3px}
+.callout.do{background:var(--tier-sage-bg);border-color:#bcd9c7;color:var(--tier-sage-ink)} .callout.do .ctag{color:var(--tier-sage-ink)}
+.callout.confirm{background:var(--tier-info-bg);border-color:#c4d4e3;color:var(--tier-info-ink)} .callout.confirm .ctag{color:var(--tier-info-ink)}
+.callout.note{background:var(--tier-gold-bg);border-color:#d9c184;color:var(--tier-gold-ink)} .callout.note .ctag{color:var(--tier-gold-ink)}
+.callout.stack{background:var(--gold-tint);border-color:#e0cd9b;color:var(--brass-deep)} .callout.stack .ctag{color:var(--brass-deep)}
+
+/* ---- chips / pills ---- */
+.chip{display:inline-flex;align-items:center;font-family:var(--font-clerk);font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-pill);white-space:nowrap}
+.chip.fed{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}
+.chip.ca{background:transparent;border:1.5px solid var(--brass);color:var(--brass-deep)}
+.chip.link{background:var(--tier-info-bg);color:var(--tier-info-ink);border:1px solid transparent;text-decoration:none;transition:background-color var(--dur-hover) var(--ease)}
+.chip.link:hover{background:#dfe9f2}
+.formnum{display:inline-block;font-family:var(--font-reg);font-size:13px;background:var(--tier-info-bg);color:var(--tier-info-ink);border-radius:6px;padding:2px 8px;margin:2px 3px 2px 0}
+
+/* ==================================================================
+   VAULT LINE — trust element at every point of data entry
+   ================================================================== */
+.vault-line{display:flex;align-items:center;gap:7px;font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);margin:10px 0 0}
+.vault-line .lock-ic{flex:none;color:var(--brass)}
+
+/* ==================================================================
+   VERIFICATION STAMP — the Rates Plate on-screen component
+   ================================================================== */
+.stamp{
+  display:inline-flex;align-items:center;font-family:var(--font-reg);font-variant-numeric:tabular-nums;
+  font-size:11px;letter-spacing:.03em;text-transform:uppercase;padding:4px 9px;border-radius:3px;
+  background:var(--tier-verified-bg);color:var(--tier-verified-ink);border:1.5px solid var(--tier-verified-border);
+  transition:background-color var(--dur-badge) var(--ease),color var(--dur-badge) var(--ease),border-color var(--dur-badge) var(--ease);
+}
+.stamp.stale{background:var(--tier-gold-bg);color:var(--tier-gold-ink);border-color:var(--tier-gold-border)}
+.stamp-row{margin-top:10px}
+
+/* ==================================================================
+   BUTTONS
+   ================================================================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;
+  font-family:var(--font-clerk);font-weight:700;font-size:14.5px;border-radius:var(--radius);
+  padding:0 16px;border:1.5px solid var(--navy);transition:background-color var(--dur-hover) var(--ease),color var(--dur-hover) var(--ease);
+}
+.btn-primary{background:var(--navy);color:var(--sheet);border-color:var(--navy)}
+.btn-primary:hover{background:var(--navy-2);border-color:var(--navy-2)}
+.btn-secondary{background:var(--sheet);color:var(--navy)}
+.btn-secondary:hover{background:var(--recess)}
+.vso-print-btn{margin-top:12px}
+.addbtn{
+  width:100%;border:1.5px dashed var(--hairline);background:transparent;color:var(--ink-2);
+  border-radius:var(--radius);padding:12px;font-family:var(--font-clerk);font-weight:700;font-size:14.5px;
+  min-height:44px;margin-top:4px;transition:border-color var(--dur-hover) var(--ease),color var(--dur-hover) var(--ease);
+}
+.addbtn:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ==================================================================
+   FORM CONTROLS
+   ================================================================== */
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media (max-width:480px){.dgrid{grid-template-columns:1fr}}
+.dfield label{display:block;font-family:var(--font-clerk);font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 4px 1px}
+.dfield input,.dfield select,.drow select{
+  width:100%;font-family:var(--font-doc);font-size:17px;padding:10px 11px;
+  border-radius:var(--radius);background:var(--recess);color:var(--ink);
+  border:1.5px solid var(--hairline);min-height:44px;color-scheme:light;
+}
+.dfield select,.drow select{cursor:pointer;font-family:var(--font-clerk);font-size:15px}
+.dfield input:focus,.dfield select:focus,.drow select:focus{outline:none;border-color:var(--link);box-shadow:0 0 0 2px rgba(42,77,140,.18)}
+
+.drow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.drow select{flex:1}
+.bl{display:flex;align-items:center;gap:6px;font-family:var(--font-clerk);font-size:12.5px;color:var(--ink-2);white-space:nowrap;cursor:pointer;user-select:none}
+.bl input{width:18px;height:18px;accent-color:var(--navy);cursor:pointer}
+.drow .x{border:0;background:transparent;color:var(--ink-2);font-size:16px;width:44px;height:44px;flex-shrink:0;border-radius:8px;display:grid;place-items:center;transition:background-color var(--dur-hover) var(--ease),color var(--dur-hover) var(--ease)}
+.drow .x:hover{background:var(--tier-terracotta-bg);color:var(--tier-terracotta-ink)}
+
+.deps{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tog{display:flex;align-items:center;gap:8px;font-family:var(--font-clerk);font-size:14.5px;font-weight:600;color:var(--ink);background:var(--recess);border:1px solid var(--hairline);border-radius:var(--radius);padding:0 12px;min-height:44px;cursor:pointer;user-select:none}
+.tog input{width:18px;height:18px;accent-color:var(--navy);cursor:pointer}
+.step{display:flex;align-items:center;gap:8px;background:var(--recess);border:1px solid var(--hairline);border-radius:var(--radius);padding:0 6px;min-height:44px;font-family:var(--font-clerk);font-size:14.5px;color:var(--ink-2)}
+.step b{min-width:20px;text-align:center;font-family:var(--font-reg);font-size:17px;color:var(--navy)}
+.step button{width:44px;height:44px;border:0;border-radius:8px;background:transparent;color:var(--navy);font-size:18px;font-weight:700;display:grid;place-items:center;transition:background-color var(--dur-hover) var(--ease)}
+.step button:hover{background:var(--hairline)}
+
+/* ==================================================================
+   RESULT CARD — combined-rating dial, re-inked, no glow
+   ================================================================== */
+.result{text-align:center;padding:22px 20px 20px}
+.result .lab{font-family:var(--font-clerk);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.ring{position:relative;width:172px;height:172px;margin:12px auto 4px}
+.ring svg{display:block;width:172px;height:172px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:11}
+.ring .tr{stroke:var(--recess)}
+.ring .fl{stroke:var(--navy);stroke-linecap:round;stroke-dasharray:505.8;stroke-dashoffset:505.8;transition:stroke-dashoffset .5s var(--ease)}
+.ring .rc{position:absolute;inset:0;display:grid;place-items:center}
+.ring .rc .num{font-family:var(--font-reg);font-weight:600;font-size:34px;letter-spacing:-1px;color:var(--navy);line-height:1}
+.ring .rc .pct{font-family:var(--font-reg);font-weight:600;font-size:19px;color:var(--navy);opacity:.8}
+.result .exact{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);margin-top:6px;min-height:15px}
+.result .pay{font-family:var(--font-clerk);font-size:15px;margin-top:14px;font-weight:600;color:var(--ink)}
+.result .pay b{font-family:var(--font-reg);font-weight:600;color:var(--navy);font-size:28px;letter-spacing:-.5px}
+.result .pay .yr{display:block;font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);font-weight:500;margin-top:3px}
+.result .paybk{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.45}
+
+/* eligibility lines */
+#tdiu,#path100{font-family:var(--font-doc);font-size:15px;line-height:1.55;margin:8px 0}
+#tdiu b,#path100 b{color:var(--navy)}
+
+/* "VA math" trace */
+.steps{
+  font-family:var(--font-reg);font-size:14.5px;line-height:1.6;color:var(--ink);
+  background:var(--recess);border:1px solid var(--hairline);border-radius:var(--radius);
+  padding:12px 14px;margin-top:6px;white-space:pre-wrap;
+}
+
+/* ==================================================================
+   DEADLINE CARDS
+   ================================================================== */
+.dl{display:flex;gap:14px;align-items:center;background:var(--sheet);border:1px solid var(--sheet-border);border-left:5px solid var(--hairline);border-radius:var(--radius);padding:13px 15px;margin-bottom:10px;box-shadow:var(--shadow);transition:border-color var(--dur-badge) var(--ease)}
+.dl .dnum{flex:0 0 66px;text-align:center}
+.dl .dnum b{display:block;font-family:var(--font-reg);font-weight:600;font-size:26px;letter-spacing:-.5px;line-height:1}
+.dl .dnum small{display:block;font-family:var(--font-clerk);font-weight:700;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin-top:5px}
+.dl .dbody{flex:1;min-width:0}
+.dl .dbody .dtier{display:inline-block;font-family:var(--font-clerk);font-weight:800;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.dl .dbody h4{margin:0;font-family:var(--font-clerk);font-weight:600;font-size:15px;color:var(--ink);line-height:1.3}
+.dl .dbody .ddue{margin:3px 0 0;font-family:var(--font-reg);font-size:13px;font-weight:600;color:var(--ink-2)}
+.dl .dbody .dsub{margin:4px 0 0;font-family:var(--font-doc);font-size:15px;color:var(--ink-2);line-height:1.45;max-width:var(--measure)}
+
+.dl.t-urgent{border-left-color:#c98f6f}
+.dl.t-urgent .dnum b,.dl.t-urgent .dtier{color:var(--tier-terracotta-ink)}
+.dl.t-approaching{border-left-color:#d1ac54}
+.dl.t-approaching .dnum b,.dl.t-approaching .dtier{color:var(--tier-gold-ink)}
+.dl.t-steady{border-left-color:#7fa88c}
+.dl.t-steady .dnum b,.dl.t-steady .dtier{color:var(--tier-sage-ink)}
+.dl.t-info{border-left-color:#8fa8c2}
+.dl.t-info .dnum b,.dl.t-info .dtier{color:var(--tier-info-ink)}
+
+/* ---- deadline badges on Benefits/catalog rows — same tiers as chips,
+   computed live from the on-device dates already entered on the Claim tab.
+   One deadline engine (tierFor + computeDeadline below) drives both this
+   and the .dl cards above. ---- */
+.dlbadge{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;font-family:var(--font-clerk);font-size:13px;line-height:1.4;color:var(--ink-2)}
+.dlbadge .dltag{flex:none;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:11px;padding:3px 9px;border-radius:var(--radius-pill);transition:background-color var(--dur-badge) var(--ease),color var(--dur-badge) var(--ease)}
+.dlbadge .dltext{flex:1;min-width:0}
+.dlbadge.t-urgent .dltag{background:var(--tier-terracotta-bg);color:var(--tier-terracotta-ink)}
+.dlbadge.t-approaching .dltag{background:var(--tier-gold-bg);color:var(--tier-gold-ink)}
+.dlbadge.t-steady .dltag{background:var(--tier-sage-bg);color:var(--tier-sage-ink)}
+.dlbadge.t-info .dltag{background:var(--tier-info-bg);color:var(--tier-info-ink)}
+
+/* ---- back-pay ---- */
+.bpgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.bpgrid .full{grid-column:1/-1}
+.bptotal{text-align:center;font-family:var(--font-reg);font-weight:600;font-size:28px;color:var(--navy);letter-spacing:-.5px;margin:14px 0 2px}
+.bpsub{text-align:center;font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);margin:2px 0 0;line-height:1.45}
+.bpdeps{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);margin:8px 0 0}
+
+/* ==================================================================
+   CHECKLIST + PROGRESS
+   ================================================================== */
+.grp{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--font-clerk);font-weight:700;font-size:14.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass-deep);margin:18px 2px 6px}
+.grp:first-child{margin-top:2px}
+.grp .gc{font-family:var(--font-clerk);font-weight:600;font-size:13px;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+.pbar{height:4px;background:var(--recess);border-radius:2px;margin:0 2px 8px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--navy);border-radius:2px;transition:width var(--dur-badge) var(--ease)}
+
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--hairline);cursor:pointer;min-height:44px;border-radius:6px;transition:background-color var(--dur-hover) var(--ease)}
+.chk:last-child{border-bottom:0}
+.chk:hover{background:var(--recess)}
+.chk .box{flex:0 0 auto;width:22px;height:22px;border-radius:5px;border:2px solid var(--navy-2);display:grid;place-items:center;font-size:13px;color:transparent;margin-top:1px;transition:background-color var(--dur-hover) var(--ease),border-color var(--dur-hover) var(--ease)}
+.chk.done .box{background:var(--tier-sage-ink);border-color:var(--tier-sage-ink);color:#fff}
+.chk .t{flex:1;font-family:var(--font-doc);font-size:15px;line-height:1.4;color:var(--ink)}
+.chk.done .t{color:var(--ink-2);text-decoration:line-through}
+.chk .t small{display:block;font-family:var(--font-clerk);color:var(--ink-2);font-size:13px;margin-top:2px;text-decoration:none}
+
+/* ==================================================================
+   PACT accordions / jump chips
+   ================================================================== */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 16px}
+.chips .chip.link{min-height:32px}
+details.sub{margin:10px 0 4px;border:1px solid var(--hairline);border-radius:var(--radius);background:var(--recess)}
+details.sub summary{list-style:none;cursor:pointer;padding:11px 12px;font-family:var(--font-clerk);font-size:15px;font-weight:600;color:var(--ink);min-height:44px;display:flex;align-items:center;gap:8px}
+details.sub summary::-webkit-details-marker{display:none}
+details.sub summary .chev{margin-left:auto;color:var(--ink-2);font-size:11px;transition:transform var(--dur-hover) var(--ease)}
+details.sub[open] summary .chev{transform:rotate(180deg)}
+details.sub .in{padding:0 12px 12px}
+details.sub .in p{font-family:var(--font-doc);font-size:15px;color:var(--ink)}
+
+/* ==================================================================
+   BENEFITS catalog groups
+   ================================================================== */
+details.bgrp{background:var(--sheet);border:1px solid var(--sheet-border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+details.bgrp summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:14px 18px;font-family:var(--font-clerk);font-weight:700;font-size:15px;color:var(--navy);min-height:44px;transition:background-color var(--dur-hover) var(--ease)}
+details.bgrp summary:hover{background:var(--recess)}
+details.bgrp summary::-webkit-details-marker{display:none}
+details.bgrp summary .bs-n{margin-left:auto;font-family:var(--font-clerk);font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+details.bgrp summary .chev{color:var(--ink-2);font-size:12px;transition:transform var(--dur-hover) var(--ease)}
+details.bgrp[open] summary .chev{transform:rotate(180deg)}
+.bitemwrap{padding:4px 18px 16px;border-top:1px solid var(--hairline)}
+
+/* ==================================================================
+   EMPTY STATES / SOURCE STAMPS
+   ================================================================== */
+.empty{text-align:center;color:var(--ink-2);font-family:var(--font-clerk);font-size:15px;padding:18px 8px}
+.src{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);text-align:center;margin:8px 0 10px}
+
+/* ==================================================================
+   TABLES — rates/comparisons, e.g. the P&T "at a glance" table.
+   Header row navy/paper-lit small-caps; striped body; figures right-
+   aligned Register mono; scrolls in its own container on mobile.
+   ================================================================== */
+.tblwrap{overflow-x:auto;margin:14px 0;border:1px solid var(--sheet-border);border-radius:var(--radius);box-shadow:var(--shadow)}
+table.dtable{width:100%;border-collapse:collapse;background:var(--sheet)}
+table.dtable th{background:var(--navy);color:var(--paper-lit);text-align:left;padding:10px 14px;font-family:var(--font-clerk);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+table.dtable td{padding:10px 14px;border-bottom:1px solid var(--hairline);vertical-align:top;font-family:var(--font-doc);font-size:15px;color:var(--ink)}
+table.dtable tr:last-child td{border-bottom:0}
+table.dtable tr:nth-child(even) td{background:var(--stripe)}
+table.dtable td.val{font-family:var(--font-reg);font-variant-numeric:tabular-nums;font-weight:600;color:var(--brass-deep);text-align:right;white-space:nowrap}
+table.dtable tfoot td{border-top:2px solid var(--navy);font-weight:800;color:var(--navy);background:var(--gold-tint)}
+@media (max-width:480px){table.dtable th{white-space:normal;padding:8px 9px;font-size:10px}table.dtable td{padding:8px 9px;font-size:13.5px}table.dtable td.val{font-size:13px}}
+
+/* ==================================================================
+   GUIDES — TOC: numbered leaders in --brass, dotted --hairline
+   separators. Continuous 01…N numbering across grouped sub-lists via
+   one shared counter-reset on .toc-groups (not on each <ol>).
+   ================================================================== */
+.toc-groups{counter-reset:toc}
+.toc-list{list-style:none;padding:0;margin:4px 0 22px}
+.toc-list li{counter-increment:toc;display:flex;align-items:baseline;gap:12px;padding:11px 2px;border-bottom:1px dotted var(--hairline);min-height:44px}
+.toc-list li::before{content:counter(toc,decimal-leading-zero);flex:none;font-family:var(--font-reg);font-weight:600;font-size:13px;color:var(--brass-deep);min-width:24px;padding-top:1px}
+.toc-list a{font-family:var(--font-clerk);font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+.toc-list a:hover{color:var(--brass-deep);text-decoration:underline}
+.toc-list .tdesc{display:block;font-family:var(--font-doc);font-weight:400;font-style:italic;color:var(--ink-2);font-size:13.5px;margin-top:2px}
+.toc-list .soon{font-family:var(--font-clerk);font-weight:700;font-size:15px;color:var(--ink-2);cursor:default}
+.toc-list .soon-tag{flex:none;font-family:var(--font-clerk);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:var(--recess);border:1px solid var(--hairline);border-radius:var(--radius-pill);padding:2px 8px;white-space:nowrap;align-self:center}
+
+/* ---- Guides — article template: single reading column, Document
+   serif 17px/1.62, max 70ch, .answer lead block at top ---- */
+.back-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-clerk);font-weight:700;font-size:13px;color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;margin:0 0 18px}
+.back-link:hover{text-decoration-thickness:2px}
+.garticle{max-width:var(--measure)}
+.garticle .gkicker{font-family:var(--font-clerk);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-deep);margin:0 0 6px}
+.garticle .gtitle{font-family:var(--font-doc);font-weight:700;font-size:28px;line-height:1.2;color:var(--navy);margin:0 0 16px}
+.garticle .answer{background:var(--recess);border-left:4px solid var(--brass);border-radius:0 6px 6px 0;padding:16px 20px;margin:0 0 22px;font-family:var(--font-doc);font-size:17px;line-height:1.62;color:var(--ink)}
+.garticle .gbody h3{font-family:var(--font-clerk);font-weight:700;font-size:19px;color:var(--navy);margin:26px 0 8px}
+.garticle .gbody p,.garticle .gbody li{font-family:var(--font-doc);font-size:17px;line-height:1.62;color:var(--ink)}
+.garticle .gbody ul{margin:0 0 1em}
+.garticle .gxref{margin-top:26px;padding-top:14px;border-top:1px solid var(--hairline)}
+.garticle .gxref p{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);line-height:1.5;margin:0 0 4px}
+
+/* ---- plain reading-column prose (P&T Stack's VR&E playbook "plain
+   Document-serif reading columns, max 70ch") — shares type rules with
+   the Guides article body so the two feel like one family. ---- */
+.read-prose{font-family:var(--font-doc);font-size:17px;line-height:1.62;color:var(--ink)}
+.read-prose .lead{font-size:19px;line-height:1.6;color:var(--navy-2)}
+.read-prose h3{font-family:var(--font-clerk);font-weight:700;font-size:19px;color:var(--navy);margin:26px 0 8px}
+.read-prose ol,.read-prose ul{margin:0 0 1em}
+.read-prose li{margin:6px 0}
+
+/* ---- cross-reference jump target flash (editorial-merge "read more"
+   links land on a Benefits/system card in another tab; see xrefTo()) ---- */
+@keyframes xrefFlash{0%{background:var(--gold-tint)}100%{background:var(--sheet)}}
+.xref-flash{animation:xrefFlash 1.2s var(--ease)}
+
+/* ---- xref landing offset: the tab rail is sticky (44px) and would
+   otherwise cover a jump target's heading; scroll-margin-top clears it
+   with a little breathing room. Covers every real xref landing-id prefix
+   in the document (bc-* generated catalog cards, g-* guide articles,
+   sys-*/pact-*/pt-* reference + part-wrap anchors, and #ben-ca). ---- */
+[id^="bc-"],[id^="g-"],[id^="sys-"],[id^="pt-"],[id^="pact-"],#ben-ca{scroll-margin-top:54px}
+
+/* ---- blank ruled fill-in fields (VSO one-pager identity block) — NOT
+   inputs: nothing here is stored or transmitted, hand-fill and print
+   only, per the zero-PII rule. ---- */
+.fillgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;margin:12px 0 4px}
+@media (max-width:480px){.fillgrid{grid-template-columns:1fr}}
+.fillgrid .ff label{display:block;font-family:var(--font-clerk);font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 5px 1px}
+.fillgrid .ff .fline{display:block;min-height:22px;border-bottom:1.5px solid var(--hairline)}
+.fillgrid .ff .fline.pre{font-family:var(--font-doc);font-size:15px;color:var(--ink);border-bottom-color:transparent}
+
+/* ==================================================================
+   FOOTER
+   ================================================================== */
+.site-footer{border-top:1px solid var(--hairline);margin-top:8px}
+.site-footer .wrap{padding:20px 0 40px}
+.footer-line{font-family:var(--font-clerk);font-size:13px;color:var(--ink-2);line-height:1.6;margin:0 0 6px;max-width:var(--measure)}
+.footer-line:last-child{margin-bottom:0}
+.footer-line a{color:var(--link)}
+
+/* ==================================================================
+   MOTION — reduced-motion override
+   ================================================================== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important;scroll-behavior:auto !important}
+}
+
+/* ==================================================================
+   PRINT PROFILE
+   ================================================================== */
+@media print{
+  @page{size:letter;margin:0.75in}
+  body{font-family:Georgia,Cambria,"Times New Roman",serif;font-size:11pt;line-height:1.45;background:#fff;color:#000}
+  *{background:transparent !important;box-shadow:none !important;color:#000 !important;animation:none !important}
+  .masthead,.tabrail,.vault-line,.addbtn,.step button,.tabrail-echo,button:not(.chk .box),.back-link,#guides-toc{display:none !important}
+  #guides-article,.garticle{display:block !important}
+  table.dtable th,table.dtable td{border:1pt solid #000 !important}
+  table.dtable tr:nth-child(even) td{background:transparent !important}
+  .fillgrid .ff .fline{border-bottom:1pt solid #000 !important;min-height:16pt}
+  .part-wrap .pnum{font-size:18pt}
+  .card h3,.tool-panel h3{font-size:14pt}
+  .bhead h4{font-size:12pt}
+  h4{font-size:12pt}
+  .notice{border:1pt solid #000 !important;padding:8pt 10pt;margin:0 0 12pt}
+  .notice-stamp{border:1pt solid #000 !important}
+  .card,.bcard,.tool-panel,.result,.dl,.chk,details.bgrp,details.sub{border:1pt solid #000 !important;page-break-inside:avoid;box-shadow:none !important}
+  h2,h3,h4{page-break-after:avoid}
+  p{orphans:3;widows:3}
+  .dfield input{background:none !important;border:none !important;border-bottom:1pt solid #000 !important;border-radius:0 !important;box-shadow:none !important;padding:2pt 1pt 4pt}
+  .dfield input::-webkit-calendar-picker-indicator{display:none !important}
+  .chk .box{background:none !important;border:2px solid var(--navy-2) !important;color:transparent !important}
+  .chk.done .t{text-decoration:none !important}
+  .stamp{border:1pt solid #000 !important}
+  .dlbadge .dltag{border:1pt solid #000 !important}
+  .ring .fl{stroke:#000 !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:9pt}
+  a{text-decoration:none !important}
+
+  /* ---- VSO one-pager scoped print ( "take it to the VSO" stylesheet,
+     but isolated to just this one document instead of the whole P&T Stack
+     tab). Toggled by the on-screen "Print this page" button, which adds
+     body.print-vso-only before calling window.print(). Hides every other
+     top-level block in the active tab panel and the site footer; the
+     Notice band sits outside .panel-inner entirely so it's untouched and
+     still prints on page one, per */
+  body.print-vso-only .site-footer{display:none !important}
+  body.print-vso-only .panel-inner>*{display:none !important}
+  body.print-vso-only .panel-inner>#vso-onepager{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="wordmark-block">
+      <span class="wordmark">Muster</span>
+      <span class="tagline">a free field desk for veterans' benefits.</span>
+    </div>
+  </div>
+</header>
+
+<div class="notice" role="note">
+  <div class="wrap">
+    <span class="notice-stamp">Unofficial</span>
+    <p class="notice-text">Muster is a free, independent tool built by a disabled veteran. It is not affiliated with, endorsed by, or connected to the U.S. Department of Veterans Affairs — confirm anything that matters at <a href="https://www.va.gov/" target="_blank" rel="noopener">VA.gov</a> or with an accredited VSO.</p>
+  </div>
+</div>
+
+<nav class="tabrail" aria-label="Sections">
+  <div class="wrap">
+    <div class="tabrail-scroll" id="tabs" role="tablist">
+      <button role="tab" id="tab-calc" aria-controls="p-calc" aria-selected="true" tabindex="0" data-t="calc" class="on">Calculator</button>
+      <button role="tab" id="tab-claim" aria-controls="p-claim" aria-selected="false" tabindex="-1" data-t="claim">Claim &amp; Deadlines</button>
+      <button role="tab" id="tab-pact" aria-controls="p-pact" aria-selected="false" tabindex="-1" data-t="pact">PACT Act</button>
+      <button role="tab" id="tab-ben" aria-controls="p-ben" aria-selected="false" tabindex="-1" data-t="ben">Benefits</button>
+      <button role="tab" id="tab-pt" aria-controls="p-pt" aria-selected="false" tabindex="-1" data-t="pt">100% P&amp;T Stack</button>
+      <button role="tab" id="tab-guides" aria-controls="p-guides" aria-selected="false" tabindex="-1" data-t="guides">Guides</button>
+    </div>
+    <span class="tabrail-echo">Unofficial · not the VA</span>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ CALCULATOR ============ -->
+  <section class="panel on" id="p-calc" role="tabpanel" aria-labelledby="tab-calc" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">Calculator</div>
+        <p class="pdesc">Combine your VA disability ratings and see estimated monthly pay at exact current rates.</p>
+      </div>
+
+      <div class="result">
+        <div class="lab">Combined VA rating</div>
+        <div class="ring">
+          <svg viewBox="0 0 172 172" aria-hidden="true">
+            <circle class="tr" cx="86" cy="86" r="80.5"/>
+            <circle class="fl" id="ringFill" cx="86" cy="86" r="80.5"/>
+          </svg>
+          <div class="rc"><div><span class="num" id="rOut">0</span><span class="pct">%</span></div></div>
+        </div>
+        <div class="exact reg" id="rExact"></div>
+        <div class="pay" id="rPay" hidden><b class="reg" id="payN">$0.00</b> / month<span class="yr" id="payYr"></span></div>
+        <div class="paybk" id="rPayBk"></div>
+        <div class="stamp-row"><span class="stamp stamp-slot" id="stampCalc"></span></div>
+      </div>
+
+      <div class="card">
+        <h3>Dependents</h3>
+        <div class="deps" id="deps"></div>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Saved on this device only — nothing you enter leaves your browser.</p>
+      </div>
+
+      <div class="card">
+        <h3>Eligibility &amp; path to 100%</h3>
+        <p id="tdiu"></p>
+        <p id="path100"></p>
+      </div>
+
+      <div class="card">
+        <h3>Your disabilities</h3>
+        <p>Add each rating the VA assigned. Check <b>BL</b> for disabilities of paired limbs (both arms / both legs) to apply the bilateral factor.</p>
+        <div id="rows"></div>
+        <button class="addbtn" id="addRow" type="button">+ Add a disability</button>
+      </div>
+
+      <div class="tool-panel">
+        <h3>The math, step by step</h3>
+        <div class="steps reg" id="steps"></div>
+        <p class="fine" style="margin-top:10px">VA doesn't add ratings — it combines them on a "whole person" basis (each new disability only acts on the healthy part that's left), then rounds to the nearest 10%. Pay figures use the official VA rates in the box above, plus your dependent picks. Always verify on VA.gov. This is an unofficial estimator, not legal or medical advice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLAIM & DEADLINES ============ -->
+  <section class="panel" id="p-claim" role="tabpanel" aria-labelledby="tab-claim" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">Claim &amp; Deadlines</div>
+        <p class="pdesc">Enter what you have — each date unlocks the deadlines that depend on it.</p>
+      </div>
+
+      <div class="card">
+        <h3>Your dates</h3>
+        <p>Add what you have — nothing here is required to see the others.</p>
+        <div class="dgrid">
+          <div class="dfield"><label for="d-sep">Separation</label><input type="date" id="d-sep" data-d="sep" /></div>
+          <div class="dfield"><label for="d-itf">Intent to File (21-0966)</label><input type="date" id="d-itf" data-d="itf" /></div>
+          <div class="dfield"><label for="d-filed">Claim filed (21-526EZ)</label><input type="date" id="d-filed" data-d="filed" /></div>
+          <div class="dfield"><label for="d-dec">Decision letter</label><input type="date" id="d-dec" data-d="decision" /></div>
+        </div>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Saved on this device only — nothing you enter leaves your browser.</p>
+      </div>
+
+      <div class="card">
+        <h3>Deadlines</h3>
+        <div id="deadlines"></div>
+        <p class="src">Deadline rules: VA.gov · retrieved July 1, 2026</p>
+      </div>
+
+      <div class="tool-panel">
+        <h3>Back-pay estimator</h3>
+        <p>Per VA.gov, your effective date is usually the <b>later</b> of the date VA got your claim or the date your illness/injury arose — and an <b>Intent to File</b> can hold that date if you file within 1 year.
+          <a href="https://www.va.gov/disability/effective-date/" target="_blank" rel="noopener">Effective dates ↗</a> ·
+          <a href="https://www.va.gov/resources/your-intent-to-file-a-va-claim/" target="_blank" rel="noopener">Intent to File ↗</a></p>
+        <div class="bpgrid">
+          <div class="dfield full"><label for="bp-eff">Effective date</label><input type="date" id="bp-eff" /></div>
+          <div class="dfield"><label for="bp-new">New rating</label><select id="bp-new"></select></div>
+          <div class="dfield"><label for="bp-old">Prior rating</label><select id="bp-old"></select></div>
+        </div>
+        <p class="bpdeps" id="bpDeps"></p>
+        <div class="bptotal reg" id="bpWrap" hidden>≈ <span id="bpN">$0</span></div>
+        <p class="bpsub" id="bpSub"></p>
+        <div class="stamp-row"><span class="stamp stamp-slot" id="stampClaim"></span></div>
+        <p class="fine" style="margin-top:10px">Rough estimate at the rates in the box above. VA computes the exact amount using the rate in effect each month — earlier months can pay slightly less. Increases, appeals and presumptive claims can have different effective-date rules. Verify with VA.gov or a VSO.</p>
+      </div>
+
+      <div class="card">
+        <h3>Filing checklist</h3>
+        <p>A working checklist — tap to tick things off.</p>
+        <div id="checklist"></div>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Saved on this device only — nothing you enter leaves your browser.</p>
+      </div>
+
+      <div class="card"><p class="fine">General guidance only. Consider a free, accredited VSO (VFW, DAV, American Legion, county veteran service officer) — they file with you at no cost.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ PACT ACT ============ -->
+  <section class="panel" id="p-pact" role="tabpanel" aria-labelledby="tab-pact" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">PACT Act</div>
+        <p class="pdesc">Presumptive toxic-exposure conditions, service windows, and how to file — quoted from VA.gov.</p>
+      </div>
+
+      <div class="chips" aria-label="Jump to section">
+        <a class="chip link" href="#pact-burn">Burn pits</a>
+        <a class="chip link" href="#pact-ao">Agent Orange</a>
+        <a class="chip link" href="#pact-rad">Radiation</a>
+        <a class="chip link" href="#pact-lejeune">Camp Lejeune</a>
+        <a class="chip link" href="#pact-screen">Screening</a>
+        <a class="chip link" href="#pact-file">How to file</a>
+      </div>
+
+      <div class="bcard"><h4>What "presumptive" means</h4>
+        <p>For certain conditions, VA <b>automatically assumes ("presumes") that your service caused your condition</b>. Per VA.gov: "You don't need to prove that your service caused the condition. You only need to meet the service requirements for the presumption." No nexus evidence needed — just proof of qualifying service (the dates and places below).</p>
+        <p><a href="https://www.va.gov/resources/the-pact-act-and-your-va-benefits/" target="_blank" rel="noopener">The PACT Act and your VA benefits ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-burn"><h4>Burn pits &amp; airborne hazards</h4>
+        <p>Qualifying service in these locations (or the airspace above them):</p>
+        <ul>
+          <li><b>On or after Sept 11, 2001:</b> Afghanistan, Djibouti, Egypt, Jordan, Lebanon, Syria, Uzbekistan, Yemen</li>
+          <li><b>On or after Aug 2, 1990:</b> Bahrain, Iraq, Kuwait, Oman, Qatar, Saudi Arabia, Somalia, United Arab Emirates</li>
+        </ul>
+        <details class="sub"><summary>Presumptive conditions (per VA.gov)<span class="chev">▾</span></summary><div class="in">
+          <p><b>Cancers:</b> brain, gastrointestinal (any type), glioblastoma, head (any type), kidney, lymphoma (any type), melanoma, neck (any type), pancreatic, reproductive (any type), respiratory (any type).</p>
+          <p><b>Chronic illnesses:</b> asthma diagnosed after service, chronic bronchitis, COPD, chronic rhinitis, chronic sinusitis, constrictive/obliterative bronchiolitis, emphysema, granulomatous disease, interstitial lung disease, pleuritis, pulmonary fibrosis, sarcoidosis.</p>
+        </div></details>
+        <p><a href="https://www.va.gov/resources/presumptive-cancers-related-to-burn-pit-exposure/" target="_blank" rel="noopener">Burn-pit cancer detail ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-ao"><h4>Agent Orange</h4>
+        <p>Presumed exposure for service in (per VA.gov):</p>
+        <ul>
+          <li>Republic of Vietnam, its inland waterways, or within 12 nautical miles offshore — Jan 9, 1962 – May 7, 1975</li>
+          <li>Any U.S. or Royal Thai base in Thailand — Jan 9, 1962 – June 30, 1976</li>
+          <li>Laos — Dec 1, 1965 – Sept 30, 1969</li>
+          <li>Cambodia at Mimot or Krek, Kampong Cham Province — Apr 16–30, 1969</li>
+          <li>Guam or American Samoa — Jan 9, 1962 – July 31, 1980</li>
+          <li>Johnston Atoll — Jan 1, 1972 – Sept 30, 1977</li>
+          <li>Korean DMZ — Sept 1, 1967 – Aug 31, 1971</li>
+        </ul>
+        <details class="sub"><summary>Presumptive conditions (per VA.gov)<span class="chev">▾</span></summary><div class="in">
+          <p><b>Cancers:</b> bladder cancer, chronic B-cell leukemia, Hodgkin's disease, multiple myeloma, non-Hodgkin's lymphoma, prostate cancer, respiratory cancers (including lung cancer), certain soft-tissue sarcomas.</p>
+          <p><b>Other illnesses:</b> AL amyloidosis, chloracne (or similar acneiform disease), type 2 diabetes, hypertension (high blood pressure), hypothyroidism, ischemic heart disease, MGUS, Parkinsonism, Parkinson's disease, early-onset peripheral neuropathy, porphyria cutanea tarda.</p>
+        </div></details>
+        <p><a href="https://www.va.gov/disability/eligibility/hazardous-materials-exposure/agent-orange/" target="_blank" rel="noopener">Agent Orange eligibility ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-rad"><h4>Radiation</h4>
+        <p>PACT-recognized radiation-risk cleanup activity:</p>
+        <ul>
+          <li>Enewetak Atoll cleanup — Jan 1, 1977 – Dec 31, 1980</li>
+          <li>Palomares, Spain B-52 response/cleanup — Jan 17, 1966 – Mar 31, 1967</li>
+          <li>Thule Air Force Base, Greenland — Jan 21, 1968 – Sept 25, 1968</li>
+        </ul>
+        <p>Full condition list: <a href="https://www.va.gov/disability/eligibility/hazardous-materials-exposure/ionizing-radiation/" target="_blank" rel="noopener">Ionizing radiation exposure ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-lejeune"><h4>Camp Lejeune water</h4>
+        <p>At least <b>30 days total</b> of service at Camp Lejeune or MCAS New River between <b>Aug 1, 1953 and Dec 31, 1987</b>.</p>
+        <p><b>8 presumptive conditions:</b> adult leukemia · aplastic anemia and other myelodysplastic syndromes · bladder cancer · kidney cancer · liver cancer · multiple myeloma · non-Hodgkin's lymphoma · Parkinson's disease.</p>
+        <p><a href="https://www.va.gov/disability/eligibility/hazardous-materials-exposure/camp-lejeune-water-contamination/" target="_blank" rel="noopener">Camp Lejeune water contamination ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-screen"><h4>Free toxic exposure screening</h4>
+        <p>Per VA.gov: "Every Veteran enrolled in VA health care will receive an initial screening and a follow-up screening at least once every 5 years." Screenings cover burn pits, Gulf War exposures, Agent Orange, radiation, Camp Lejeune water, and other hazards.</p>
+        <p><b>How:</b> contact your local VA health facility, ask at your next appointment, or schedule a telehealth screening through VA's VET-HOME.</p>
+        <p><a href="https://www.va.gov/resources/the-pact-act-and-your-va-benefits/" target="_blank" rel="noopener">Toxic exposure screening (PACT page) ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pact-file"><h4>Filing — including previously denied claims</h4>
+        <p>File a new claim online, by mail, in person, or with a free accredited representative (form <span class="formnum">21-526EZ</span>).</p>
+        <div class="callout confirm"><span class="ctag">Confirm</span>Denied before, presumptive now? Per VA.gov: "If we denied your disability claim in the past and we now consider your condition presumptive, you can submit a Supplemental Claim. We'll review your case again." That's form <span class="formnum">20-0995</span> — and "you don't need to wait for us to contact you before you file."</div>
+        <p><a href="https://www.va.gov/decision-reviews/supplemental-claim/" target="_blank" rel="noopener">Supplemental Claims ↗</a> · <a href="https://www.va.gov/resources/the-pact-act-and-your-va-benefits/" target="_blank" rel="noopener">File a PACT claim ↗</a></p>
+      </div>
+
+      <p class="src">Source: VA.gov · retrieved July 1, 2026</p>
+    </div>
+  </section>
+
+  <!-- ============ BENEFITS ============ -->
+  <section class="panel" id="p-ben" role="tabpanel" aria-labelledby="tab-ben" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">Benefits</div>
+        <p class="pdesc">The federal benefits catalog, organized by category — and the system knowledge behind it.</p>
+      </div>
+
+      <div class="grp">Federal benefits — by category</div>
+      <div id="bencat"></div>
+
+      <div class="part-wrap" id="ben-ca">
+        <div class="pkicker">State · California</div>
+        <div class="pnum">The California Chapter</div>
+        <p class="pdesc">State-level benefits layered on top of the federal catalog above — filed and confirmed locally. A County Veterans Service Officer knows the full local list and files with you for free.</p>
+      </div>
+
+      <div class="grp">California benefits — by category</div>
+      <div id="bencatCA"></div>
+
+      <div class="bcard"><p class="fine" style="margin:0">Every state adds its own benefits. Muster starts with California; more states are planned. <a href="https://www.va.gov/statedva.htm" target="_blank" rel="noopener">Find your state's veterans department ↗</a></p></div>
+
+      <div class="grp">Know the system</div>
+      <div class="bcard"><h4>How "VA math" works</h4><p>Ratings combine, they don't add. 50% + 30% isn't 80% — the 30% only applies to the 50% of you that's still "whole": 50 + (30% of the remaining 50) = 65%, which rounds to 70%. More disabilities means diminishing returns. That's why getting to 100% combined is hard.</p></div>
+      <div class="bcard" id="sys-pt"><h4>P&amp;T — Permanent &amp; Total</h4><p>A 100% rating that VA considers <b>permanent</b> (won't improve) and <b>total</b>. Unlocks the biggest benefits: CHAMPVA for family, Chapter 35 DEA education for dependents, property-tax breaks (state-dependent), and usually no future re-exams. The full stack this unlocks is laid out in <a class="xref" href="#tab-pt">the 100% P&amp;T Stack tab</a>.</p></div>
+      <div class="bcard" id="sys-tdiu"><h4>TDIU (Individual Unemployability)</h4><p>If service-connected disabilities keep you from holding steady work, you can be paid at the 100% rate without a 100% rating. Usually needs one disability at 60%, or a combined 70% with one at 40%+ (form <span class="formnum">21-8940</span>). Schedular P&amp;T and TDIU are not the same status — see <a class="xref" href="#g-can-you-work-with-100-percent-pt-va-disability">the Guides article on working with a 100% rating</a> for why that distinction matters.</p></div>
+      <div class="bcard" id="sys-forms"><h4>Key forms</h4><p>
+        <span class="formnum">21-526EZ</span> file/increase a disability claim<br>
+        <span class="formnum">21-0966</span> Intent to File — locks your effective date, gives you a year to gather evidence<br>
+        <span class="formnum">21-4138</span> statement in support (your own account)<br>
+        <span class="formnum">21-4142</span> authorizes VA to get your private medical records<br>
+        <span class="formnum">21-8940</span> TDIU claim</p></div>
+      <div class="bcard"><h4>What wins a claim</h4><p>Three legs: a current diagnosis, an in-service event/exposure, and a nexus — a medical opinion linking the two ("at least as likely as not"). A strong nexus letter and a complete C&amp;P exam matter most.</p></div>
+      <div class="bcard"><p class="fine" style="margin:0">Unofficial reference, current understanding of VA rules — not legal advice. Verify specifics at VA.gov or with an accredited VSO or attorney.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 100% P&T STACK ============ -->
+  <section class="panel" id="p-pt" role="tabpanel" aria-labelledby="tab-pt" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">100% P&amp;T Stack</div>
+        <p class="pdesc">Every benefit unlocked by a Permanent &amp; Total rating, stacked in one place.</p>
+      </div>
+
+      <div class="card">
+        <h3>How to use this stack</h3>
+        <p>A 100% Permanent &amp; Total rating quietly unlocks a second stack of benefits on top of your monthly compensation — health coverage for the family, education for the kids, housing tax breaks, and a possible path to a funded business. VA won't proactively hand you any of it. This page exists so none of it slips by.</p>
+        <p>Work it once with a highlighter, then take the <a class="xref" href="#pt-vso">VSO one-pager</a> further down to your County Veterans Service Officer and have them confirm and file.</p>
+        <div class="callout do"><span class="ctag">Do this</span>Don't research the whole stack before acting — pick the one benefit worth the most to your family and take its first step today.</div>
+        <div class="callout confirm"><span class="ctag">Confirm</span>Rates, grant caps, and state rules change every year, usually each December with the COLA. The figures on this page are 2026 estimates — your County VSO confirms current numbers for free.</div>
+        <div class="callout note"><span class="ctag">Note</span>This page assumes your 100% is a <b>schedular</b> Permanent &amp; Total rating. If any part of it is <b>TDIU</b>, earning income can trigger a review — confirm which you have (see <a class="xref" href="#sys-tdiu">TDIU in the Benefits tab</a>) before starting a business.</div>
+      </div>
+
+      <div class="card">
+        <h3>The 2-minute check</h3>
+        <p>Seven questions. Anything you can't tick is money or coverage you've already earned and aren't using yet.</p>
+        <div id="twoMinChecklist"></div>
+        <p class="fine" style="margin-top:10px">Ticked fewer than 7? Take this list to your County Veterans Service Officer (free) and ask them to confirm eligibility and help you file for anything you couldn't tick.</p>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Saved on this device only — nothing you enter leaves your browser.</p>
+      </div>
+
+      <div class="part-wrap">
+        <div class="pkicker">Overview</div>
+        <div class="pnum">Your benefits at a glance</div>
+        <p class="pdesc">A married 100% P&amp;T veteran in California with two children — the stack and roughly what it's worth.</p>
+      </div>
+      <div class="tblwrap">
+        <table class="dtable">
+          <thead><tr><th>Benefit</th><th>Who it helps</th><th>Estimated value</th></tr></thead>
+          <tbody>
+            <tr><td>Monthly compensation (tax-free, P&amp;T)</td><td>You + dependents</td><td class="val reg">~$52k+/yr</td></tr>
+            <tr><td>CHAMPVA health coverage</td><td>Spouse + kids</td><td class="val reg">~$4k–12k/yr</td></tr>
+            <tr><td>Chapter 35 DEA education</td><td>Spouse + 2 kids</td><td class="val reg">~$160k total</td></tr>
+            <tr><td>CalVet College Fee Waiver</td><td>Dependents</td><td class="val reg">~$60k+/kid</td></tr>
+            <tr><td>CA Disabled Veterans' Property Tax Exemption</td><td>Your home</td><td class="val reg">~$2k–3k/yr</td></tr>
+            <tr><td>VA Home Loan funding-fee waiver</td><td>Home purchase</td><td class="val reg">~$10k–25k once</td></tr>
+            <tr><td>SAH / SHA adaptive-housing grant (if eligible)</td><td>Your home</td><td class="val reg">up to ~$117k</td></tr>
+            <tr><td>VR&amp;E Ch.31 — self-employment track</td><td>Your business</td><td class="val reg">funds startup</td></tr>
+            <tr><td>CA perks (DMV, parks, hunting/fishing)</td><td>You + family</td><td class="val reg">~$300–600/yr</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="2">The point</td><td class="val reg">six figures</td></tr></tfoot>
+        </table>
+      </div>
+      <div class="bcard">
+        <p class="fine" style="margin:0 0 10px">Values are 2026 estimates and depend on your exact situation (dependents, income, home value, conditions) — they show the scale of what your rating unlocks. Education and one-time housing figures are lifetime/one-time, not annual. Confirm your real numbers with your County VSO.</p>
+        <div class="callout stack" style="margin:0"><span class="ctag">Stack it</span>Between family healthcare, the kids' education, and housing, a 100% P&amp;T veteran's earned stack adds up fast — and most of it goes unclaimed. Mostly what stands between you and it is paperwork.</div>
+      </div>
+
+      <div class="part-wrap">
+        <div class="pkicker">Part I</div>
+        <div class="pnum">The Federal Stack</div>
+        <p class="pdesc">These follow you to any state. Full eligibility and filing detail for each already lives in the Benefits catalog — this is the deeper "why it matters at P&amp;T" layer on top of it.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>Monthly Compensation — now permanent<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum reg">~$52k+</span><span class="vunit">per year, tax-free</span></div>
+        </div>
+        <p>P&amp;T doesn't change the rate table, but it does two things the table doesn't show: it's <b>permanent</b> (no more scheduled re-exams — your rating is protected), and it's the gate that opens everything else on this page.</p>
+        <div class="callout do"><span class="ctag">First step</span>Log into VA.gov and confirm every dependent is on file — a missing spouse or child is money you're not getting each month.</div>
+        <p class="fine"><a class="xref" href="#bc-comp">Full compensation detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>Special Monthly Compensation (SMC)<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum txt">Extra</span><span class="vunit">tax-free /mo</span></div>
+        </div>
+        <p>Additional tax-free compensation above the 100% rate for specific situations — loss of use of a limb or organ, being housebound, or needing another person's regular aid and attendance. Many eligible veterans never apply because no one told them it exists.</p>
+        <div class="callout do"><span class="ctag">First step</span>Ask your VSO to review your conditions for SMC-K, SMC-S (housebound), and aid &amp; attendance — worth a look if any condition has worsened.</div>
+        <p class="fine"><a class="xref" href="#bc-smc">Full SMC detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard" id="pt-champva">
+        <div class="bhead"><h4>CHAMPVA — health coverage for your family<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum reg">~$4k–12k</span><span class="vunit">per year</span></div>
+        </div>
+        <p>Because you're 100% P&amp;T, your spouse and children qualify for CHAMPVA — coverage that can replace or supplement private insurance. Cost-sharing is modest: roughly a $50/person, $100/family annual deductible and a 25% cost share, with an annual catastrophic cap around $3,000. <b>Dental is not included.</b></p>
+        <div class="callout note"><span class="ctag">Note</span>CHAMPVA is a <b>secondary payer</b> and not every provider accepts it — confirm your doctors take it before dropping any coverage you already have. If anyone in the family is also a military retiree, see <a class="xref" href="#g-champva-vs-tricare-100-pt-spouse">CHAMPVA vs TRICARE in Guides</a>.</div>
+        <div class="callout do"><span class="ctag">First step</span>Enroll your family with the VA Office of Community Care (CHAMPVA application, Form 10-10d). Have dependents' documents ready.</div>
+        <p class="fine"><a class="xref" href="#bc-champva">Full CHAMPVA detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>Chapter 35 (DEA) — education for your dependents<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum reg">~$160k</span><span class="vunit">total, family</span></div>
+        </div>
+        <p>Each dependent gets 36 months of education benefits — roughly $1,500+/month at full-time (a monthly stipend, not tuition). Across a spouse and two children that's on the order of $160,000. For eligibility arising on or after Aug 1, 2023, there's no delimiting (expiration) date.</p>
+        <div class="callout stack"><span class="ctag">Stack it</span>In California, DEA pays a stipend <i>while</i> the <a class="xref" href="#bc-calvetfee">CalVet College Fee Waiver</a> wipes out tuition — the two stack. That's the single biggest long-term play in this stack. Lock it in now, even years before enrollment.</div>
+        <div class="callout do"><span class="ctag">First step</span>Apply for Chapter 35 (VA Form 22-5490) for each dependent and keep the certificate of eligibility on file.</div>
+        <p class="fine"><a class="xref" href="#bc-ch35">Full Ch.35 DEA detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>VA Home Loan — funding fee waived<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum reg">~$10k–25k</span><span class="vunit">one-time saving</span></div>
+        </div>
+        <p>VA-guaranteed loans already skip the down payment and private mortgage insurance — at 100% disabled, the funding fee is waived entirely. On a typical home that fee runs many thousands of dollars.</p>
+        <div class="callout do"><span class="ctag">First step</span>Get or refresh your VA Certificate of Eligibility on VA.gov before you shop lenders, and confirm the funding-fee exemption is applied.</div>
+        <p class="fine"><a class="xref" href="#bc-loanfee">Full detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>SAH / SHA — adaptive housing grants<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum reg">up to ~$117k</span><span class="vunit">SAH, one-time</span></div>
+        </div>
+        <p>For certain conditions (qualifying mobility loss or loss-of-use), Specially Adapted Housing (SAH) can provide up to roughly $117,000 to build, buy, or modify an accessible home; the smaller Special Home Adaptation (SHA) grant (~$23k) covers other conditions. Caps rise most fiscal years — confirm the current amount.</p>
+        <div class="callout confirm"><span class="ctag">Confirm</span>Eligibility is condition-specific. If you're building or modifying a home, ask your VSO whether your conditions qualify — this is the largest single grant on this page.</div>
+        <p class="fine"><a class="xref" href="#bc-sahsha">Full detail — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>VA Health Priority Group 1 + dental<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum txt">Full</span><span class="vunit">care, $0–low</span></div>
+        </div>
+        <p>At 100% you're in Priority Group 1 — the top tier for VA health care, with no copays for most care — and you're eligible for VA dental, one of the most valuable and most-missed benefits on this list. Plenty of veterans keep paying for private care out of habit and never enroll.</p>
+        <div class="callout do"><span class="ctag">First step</span>Enroll in VA health care (Form 10-10EZ) and ask about VA dental eligibility at your facility.</div>
+        <p class="fine"><a class="xref" href="#bc-nocopay">No-copay care</a> · <a class="xref" href="#bc-dental">Dental — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>Commissary, Exchange, MWR &amp; Space-A travel<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum txt">Ongoing</span><span class="vunit">savings + travel</span></div>
+        </div>
+        <p>Full commissary, exchange, and MWR base access (in person and online), plus eligibility for Space-Available ("Space-A") flights — standby seats on military aircraft at little or no cost. For 100% disabled veterans, family accompaniment and eligible routes are limited — verify before you plan a trip.</p>
+        <div class="callout do"><span class="ctag">First step</span>Get your Veteran Health Identification Card (VHIC) and verify access through the Defense Commissary/Exchange online portals.</div>
+        <p class="fine"><a class="xref" href="#bc-commissary">Commissary/Exchange</a> · <a class="xref" href="#bc-spacea">Space-A — Benefits catalog ↗</a></p>
+      </div>
+
+      <div class="bcard">
+        <div class="bhead"><h4>SSDI — a separate check worth checking<span class="chip fed">Fed</span></h4>
+          <div class="vbadge"><span class="vnum txt">Separate</span><span class="vunit">monthly, possible</span></div>
+        </div>
+        <p>Social Security Disability Insurance is a completely separate program from VA compensation — you can potentially receive both. A 100% P&amp;T rating gets your SSDI claim <b>expedited</b> processing. It has its own medical and work rules, so it's worth a serious look.</p>
+        <div class="callout note"><span class="ctag">Note</span>SSDI has income/work rules. If you're also pursuing self-employment through <a class="xref" href="#pt-vre">VR&amp;E</a> below, talk to your VSO about sequencing so the two don't conflict.</div>
+        <div class="callout do"><span class="ctag">First step</span>Check your eligibility at SSA.gov, and mention the expedited processing for 100% P&amp;T veterans when you apply.</div>
+      </div>
+
+      <div class="callout confirm"><span class="ctag">Also ask about</span><a class="xref" href="#bc-dic">DIC for survivors</a>, <a class="xref" href="#bc-valife">VALife / S-DVI life insurance</a>, and your dependent ID cards — your VSO can run the full list against your file in one sitting.</div>
+
+      <div class="part-wrap">
+        <div class="pkicker">State · California</div>
+        <div class="pnum">The California Chapter</div>
+        <p class="pdesc">Already fully cataloged in Benefits → The California Chapter — here's how it specifically stacks at 100% P&amp;T.</p>
+      </div>
+      <div class="bcard">
+        <p>The state side of the stack — the Disabled Veterans' Property Tax Exemption, the CalVet College Fee Waiver, the CalVet Home Loan, and the DMV/parks/hunting-and-fishing perks — is cataloged in full under <a class="xref" href="#ben-ca">Benefits → The California Chapter ↗</a>. Two things worth knowing that those catalog entries don't say on their own:</p>
+        <div class="callout stack"><span class="ctag">Stack it</span>Chapter 35 DEA (federal, above) pays a monthly stipend <i>while</i> the CalVet Fee Waiver wipes out tuition — together they can mean a debt-free degree <b>plus</b> a stipend for each of your kids. Confirm eligibility now, even years before they enroll.</div>
+        <div class="callout stack"><span class="ctag">The point</span>Federal compensation, CHAMPVA, DEA, the property-tax exemption, and the fee waiver together typically add up to six figures across a family's lifetime — see the at-a-glance table above.</div>
+      </div>
+
+      <div class="part-wrap" id="pt-vre">
+        <div class="pkicker">Part II</div>
+        <div class="pnum">The VR&amp;E Self-Employment Playbook</div>
+        <p class="pdesc">Veteran Readiness &amp; Employment (Chapter 31) can fund your business. Few veterans use the self-employment track — here's how.</p>
+      </div>
+      <div class="measure read-prose">
+        <p class="lead">If your service-connected condition makes traditional employment hard, <a class="xref" href="#bc-vre">VR&amp;E (Chapter 31)</a> can assign you a counselor, help you write a business plan, and <b>fund startup costs</b> — equipment, software, licenses, sometimes inventory — plus a monthly subsistence allowance while you build the plan.</p>
+        <div class="callout note"><span class="ctag">Read this first</span>Being 100% P&amp;T does <b>not</b> disqualify you. Eligibility hinges on a service-connected disability that creates an employment barrier, plus the drive/skills to run a business. Note the basic <b>12-year eligibility window</b>, measured from separation or the date you were first notified of your rating, whichever is later — past it you need a "serious employment handicap" extension. And if any of your 100% is TDIU, confirm with your VSO how self-employment income interacts with it before you start.</div>
+        <h3>The 4 steps</h3>
+        <ol>
+          <li><b>Apply.</b> VA.gov → Veteran Readiness and Employment (Chapter 31) → file VA Form 28-1900. It takes minutes and it's free.</li>
+          <li><b>Meet your VRC.</b> You're assigned a Vocational Rehabilitation Counselor. Ask specifically for the <b>Self-Employment track</b>, and bring a one-page concept: what the business is, who it serves, and why your disability makes self-employment the right fit.</li>
+          <li><b>Build the plan.</b> Work the business plan with the VRC — they assess viability and fund the approved pieces. VA will often pay for an outside business-plan consultant, which is genuinely useful.</li>
+          <li><b>Lean on your County VSO.</b> They push the paperwork for a living and it costs you nothing. Use them at every step.</li>
+        </ol>
+        <div class="callout note"><span class="ctag">The #1 reason vets get denied</span>A vague "I want to be my own boss" with no numbers. Bring a real market, real financials, and a clear tie between your disability and why self-employment fits. Specific beats enthusiastic.</div>
+        <div class="callout do"><span class="ctag">First step this month</span>File VA Form 28-1900 today, then book your County VSO to start the property-tax, CHAMPVA, and DEA paperwork in the same visit — one trip, several benefits opened.</div>
+      </div>
+
+      <div class="part-wrap">
+        <div class="pkicker">Take action</div>
+        <div class="pnum">The Claims-Prep Checklist</div>
+        <p class="pdesc">Print this page and bring it to your County VSO. Check off as you go.</p>
+      </div>
+      <div class="card">
+        <div id="ptChecklist"></div>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Saved on this device only — nothing you enter leaves your browser.</p>
+      </div>
+
+      <div id="vso-onepager">
+      <div class="part-wrap" id="pt-vso">
+        <div class="pkicker">Take to your VSO</div>
+        <div class="pnum">VSO One-Pager</div>
+        <p class="pdesc">A printable action sheet for your appointment. Fill the fields below by hand — nothing on this sheet is saved.</p>
+        <button type="button" class="btn btn-secondary vso-print-btn" id="vsoPrintBtn">Print this page ⎙</button>
+      </div>
+      <div class="card">
+        <h3>My VA benefits — action sheet</h3>
+        <div class="fillgrid">
+          <div class="ff"><label>Name</label><span class="fline"></span></div>
+          <div class="ff"><label>VA file / SSN (last 4)</label><span class="fline"></span></div>
+          <div class="ff"><label>Combined rating</label><span class="fline pre">100% Permanent &amp; Total</span></div>
+          <div class="ff"><label>Schedular or TDIU? (confirm)</label><span class="fline"></span></div>
+          <div class="ff"><label>Spouse</label><span class="fline"></span></div>
+          <div class="ff"><label>Dependent children</label><span class="fline"></span></div>
+        </div>
+        <div class="callout confirm"><span class="ctag">What I'm asking</span>Please help me confirm eligibility and file for the items below that apply to me. I understand these figures are estimates that change yearly — please correct any that are out of date.</div>
+        <div id="vsoChecklist"></div>
+        <p class="vault-line"><svg class="lock-ic" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3H9zm3 4a1.75 1.75 0 0 1 1 3.19V19a1 1 0 1 1-2 0v-1.81A1.75 1.75 0 0 1 12 14z"/></svg>Only the check-off list above is saved on this device. The fields at the top are never stored anywhere — fill them in by hand, ideally on a printed copy.</p>
+      </div>
+      </div><!-- /#vso-onepager -->
+
+      <div class="part-wrap">
+        <div class="pkicker">Reference</div>
+        <div class="pnum">Glossary &amp; Key Forms</div>
+        <p class="pdesc">Terms and form numbers specific to the P&amp;T stack. General claim-filing forms are in the Benefits tab's <a class="xref" href="#sys-forms">Key forms</a> card.</p>
+      </div>
+      <div class="card">
+        <h3>Glossary</h3>
+        <p>
+          <b>100% P&amp;T (Permanent &amp; Total)</b> — a 100% disability rating VA considers permanent, with no scheduled re-exams, which unlocks the dependent and ancillary benefits on this page.<br>
+          <b>Schedular vs. TDIU</b> — "Schedular" 100% comes from your combined rating reaching 100%. TDIU pays at the 100% rate because you can't hold steady work, and earning income can affect it. See <a class="xref" href="#sys-tdiu">TDIU in Benefits</a>.<br>
+          <b>CHAMPVA</b> — Civilian Health and Medical Program of the VA, health coverage for the family of a 100% P&amp;T veteran.<br>
+          <b>DEA (Chapter 35)</b> — Survivors' &amp; Dependents' Educational Assistance, the education benefit for your dependents.<br>
+          <b>VR&amp;E (Chapter 31)</b> — Veteran Readiness &amp; Employment, career &amp; self-employment support including business funding.<br>
+          <b>SMC</b> — Special Monthly Compensation, extra tax-free pay for specific conditions.<br>
+          <b>SAH / SHA</b> — Specially Adapted Housing / Special Home Adaptation grants for accessible housing.<br>
+          <b>VSO</b> — Veterans Service Officer/Organization, accredited reps (often free) who file and manage claims.<br>
+          <b>COE</b> — Certificate of Eligibility, proves your VA home-loan entitlement.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Key forms for the P&amp;T stack</h3>
+        <p>
+          <span class="formnum">28-1900</span> VR&amp;E (Chapter 31) application<br>
+          <span class="formnum">22-5490</span> Dependents' educational assistance (Chapter 35)<br>
+          <span class="formnum">10-10EZ</span> VA health care enrollment<br>
+          <span class="formnum">10-10d</span> CHAMPVA application<br>
+          <span class="formnum">26-4555</span> SAH/SHA housing grant
+        </p>
+      </div>
+
+      <div class="bcard"><p class="fine" style="margin:0">Unofficial reference for 100% Permanent &amp; Total veterans, adapted from an independent field manual written by a fellow 100% P&amp;T veteran — not legal, financial, or claims advice, and not a substitute for an accredited VSO. Dollar figures are 2026 estimates and change annually; confirm every number with your County Veterans Service Office (free).</p></div>
+    </div>
+  </section>
+
+  <!-- ============ GUIDES ============ -->
+  <section class="panel" id="p-guides" role="tabpanel" aria-labelledby="tab-guides" tabindex="0">
+    <div class="panel-inner">
+      <div class="part-wrap">
+        <div class="pnum">Guides</div>
+        <p class="pdesc">Plain-English reading on how the claims process actually works.</p>
+      </div>
+
+      <div id="guides-toc" class="gview">
+        <div class="card">
+          <h3>What's inside</h3>
+          <p>Comparisons and math that don't fit in a benefit-card summary — CHAMPVA vs TRICARE, how back pay is calculated, what a re-evaluation can and can't do to a Permanent &amp; Total rating. Three articles are live; the rest are on the way.</p>
+          <div class="toc-groups">
+            <div class="grp">Money &amp; Pay</div>
+            <ol class="toc-list">
+              <li><span class="soon">How VA disability back pay is calculated<span class="tdesc">The math behind a retroactive payment, step by step.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">CRDP vs CRSC — concurrent receipt explained<span class="tdesc">Two ways military retirees get VA comp without an offset.</span></span><span class="soon-tag">Soon</span></li>
+              <li><a class="xref" href="#g-can-you-work-with-100-percent-pt-va-disability">Can you work with a 100% P&amp;T rating?<span class="tdesc">Schedular vs. TDIU — the distinction that decides the answer.</span></a></li>
+              <li><span class="soon">Will a re-evaluation lower my P&amp;T rating?<span class="tdesc">What "Permanent &amp; Total" actually protects you from.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">Do P&amp;T benefits transfer when you move states?<span class="tdesc">What follows you federally, and what resets at the state line.</span></span><span class="soon-tag">Soon</span></li>
+            </ol>
+            <div class="grp">Health &amp; Family</div>
+            <ol class="toc-list">
+              <li><a class="xref" href="#g-champva-vs-tricare-100-pt-spouse">CHAMPVA vs TRICARE — what covers a 100% P&amp;T veteran's family?<span class="tdesc">Which one your dependents actually qualify for.</span></a></li>
+              <li><span class="soon">100% P&amp;T VA dental coverage — what's included<span class="tdesc">What Class IV dental actually covers.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">SMC-S housebound vs aid &amp; attendance — the difference<span class="tdesc">Two SMC tiers, two very different qualifying pictures.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">Chapter 35 DEA eligibility for dependents<span class="tdesc">Who qualifies, and when the clock starts.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">VALife / S-DVI life insurance for disabled veterans<span class="tdesc">Guaranteed-acceptance coverage, and the waiting period to know about.</span></span><span class="soon-tag">Soon</span></li>
+            </ol>
+            <div class="grp">Property, Travel &amp; Access</div>
+            <ol class="toc-list">
+              <li><a class="xref" href="#g-100-percent-pt-property-tax-exemption-by-state">Property tax exemptions for 100% P&amp;T veterans, by state<span class="tdesc">Every state does it differently — how to find yours.</span></a></li>
+              <li><span class="soon">VA home loan funding fee waiver for disabled vets<span class="tdesc">Confirming the exemption before you close.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">DV license plates &amp; registration fee waivers<span class="tdesc">State-by-state, what's free and what's discounted.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">Commissary &amp; exchange access for disabled veterans<span class="tdesc">Who gets in, and the online shopping benefit.</span></span><span class="soon-tag">Soon</span></li>
+              <li><span class="soon">Space-A travel with a 100% P&amp;T rating<span class="tdesc">Category standing and what to know before you fly standby.</span></span><span class="soon-tag">Soon</span></li>
+            </ol>
+          </div>
+          <p class="fine">15 planned, 3 live. Unlinked titles aren't dead links — they just aren't written yet.</p>
+        </div>
+      </div>
+
+      <div id="guides-article" class="gview" hidden>
+        <a href="#" class="back-link" id="gBack">← All guides</a>
+
+        <article class="garticle" id="g-champva-vs-tricare-100-pt-spouse" hidden>
+          <div class="gkicker">Guide</div>
+          <h2 class="gtitle">CHAMPVA vs TRICARE — what covers a 100% P&amp;T veteran's family?</h2>
+          <div class="answer"><p><b>If you're a 100% P&amp;T veteran (and not a military retiree), your spouse and kids generally qualify for CHAMPVA, not TRICARE.</b> TRICARE is for retirees/active-duty families; CHAMPVA is the VA program for dependents of permanently &amp; totally disabled veterans. CHAMPVA has a modest deductible (~$50/person, $100/family), a 25% cost share, and a ~$3,000 catastrophic cap — but not every provider accepts it, and it doesn't cover dental.</p></div>
+          <div class="gbody">
+            <h3>What to check</h3>
+            <ul>
+              <li>You can't usually have both — eligibility depends on your status (retiree vs. P&amp;T-only).</li>
+              <li>CHAMPVA is a <b>secondary payer</b> and coordinates with other coverage/Medicare.</li>
+              <li>Confirm your family's doctors accept CHAMPVA <b>before</b> dropping any current plan.</li>
+              <li>Apply through the VA Office of Community Care with your dependents' documents.</li>
+            </ul>
+            <h3>The mistakes that cost veterans this benefit</h3>
+            <ul>
+              <li>Dropping a working plan before confirming CHAMPVA is accepted by your providers.</li>
+              <li>Assuming CHAMPVA includes dental (it doesn't).</li>
+              <li>Not enrolling the family at all because no one mentioned it.</li>
+            </ul>
+          </div>
+          <div class="gxref">
+            <p>Source: U.S. Dept. of Veterans Affairs (VA.gov), as of 2026. Figures change yearly — confirm with your County VSO.</p>
+            <p>Related: <a class="xref" href="#bc-champva">CHAMPVA — Benefits catalog ↗</a> · <a class="xref" href="#pt-champva">the P&amp;T Stack's CHAMPVA card ↗</a></p>
+          </div>
+        </article>
+
+        <article class="garticle" id="g-100-percent-pt-property-tax-exemption-by-state" hidden>
+          <div class="gkicker">Guide</div>
+          <h2 class="gtitle">Property tax exemptions for 100% P&amp;T veterans, by state</h2>
+          <div class="answer"><p><b>Most states offer a property-tax break for 100%/P&amp;T disabled veterans — but the amount and rules vary widely.</b> Some states exempt the home entirely; others exempt a set dollar amount of assessed value (California exempts roughly $180,671, or ~$271,009 for low-income households, saving ~$2,000–3,000/year). You almost always must <b>file a claim</b> — it isn't automatic.</p></div>
+          <div class="gbody">
+            <h3>How to claim it</h3>
+            <ul>
+              <li>Confirm your state's exemption type (full exemption vs. fixed assessed-value amount).</li>
+              <li>File with your <b>county assessor</b> once the home is your principal residence.</li>
+              <li>Check for a higher <b>low-income</b> tier if your household income is under the cap.</li>
+              <li>Re-file if you move — the exemption follows the principal residence, not you automatically.</li>
+            </ul>
+            <h3>The mistakes that cost veterans this benefit</h3>
+            <ul>
+              <li>Assuming it applies automatically — most require an application.</li>
+              <li>Missing the low-income tier that nearly doubles the exemption in some states.</li>
+              <li>Not re-filing after a move or refinance.</li>
+            </ul>
+          </div>
+          <div class="gxref">
+            <p>Source: State veterans agencies &amp; county assessor guidance, as of 2026. Figures change yearly — confirm with your County VSO.</p>
+            <p>Related: California's own figures are cataloged at <a class="xref" href="#bc-captax">the CA property-tax exemption — Benefits catalog ↗</a>.</p>
+          </div>
+        </article>
+
+        <article class="garticle" id="g-can-you-work-with-100-percent-pt-va-disability" hidden>
+          <div class="gkicker">Guide</div>
+          <h2 class="gtitle">Can you work with a 100% P&amp;T rating?</h2>
+          <div class="answer"><p><b>Usually yes — if your 100% is <i>schedular</i> Permanent &amp; Total.</b> A schedular 100% has no earnings limit; you can work and earn freely. The exception is <b>TDIU</b> (Individual Unemployability), where earning above the substantially-gainful threshold can trigger a review. Know which one you have before you start a job or business.</p></div>
+          <div class="gbody">
+            <h3>The key distinction</h3>
+            <ul>
+              <li><b>Schedular 100% P&amp;T:</b> your combined rating reaches 100%. No work or income restriction.</li>
+              <li><b>TDIU:</b> paid at the 100% rate because you can't hold substantially gainful employment — income can affect it.</li>
+              <li>Permanent &amp; Total also means no scheduled re-examinations, so the rating itself is protected.</li>
+              <li>Check your award letter or ask your County VSO which basis your 100% rests on — for free.</li>
+            </ul>
+            <h3>The mistakes that cost veterans this benefit</h3>
+            <ul>
+              <li>Assuming all 100% ratings have the same work rules — TDIU is the trap.</li>
+              <li>Starting a business under TDIU without confirming the income interaction first.</li>
+              <li>Not getting the schedular-vs-TDIU answer in writing from a VSO before earning.</li>
+            </ul>
+          </div>
+          <div class="gxref">
+            <p>Source: U.S. Dept. of Veterans Affairs (VA.gov), as of 2026. Figures change yearly — confirm with your County VSO.</p>
+            <p>Related: full definitions in <a class="xref" href="#sys-pt">P&amp;T</a> and <a class="xref" href="#sys-tdiu">TDIU</a> — Benefits tab · the <a class="xref" href="#pt-vre">VR&amp;E self-employment playbook</a> if you're considering starting a business.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-line">Muster is a free, independent tool. It is not affiliated with, endorsed by, or connected to the U.S. Department of Veterans Affairs — confirm anything that matters at <a href="https://www.va.gov/" target="_blank" rel="noopener">VA.gov</a> or with an accredited VSO.</p>
+    <p class="footer-line">Free forever — nothing here is ever for sale.</p>
+    <p class="footer-line"><span class="stamp stamp-slot" id="stampFoot"></span></p>
+  </div>
+</footer>
+
+<script>
+/* ================= DATA + ENGINE (no DOM) ================= */
+
+/* ==== RATES — verify every December ====
+   VA compensation tables, copied verbatim from official rates. */
+const RATE_EFFECTIVE = "December 1, 2025";
+const FLAT = {0:0, 10:180.42, 20:356.66};
+const NO_CHILD = {
+  30:{alone:552.47,spouse:617.47,spouse1p:669.47,spouse2p:721.47,p1:604.47,p2:656.47},
+  40:{alone:795.84,spouse:882.84,spouse1p:952.84,spouse2p:1022.84,p1:865.84,p2:935.84},
+  50:{alone:1132.90,spouse:1241.90,spouse1p:1329.90,spouse2p:1417.90,p1:1220.90,p2:1308.90},
+  60:{alone:1435.02,spouse:1566.02,spouse1p:1671.02,spouse2p:1776.02,p1:1540.02,p2:1645.02},
+  70:{alone:1808.45,spouse:1961.45,spouse1p:2084.45,spouse2p:2207.45,p1:1931.45,p2:2054.45},
+  80:{alone:2102.15,spouse:2277.15,spouse1p:2417.15,spouse2p:2557.15,p1:2242.15,p2:2382.15},
+  90:{alone:2362.30,spouse:2559.30,spouse1p:2717.30,spouse2p:2875.30,p1:2520.30,p2:2678.30},
+  100:{alone:3938.58,spouse:4158.17,spouse1p:4334.41,spouse2p:4510.65,p1:4114.82,p2:4291.06},
+};
+const WITH_CHILD = {
+  30:{c1:596.47,c1spouse:666.47,c1spouse1p:718.47,c1spouse2p:770.47,c1p1:648.47,c1p2:700.47},
+  40:{c1:853.84,c1spouse:947.84,c1spouse1p:1017.84,c1spouse2p:1087.84,c1p1:923.84,c1p2:993.84},
+  50:{c1:1205.90,c1spouse:1322.90,c1spouse1p:1410.90,c1spouse2p:1498.90,c1p1:1293.90,c1p2:1381.90},
+  60:{c1:1523.02,c1spouse:1663.02,c1spouse1p:1768.02,c1spouse2p:1873.02,c1p1:1628.02,c1p2:1733.02},
+  70:{c1:1910.45,c1spouse:2074.45,c1spouse1p:2197.45,c1spouse2p:2320.45,c1p1:2033.45,c1p2:2156.45},
+  80:{c1:2219.15,c1spouse:2406.15,c1spouse1p:2546.15,c1spouse2p:2686.15,c1p1:2359.15,c1p2:2499.15},
+  90:{c1:2494.30,c1spouse:2704.30,c1spouse1p:2862.30,c1spouse2p:3020.30,c1p1:2652.30,c1p2:2810.30},
+  100:{c1:4085.43,c1spouse:4318.99,c1spouse1p:4495.23,c1spouse2p:4671.47,c1p1:4261.67,c1p2:4437.91},
+};
+const ADDED = {
+  30:{cu:32,cs:105,aa:61},40:{cu:43,cs:140,aa:81},50:{cu:54,cs:176,aa:101},
+  60:{cu:65,cs:211,aa:121},70:{cu:76,cs:246,aa:141},80:{cu:87,cs:281,aa:161},
+  90:{cu:98,cs:317,aa:181},100:{cu:109.11,cs:352.45,aa:201.41},
+};
+/* ==== END RATES ==== */
+
+const r2 = n => Math.round(n*100)/100;
+const usd = n => n.toLocaleString("en-US",{style:"currency",currency:"USD"});
+const usd0 = n => n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
+
+function calcComp(rating, d){
+  rating = Number(rating);
+  if(!rating) return {monthly:0,annual:0,base:0,addOns:[],applies:false};
+  if(rating<30){const m=FLAT[rating]||0;return{monthly:m,annual:r2(m*12),base:m,addOns:[],applies:false};}
+  const kids=(d.ku18||0)+(d.ksch||0); const A=ADDED[rating]; const addOns=[]; let base;
+  if(kids>0){
+    const key=d.spouse?(d.parents===2?"c1spouse2p":d.parents===1?"c1spouse1p":"c1spouse")
+                       :(d.parents===2?"c1p2":d.parents===1?"c1p1":"c1");
+    base=WITH_CHILD[rating][key];
+    const remU=Math.max(0,(d.ku18||0)-((d.ku18||0)>0?1:0));
+    const remS=Math.max(0,(d.ksch||0)-((d.ku18||0)>0?0:1));
+    if(remU>0)addOns.push({label:`${remU} add'l child${remU>1?"ren":""} under 18`,amount:r2(remU*A.cu)});
+    if(remS>0)addOns.push({label:`${remS} child${remS>1?"ren":""} 18+ in school`,amount:r2(remS*A.cs)});
+  }else{
+    const key=d.spouse?(d.parents===2?"spouse2p":d.parents===1?"spouse1p":"spouse")
+                       :(d.parents===2?"p2":d.parents===1?"p1":"alone");
+    base=NO_CHILD[rating][key];
+  }
+  if(d.spouse&&d.aa)addOns.push({label:"Spouse Aid & Attendance",amount:A.aa});
+  const monthly=r2(base+addOns.reduce((s,a)=>s+a.amount,0));
+  return{monthly,annual:r2(monthly*12),base,addOns,applies:true};
+}
+
+/* ---- Combined-rating math (VA table method: round each pairwise step) — FROZEN ---- */
+function combine(list){
+  const a=[...list].sort((x,y)=>y-x); if(!a.length)return 0; let acc=a[0];
+  for(let i=1;i<a.length;i++){ acc=Math.round(acc + a[i]*(100-acc)/100); } return acc;
+}
+
+/* ---- Persisted state (on-device only, no transmission) ---- */
+let rows=[{r:50,bl:false},{r:30,bl:false}];
+try{const s=JSON.parse(localStorage.getItem("va_rows")||"null");if(Array.isArray(s)&&s.length)rows=s;}catch(e){}
+function saveRows(){try{localStorage.setItem("va_rows",JSON.stringify(rows))}catch(e){}}
+
+let DEPS={spouse:false,aa:false,ku18:0,ksch:0,parents:0};
+try{const s=JSON.parse(localStorage.getItem("va_deps")||"null");if(s&&typeof s==="object")DEPS={...DEPS,...s};}catch(e){}
+function saveDeps(){try{localStorage.setItem("va_deps",JSON.stringify(DEPS))}catch(e){}}
+
+let DATES={sep:"",itf:"",filed:"",decision:""};
+try{const s=JSON.parse(localStorage.getItem("va_dates")||"null");if(s&&typeof s==="object")DATES={...DATES,...s};}catch(e){}
+function saveDates(){try{localStorage.setItem("va_dates",JSON.stringify(DATES))}catch(e){}}
+
+
+/* ---- Date helpers ---- */
+const DAY=86400000;
+function parseDate(s){if(!s)return null;const d=new Date(s+"T00:00:00");return isNaN(d)?null:d;}
+function fmtDate(d){return d?d.toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"}):"—";}
+function addYears(d,n){const x=new Date(d);x.setFullYear(x.getFullYear()+n);return x;}
+function addDays(d,n){return new Date(d.getTime()+n*DAY);}
+function wholeMonths(from,to){let m=(to.getFullYear()-from.getFullYear())*12+(to.getMonth()-from.getMonth());if(to.getDate()<from.getDate())m--;return Math.max(0,m);}
+
+/* ---- Checklist data (keys must stay compatible with va_chk) ---- */
+const CHK=[
+  ["Before you file",[
+    ["File an Intent to File (21-0966)","Locks your effective/back-pay date and gives you a year to gather evidence."],
+    ["Get your DD-214 and service records",""],
+    ["List every condition + when it started in service",""],
+    ["Gather medical records (VA + private) for each condition",""],
+    ["Get a nexus letter linking each condition to service",""],
+  ]],
+  ["Filing",[
+    ["Complete the disability claim (21-526EZ)",""],
+    ["Add lay/buddy statements (21-4138) — your story & witnesses",""],
+    ["Authorize private records release (21-4142) if needed",""],
+    ["Submit on VA.gov or with a free VSO",""],
+  ]],
+  ["After you file",[
+    ["Attend every C&P exam — show up, be honest, describe your worst days",""],
+    ["Track the claim status on VA.gov",""],
+    ["If denied or under-rated: file a Supplemental, HLR, or Board appeal within the window",""],
+    ["Consider TDIU (21-8940) if you can't keep steady work",""],
+  ]],
+];
+
+/* ---- "2-minute check" (P&T Stack) — the free-checklist.html bonus doc,
+   CTA/email-capture stripped: it pointed at a paid product that no longer
+   exists. Same checklist component as CHK above, one group. ---- */
+const TWOMIN_CHK=[
+  ["Tick what's already handled",[
+    ["Family healthcare (CHAMPVA)","Are your spouse and kids enrolled in CHAMPVA? At 100% P&T they qualify — it can replace a private premium."],
+    ["Kids' & spouse's education (Chapter 35 DEA)","Have you filed for the 36 months of education benefits per dependent (~$160k of value across a family)?"],
+    ["Property-tax exemption (your state)","In CA, the Disabled Veterans' Exemption can save ~$2,000–3,000/year — but you must file with your county assessor."],
+    ["VA home-loan funding fee — waived","At 100% the funding fee is $0 (a ~$10k–25k saving). Is your Certificate of Eligibility current?"],
+    ["Special Monthly Compensation (SMC)","Extra tax-free pay for specific conditions (housebound, aid & attendance). Has your VSO reviewed you for it?"],
+    ["SSDI — the separate check","SSDI is separate from VA comp and expedited at 100% P&T. Have you checked whether you qualify?"],
+    ["VR&E (Ch.31) self-employment funding","VR&E can fund a business for vets with an employment barrier. Have you filed VA Form 28-1900?"],
+  ]],
+];
+
+/* ---- Claims-prep checklist (P&T Stack) — the claims checklist,
+   for a veteran who already has 100% P&T and is opening the ancillary
+   stack. Distinct purpose from CHK above (CHK = filing the original
+   disability claim; this = claiming what P&T unlocked afterward). ---- */
+const PT_CHK=[
+  ["Before the VSO visit",[
+    ["Confirm whether my 100% is schedular P&T or includes TDIU",""],
+    ["Log into VA.gov and confirm all dependents are on file",""],
+    ["Gather DD-214, current VA award/rating letter, marriage & birth certificates, dependents' SSNs",""],
+    ["Refresh my VA Certificate of Eligibility (home loan), if buying/building",""],
+  ]],
+  ["Federal — open these",[
+    ["CHAMPVA — enroll spouse + children (Office of Community Care)",""],
+    ["Chapter 35 DEA — file VA Form 22-5490 for each dependent",""],
+    ["VA health care — enroll (10-10EZ); ask about VA dental",""],
+    ["Ask VSO to review for SMC (housebound / aid & attendance)",""],
+    ["Ask about SAH/SHA housing grant eligibility (if building/modifying)",""],
+    ["Look into SSDI (expedited at 100% P&T) — coordinate with self-employment plans",""],
+    ["Get VHIC / shopping-benefit access (commissary, exchange, Space-A)",""],
+  ]],
+  ["California — file these",[
+    ["Disabled Veterans' Property Tax Exemption — County Assessor (basic or low-income)",""],
+    ["CalVet College Fee Waiver — confirm dependents' eligibility & plan",""],
+    ["DMV registration fee exemption + DV plates",""],
+    ["Distinguished Veteran Pass — CA State Parks",""],
+    ["Reduced-fee hunting & fishing license",""],
+  ]],
+  ["Career",[
+    ["VR&E Ch.31 — file VA Form 28-1900; request the Self-Employment track",""],
+  ]],
+];
+
+/* ---- VSO one-pager checklist (P&T Stack) — bonuses/vso-one-pager.html,
+   the "confirm/file this with me" list your VSO works down with you.
+   The identity fields on that sheet (name, VA file #, etc.) are NOT
+   reproduced as inputs — nothing here is stored; see the fillgrid
+   markup in the VSO one-pager section, which is print/hand-fill only. */
+const VSO_CHK=[
+  ["Federal",[
+    ["Dependents on file — confirm spouse + all children added","VA.gov"],
+    ["CHAMPVA — family health coverage (spouse + kids)","VA Office of Community Care"],
+    ["Chapter 35 DEA — education, each dependent","VA Form 22-5490"],
+    ["VA health care enrollment + VA dental","VA Form 10-10EZ"],
+    ["SMC review (housebound / aid & attendance)","ask VSO to review"],
+    ["SAH / SHA housing grant — eligibility check","ask VSO"],
+    ["VA home-loan Certificate of Eligibility (fee waived)","VA.gov COE"],
+    ["SSDI — separate; expedited at 100% P&T","SSA.gov"],
+  ]],
+  ["California",[
+    ["Disabled Veterans' Property Tax Exemption","County Assessor"],
+    ["CalVet College Fee Waiver (dependents)","County VSO / CalVet"],
+    ["DMV registration fee exemption + DV plates","CA DMV"],
+    ["Distinguished Veteran Pass (state parks)","CA State Parks"],
+  ]],
+  ["Career",[
+    ["VR&E Ch.31 — request the Self-Employment track","VA Form 28-1900"],
+  ]],
+];
+
+/* ---- Federal benefits catalog (thresholds are neutral, never "you qualify") ---- */
+const THR={any:"Any SC rating",dep30:"30%+ (dependents)",p30:"30%+",p50:"50%+",t100:"100% or TDIU",pt:"100% P&T",none:"No rating needed",vso:"Ask a VSO",dvown:"51%+ owned",scdis:"Qualifying SC disability"};
+const BCAT=["Compensation & Pay","Health Care","Insurance","Education","Employment & Business","Housing","Auto & Travel","Recreation","Family & Survivors","Burial & ID","General & Claims Help"];
+const FED=[
+ {cat:0,thr:"any",t:"Monthly Disability Compensation",sum:"Tax-free monthly payment for service-connected disabilities. File or add conditions with Form 21-526EZ.",link:"https://www.va.gov/disability/compensation-rates/veteran-rates/",ll:"VA comp rates",slug:"comp"},
+ {cat:0,thr:"dep30",t:"Added Pay for Dependents",sum:"Extra monthly comp for a spouse, children, or dependent parents. Add or update with Form 21-686c (plus 21-674 for school-age kids).",link:"https://www.va.gov/disability/add-remove-dependent/",ll:"Add a dependent"},
+ {cat:0,thr:"vso",t:"Special Monthly Compensation (SMC)",sum:"Higher compensation for severe situations — loss of use, housebound, aid &amp; attendance. Often missed; worth a VSO review.",link:"https://www.va.gov/disability/compensation-rates/special-monthly-compensation-rates/",ll:"VA SMC",slug:"smc"},
+ {cat:0,thr:"vso",t:"Combat-Related Special Compensation (CRSC)",sum:"Tax-free pay restoring retired pay offset by VA comp, for combat-related disabilities. Medical retirees apply through their branch.",link:"https://www.dfas.mil/RetiredMilitary/disability/crsc/",ll:"DFAS CRSC"},
+ {cat:0,thr:"vso",t:"Concurrent Retirement &amp; Disability Pay (CRDP)",sum:"Military retired pay and VA comp together without offset — generally needs 20+ qualifying years. Automatic through DFAS if eligible.",link:"https://www.dfas.mil/RetiredMilitary/disability/crdp/",ll:"DFAS CRDP"},
+ {cat:0,thr:"vso",t:"Annual Clothing Allowance",sum:"Yearly payment if a prosthetic/orthopedic device or skin medication wears out clothing. Form 10-8678 — qualify by Aug 1 each year.",link:"https://www.va.gov/disability/eligibility/special-claims/clothing-allowance/",ll:"Clothing allowance",dl:{recurring:"annual",label:"Qualify by Aug 1 each year"}},
+ {cat:1,thr:"any",t:"VA Health Care",sum:"Enrollment in VA health care — service-connected ratings raise a veteran's priority group. Enroll with Form 10-10EZ.",link:"https://www.va.gov/health-care/eligibility/",ll:"VA health eligibility"},
+ {cat:1,thr:"t100",t:"No Copays for Care &amp; Medications",sum:"Care, prescriptions, and most services at no cost in the top priority group.",link:"https://www.va.gov/health-care/copay-rates/",ll:"VA copay rates",slug:"nocopay"},
+ {cat:1,thr:"pt",t:"Comprehensive (Class IV) Dental",sum:"Full VA dental care — one of the most valuable and most-missed benefits.",link:"https://www.va.gov/health-care/about-va-health-benefits/dental-care/",ll:"VA dental",slug:"dental"},
+ {cat:1,thr:"p30",t:"Beneficiary Travel Pay",sum:"Mileage reimbursement for VA health-care travel (other paths exist below 30%). File in the BTSSS portal after each visit.",link:"https://www.va.gov/health-care/get-reimbursed-for-travel-pay/",ll:"VA travel pay"},
+ {cat:1,thr:"none",t:"Vet Center Counseling",sum:"Confidential readjustment counseling, separate from the VA medical center — for combat veterans and MST survivors. Free. Crisis line: 988, press 1.",link:"https://www.vetcenter.va.gov/",ll:"Find a Vet Center"},
+ {cat:1,thr:"vso",t:"Caregiver Support (PCAFC)",sum:"Stipend, training, and health coverage for a family caregiver — generally 70%+ and needing in-person personal care. Form 10-10CG.",link:"https://www.va.gov/family-and-caregiver-benefits/health-and-disability/comprehensive-assistance-for-family-caregivers/",ll:"VA caregiver"},
+ {cat:2,thr:"none",t:"Veterans' Group Life Insurance (VGLI)",sum:"Convert SGLI to group term life. No health questions within 240 days of separation; final window is 1 year + 120 days.",link:"https://www.va.gov/life-insurance/options-eligibility/vgli/",ll:"VGLI",dl:{anchor:"sep",days:485,label:"VGLI final application window"}},
+ {cat:2,thr:"any",t:"VALife — VA Life Insurance",sum:"Guaranteed-acceptance whole life for service-connected veterans age 80 or younger — no medical exam. A 2-year waiting period applies, so sooner is better.",link:"https://www.va.gov/life-insurance/options-eligibility/valife/",ll:"VALife",slug:"valife"},
+ {cat:3,thr:"none",t:"Post-9/11 GI Bill",sum:"Tuition, monthly housing allowance, and book stipend (36 months). Discharge after 1/1/2013 = no expiration. Form 22-1990.",link:"https://www.va.gov/education/about-gi-bill-benefits/post-9-11/",ll:"Post-9/11 GI Bill"},
+ {cat:3,thr:"vso",t:"Veteran Readiness &amp; Employment (Ch.31)",sum:"Training, education, and employment support — including a self-employment track. Needs a service-connected disability with an employment handicap. Form 28-1900.",link:"https://www.va.gov/careers-employment/vocational-rehabilitation/",ll:"VR&amp;E (Ch.31)",slug:"vre"},
+ {cat:3,thr:"pt",t:"Ch.35 DEA (Dependents' Education)",sum:"Up to 36 months of education benefits for the spouse and children of a qualifying veteran. Dependent applies with Form 22-5490.",link:"https://www.va.gov/education/survivor-dependent-benefits/dependents-education-assistance/",ll:"Ch.35 DEA",slug:"ch35"},
+ {cat:4,thr:"any",t:"Service-Disabled Veteran-Owned Small Business (SDVOSB)",sum:"Federal certification giving a veteran-owned business set-aside and sole-source contract preference. Certify free at SBA VetCert.",link:"https://veterans.certify.sba.gov/",ll:"SBA VetCert"},
+ {cat:4,thr:"any",t:"Federal Hiring Veterans' Preference (10-pt)",sum:"10-point preference for federal civil-service jobs with a compensable service-connected disability. Claim with SF-15 + rating letter on USAJOBS.",link:"https://www.opm.gov/policy-data-oversight/veterans-services/vet-guide-for-hr-professionals/",ll:"OPM vet preference"},
+ {cat:5,thr:"any",t:"VA Home Loan — Funding Fee Waived",sum:"$0-down VA-guaranteed loan; the funding fee is waived for veterans receiving disability compensation. Request a COE at VA.gov.",link:"https://www.va.gov/housing-assistance/home-loans/funding-fee-and-closing-costs/",ll:"VA loan funding fee",slug:"loanfee"},
+ {cat:5,thr:"vso",t:"Specially Adapted Housing (SAH/SHA) Grants",sum:"Grants to build or modify a home for specific severe service-connected disabilities (loss of use, blindness, etc.). Form 26-4555.",link:"https://www.va.gov/housing-assistance/disability-housing-grants/",ll:"VA housing grants",slug:"sahsha"},
+ {cat:6,thr:"pt",t:"Space-A Military Flights",sum:"Fly standby on military aircraft at no cost — veterans with a permanent &amp; total service-connected rating travel in Category VI.",link:"https://www.amc.af.mil/Home/AMC-Travel-Site/",ll:"AMC Space-A",slug:"spacea"},
+ {cat:6,thr:"vso",t:"Automobile Allowance &amp; Adaptive Equipment",sum:"One-time grant toward a vehicle plus adaptive equipment, for loss of use of hands/feet or certain vision conditions. Form 21-4502.",link:"https://www.va.gov/disability/eligibility/special-claims/automobile-allowance-adaptive-equipment/",ll:"VA auto allowance"},
+ {cat:7,thr:"none",t:"Free National Parks Veterans Pass",sum:"Free lifetime access to national parks and federal recreation lands for all veterans (and Gold Star families).",link:"https://www.nps.gov/subjects/militaryandveterans/veterans-and-gold-star-families.htm",ll:"NPS veterans pass"},
+ {cat:7,thr:"any",t:"Commissary, Exchange &amp; MWR Access",sum:"Shop on-base commissaries/exchanges and use MWR facilities — in person (VHIC) and online (2020 expansion).",link:"https://www.va.gov/records/get-veteran-id-cards/vhic/",ll:"VHIC / base access",slug:"commissary"},
+ {cat:8,thr:"pt",t:"CHAMPVA (Dependent Health Coverage)",sum:"Health coverage for the spouse and children of a qualifying veteran. Form 10-10d.",link:"https://www.va.gov/health-care/family-caregiver-benefits/champva/",ll:"CHAMPVA",slug:"champva"},
+ {cat:8,thr:"vso",t:"DIC — Survivor Compensation",sum:"Monthly tax-free payment to survivors after a service-connected death, or after a veteran rated 100% P&amp;T for the 10 years before death. Survivor files Form 21P-534EZ.",link:"https://www.va.gov/disability/dependency-indemnity-compensation/",ll:"VA DIC",slug:"dic"},
+ {cat:8,thr:"vso",t:"Fry Scholarship",sum:"Full Post-9/11 GI Bill benefits for survivors of service members who died in the line of duty while on active duty.",link:"https://www.va.gov/education/survivor-dependent-benefits/fry-scholarship/",ll:"Fry Scholarship"},
+ {cat:9,thr:"none",t:"Burial Benefits &amp; National Cemetery",sum:"Gravesite in a VA national cemetery, headstone/marker, flag, and Presidential Memorial Certificate. Pre-need decision: Form 40-10007.",link:"https://www.va.gov/burials-memorials/",ll:"VA burials"},
+ {cat:9,thr:"none",t:"Veteran Health ID Card (VHIC)",sum:"VA photo ID for care and base/commissary access, once enrolled in VA health care.",link:"https://www.va.gov/records/get-veteran-id-cards/vhic/",ll:"Get a VHIC"},
+ {cat:9,thr:"none",t:"Veteran ID Card (VIC)",sum:"A wallet card proving veteran status for retail discounts and more (honorable service). Free at VA.gov.",link:"https://www.va.gov/records/get-veteran-id-cards/",ll:"VA ID cards"},
+];
+
+/* ---- California benefits catalog — Muster's first state chapter ----
+   Same shape as FED (cat/thr/t/sum/link/ll), plus an optional val (rough
+   estimated dollar value, renders as a Stack It callout) and dl (deadline
+   rule, same declarative format as FED). Template for future state chapters:
+   add a new array in this shape + one part-wrap header + one renderCatalog()
+   call — nothing in the shared rendering code below is CA-specific. */
+const CA=[
+ {cat:5,thr:"t100",t:"CA Disabled Veterans' Property Tax Exemption",sum:"Exempts a large share of a home's assessed value from property tax for a veteran rated 100% disabled, rated individually unemployable (TDIU), or blind in both eyes or with loss of use of two or more limbs from a service-connected condition. File with the county assessor's office (Form BOE-261-G); most counties ask for periodic confirmation.",link:"https://www.boe.ca.gov/proptaxes/dv_exemption.htm",ll:"CA BOE DV exemption",val:5000,dl:{none:"Confirm the exemption with the county assessor — timing varies by county."},slug:"captax"},
+ {cat:3,thr:"pt",t:"CalVet College Fee Waiver",sum:"Waives system-wide tuition and fees at California Community Colleges, CSU, and UC campuses for the dependents of a veteran rated 100% permanently and totally disabled (CalVet Plan B) — the student's own prior-year income must fall under the annual cap. Stacks with the federal Ch.35 DEA benefit; doesn't cover books or housing. Apply each year through the county Veterans Service Office.",link:"https://www.calvet.ca.gov/VetServices/Pages/College-Fee-Waiver.aspx",ll:"CalVet fee waiver",val:3000,slug:"calvetfee"},
+ {cat:4,thr:"dvown",t:"Disabled Veteran Business Enterprise (DVBE)",sum:"Certifies a business at least 51% owned by a veteran with a service-connected disability rating of 10% or higher, for preference on California state contracts (a 3% participation goal). Pairs with the federal SDVOSB certification for combined state and federal contracting preference. Certify through the CA Department of General Services (DGS).",link:"https://www.dgs.ca.gov/PD/Resources/Find-Certified-Firms/DVBE-Certification",ll:"CA DVBE",val:0},
+ {cat:4,thr:"any",t:"CA State Civil-Service Veterans' Preference",sum:"Disabled veterans receive additional preference points on California state civil-service exams, beyond the standard veterans' preference. Claim it when applying through CalCareers.",link:"https://www.calhr.ca.gov/employees/Pages/veterans-preference.aspx",ll:"CalHR preference",val:0},
+ {cat:6,thr:"t100",t:"CA Vehicle Registration / License Fee Waiver",sum:"Waives vehicle registration and license fees on one qualifying passenger vehicle, motorcycle, or light commercial vehicle for a veteran rated 100% disabled. Apply at the CA DMV with a copy of the disability rating letter.",link:"https://www.dmv.ca.gov/portal/vehicle-registration/registration-fees/disabled-veteran-fee-exemptions/",ll:"CA DMV DV fee",val:200},
+ {cat:6,thr:"scdis",t:"CA Disabled Veteran License Plates",sum:"Issues Disabled Veteran license plates, including disabled-parking privileges, at no fee, for a veteran with a qualifying service-connected disability. Apply at the CA DMV.",link:"https://www.dmv.ca.gov/portal/vehicle-registration/license-plates-decals-and-placards/disabled-veteran-dv-license-plates/",ll:"CA DMV DV plates",val:0},
+ {cat:7,thr:"p50",t:"CA Distinguished Veteran Pass (State Parks)",sum:"Free day-use, camping, and boating access at California state parks for a veteran rated 50% or more service-connected disabled. Apply by mail to CA State Parks with a copy of the disability rating letter.",link:"https://www.parks.ca.gov/?page_id=1049",ll:"CA State Parks pass",val:175},
+ {cat:7,thr:"p50",t:"CA Reduced-Fee Hunting / Fishing License",sum:"Discounts the annual sport-fishing and hunting license for a veteran rated 50% or more service-connected disabled. Apply through the CA Department of Fish and Wildlife (CDFW) with a copy of the rating letter.",link:"https://wildlife.ca.gov/Licensing/Reduced-Fee",ll:"CDFW reduced-fee",val:50},
+ {cat:5,thr:"any",t:"CalVet Home Loan",sum:"A state home-loan program with competitive rates and built-in borrower protections, open to California veterans generally — a service-connected disability rating can improve loan terms or consideration. Apply directly through CalVet Home Loans.",link:"https://www.calvet.ca.gov/HomeLoans",ll:"CalVet Home Loans",val:0},
+ {cat:10,thr:"none",t:"County Veterans Service Officer (CVSO)",sum:"Free, accredited help filing VA claims and finding benefits, available to any veteran and their dependents regardless of disability rating, through a Veterans Service Office in every California county.",link:"https://www.calvet.ca.gov/VetServices/Pages/County-Veterans-Service-Office-(CVSO)-Location.aspx",ll:"Find your CVSO",val:0},
+];
+</script>
+<script>
+/* ================= UI ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lastRounded=0;
+
+/* ---- verification stamp — computed live from RATE_EFFECTIVE, never hardcoded ---- */
+function ratesStale(){
+  const eff=new Date(RATE_EFFECTIVE);
+  if(isNaN(eff))return false;
+  const now=new Date();
+  let months=(now.getFullYear()-eff.getFullYear())*12+(now.getMonth()-eff.getMonth());
+  if(now.getDate()<eff.getDate())months--;
+  return months>=14;
+}
+function stampDateLabel(){
+  const eff=new Date(RATE_EFFECTIVE);
+  if(isNaN(eff))return RATE_EFFECTIVE.toUpperCase();
+  return eff.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}).toUpperCase();
+}
+function renderStamps(){
+  const stale=ratesStale();
+  const html=stale
+    ? `RATES MAY BE STALE — VERIFY AT VA.GOV`
+    : `RATES VERIFIED · ${stampDateLabel()} · VA.GOV`;
+  $$(".stamp-slot").forEach(s=>{s.textContent=html;s.classList.toggle("stale",stale);});
+}
+
+/* ---- tab rail: click + roving-tabindex keyboard nav (arrow keys + Enter) ---- */
+const tabBtns=$$('#tabs [role="tab"]');
+function activateTab(btn){
+  tabBtns.forEach(b=>{
+    const on=b===btn;
+    b.classList.toggle("on",on);
+    b.setAttribute("aria-selected",on?"true":"false");
+    b.tabIndex=on?0:-1;
+  });
+  $$(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+btn.dataset.t));
+  if(!RM)btn.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
+  else btn.scrollIntoView({inline:"center",block:"nearest"});
+}
+tabBtns.forEach((b,i)=>{
+  b.addEventListener("click",()=>activateTab(b));
+  b.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"){tabBtns[(i+1)%tabBtns.length].focus();e.preventDefault();}
+    else if(e.key==="ArrowLeft"){tabBtns[(i-1+tabBtns.length)%tabBtns.length].focus();e.preventDefault();}
+    else if(e.key==="Home"){tabBtns[0].focus();e.preventDefault();}
+    else if(e.key==="End"){tabBtns[tabBtns.length-1].focus();e.preventDefault();}
+    else if(e.key==="Enter"||e.key===" "){activateTab(b);e.preventDefault();}
+  });
+});
+
+/* ---- count-up (respects reduced motion; the calculator figure counts up over 600ms) ---- */
+function countUp(node,to,fmt,dur){
+  if(!node)return;
+  const from=parseFloat(node.dataset.v||"0")||0;
+  node.dataset.v=to;
+  if(RM||from===to){node.textContent=fmt(to);return;}
+  const t0=performance.now();
+  (function f(t){
+    const p=Math.min(1,(t-t0)/dur);
+    if(p>=1){node.textContent=fmt(to);return;}
+    node.textContent=fmt(from+(to-from)*(1-Math.pow(1-p,3)));
+    requestAnimationFrame(f);
+  })(t0);
+}
+
+/* ---- disability rows ---- */
+function renderRows(){
+  if(!rows.length){$("#rows").innerHTML=`<div class="empty">No ratings yet — add one below.</div>`;return;}
+  $("#rows").innerHTML=rows.map((d,i)=>{
+    const opts=[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${v===d.r?" selected":""}>${v}%</option>`).join("");
+    return `<div class="drow"><select data-i="${i}" aria-label="Disability ${i+1} rating">${opts}</select><label class="bl"><input type="checkbox" data-bl="${i}"${d.bl?" checked":""}/>BL</label><button class="x" data-x="${i}" type="button" aria-label="Remove disability ${i+1}">✕</button></div>`;
+  }).join("");
+  $$("#rows select").forEach(s=>s.onchange=()=>{rows[+s.dataset.i].r=+s.value;saveRows();calc();});
+  $$('#rows [data-bl]').forEach(c=>c.onchange=()=>{rows[+c.dataset.bl].bl=c.checked;saveRows();calc();});
+  $$('#rows [data-x]').forEach(b=>b.onclick=()=>{rows.splice(+b.dataset.x,1);saveRows();renderRows();calc();});
+}
+$("#addRow").onclick=()=>{rows.push({r:10,bl:false});saveRows();renderRows();calc();};
+
+/* ---- dependents editor ---- */
+function stepper(k,label,v,max){
+  return `<div class="step"><span>${label}</span><button type="button" data-st="${k}" data-dir="-1" data-max="${max}" aria-label="Fewer ${label}">−</button><b>${v||0}</b><button type="button" data-st="${k}" data-dir="1" data-max="${max}" aria-label="More ${label}">+</button></div>`;
+}
+function renderDeps(){
+  let h=`<label class="tog"><input type="checkbox" id="dp-sp"${DEPS.spouse?" checked":""}/>Spouse</label>`;
+  if(DEPS.spouse)h+=`<label class="tog"><input type="checkbox" id="dp-aa"${DEPS.aa?" checked":""}/>Spouse needs Aid &amp; Attendance</label>`;
+  h+=stepper("ku18","Kids under 18",DEPS.ku18,8);
+  h+=stepper("ksch","Kids 18–23 in school",DEPS.ksch,8);
+  h+=stepper("parents","Dependent parents",DEPS.parents,2);
+  $("#deps").innerHTML=h;
+  $("#dp-sp").onchange=e=>{DEPS.spouse=e.target.checked;if(!DEPS.spouse)DEPS.aa=false;saveDeps();renderDeps();calc();renderBackpay();};
+  const aa=$("#dp-aa");if(aa)aa.onchange=e=>{DEPS.aa=e.target.checked;saveDeps();calc();renderBackpay();};
+  $$("#deps [data-st]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.st,max=+b.dataset.max;
+    DEPS[k]=Math.min(max,Math.max(0,(DEPS[k]||0)+(+b.dataset.dir)));
+    saveDeps();renderDeps();calc();renderBackpay();
+  });
+}
+
+/* ---- calculator (combine + bilateral flow FROZEN) ---- */
+const RING_C=505.8;
+function calc(){
+  const all=rows.map(d=>d.r).filter(r=>r>0);
+  const bl=rows.filter(d=>d.bl&&d.r>0).map(d=>d.r);
+  const non=rows.filter(d=>!d.bl&&d.r>0).map(d=>d.r);
+  let exact, effList, steps=[];
+  if(bl.length>=2){
+    const blC=combine(bl); const factor=Math.round(blC*0.10); const blVal=blC+factor;
+    steps.push(`Bilateral limbs: combine ${bl.join(" & ")} → ${blC}`);
+    steps.push(`+10% bilateral factor (${factor}) → ${blVal}`);
+    effList=[blVal,...non]; exact=combine(effList);
+    steps.push(`Combine ${[...effList].sort((a,b)=>b-a).join(" → ")} = ${exact}`);
+  } else {
+    effList=all; exact=combine(all);
+    if(all.length) steps.push(`Combine ${[...all].sort((a,b)=>b-a).join(" → ")} = ${exact}`);
+    else steps.push("Add a disability rating to begin.");
+  }
+  const rounded=Math.round(exact/10)*10;
+  lastRounded=rounded;
+  steps.push(`Round ${exact} to nearest 10 → ${rounded}%`);
+  countUp($("#rOut"),rounded,v=>String(Math.round(v)),600);
+  $("#ringFill").style.strokeDashoffset=(RING_C*(1-rounded/100)).toFixed(1);
+  $("#rExact").textContent = all.length? `exact combined value: ${exact}` : "";
+  const comp=calcComp(rounded,DEPS);
+  if(rounded>0){
+    $("#rPay").hidden=false;
+    countUp($("#payN"),comp.monthly,v=>usd(v),600);
+    $("#payYr").textContent=`${usd(comp.annual)} / year · tax-free`;
+    if(comp.addOns.length){
+      $("#rPayBk").textContent=`base ${usd(comp.base)} + `+comp.addOns.map(a=>`${a.label} ${usd(a.amount)}`).join(" + ");
+    } else if(rounded<30&&(DEPS.spouse||DEPS.ku18||DEPS.ksch||DEPS.parents)){
+      $("#rPayBk").textContent="Dependent add-ons start at 30%.";
+    } else $("#rPayBk").textContent="";
+  } else {$("#rPay").hidden=true;$("#rPayBk").textContent="";}
+  $("#steps").textContent=steps.join("\n");
+  // TDIU (schedular check FROZEN)
+  const maxR=all.length?Math.max(...all):0;
+  const tdiu = maxR>=60 || (rounded>=70 && all.some(r=>r>=40));
+  $("#tdiu").innerHTML = all.length? (tdiu
+    ? "<b>TDIU:</b> you may meet the schedular criteria — if these disabilities keep you from steady work, you can be paid at the 100% rate without a 100% rating (form <b>21-8940</b>)."
+    : "<b>TDIU:</b> schedular criteria not met yet (needs one rating ≥60%, or combined ≥70% with one ≥40%). Extra-schedular TDIU may still be possible — ask a VSO.") : "";
+  // path to 100
+  if(!all.length) $("#path100").innerHTML="";
+  else if(rounded>=100) $("#path100").innerHTML="<b>You're at 100%.</b>";
+  else { let need=null; for(let n=10;n<=100;n+=10){ if(Math.round(combine([...effList,n])/10)*10>=100){need=n;break;} }
+    $("#path100").innerHTML = need? `<b>Path to 100%:</b> add one more disability rated <b>${need}%+</b> to round up to 100%.`
+      : "<b>Path to 100%:</b> you'd need more than one additional rating from here."; }
+  renderBenefits();
+}
+
+/* ---- claim dates ---- */
+function initDates(){
+  $$("#p-claim input[data-d]").forEach(i=>{
+    i.value=DATES[i.dataset.d]||"";
+    i.onchange=()=>{DATES[i.dataset.d]=i.value;saveDates();renderDeadlines();renderBenefits();};
+  });
+}
+
+/* ---- deadline engine (rules per VA.gov research brief) — buildDeadlines() FROZEN ---- */
+function buildDeadlines(){
+  const out=[];
+  const sep=parseDate(DATES.sep),itf=parseDate(DATES.itf),filed=parseDate(DATES.filed),dec=parseDate(DATES.decision);
+  const now=new Date();now.setHours(0,0,0,0);
+  const push=(due,t,sub,link,ll)=>out.push({due,daysLeft:Math.round((due-now)/DAY),t,sub,link,ll});
+  if(itf&&!filed)
+    push(addYears(itf,1),"File your claim (21-526EZ)",
+      "An Intent to File gives you 1 year to complete and file your claim — file in time and your ITF date can set your effective date.",
+      "https://www.va.gov/resources/your-intent-to-file-a-va-claim/","Intent to File");
+  if(sep&&!filed){
+    const due=addYears(sep,1);
+    if(now<=due) push(due,"File within 1 year of separation",
+      "If VA gets your claim within 1 year of the day you left active service, the effective date can be as early as the day after separation.",
+      "https://www.va.gov/disability/effective-date/","Effective dates");
+  }
+  if(dec){
+    push(addYears(dec,1),"Appeal deadline — HLR (20-0996) / Board Appeal (10182)",
+      "Higher-Level Review and Board Appeal must be requested within 1 year of the date on your decision letter.",
+      "https://www.va.gov/resources/decision-reviews-faqs/","Decision reviews");
+    out.push({due:addYears(dec,1),daysLeft:Infinity,noexpire:true,
+      t:"Supplemental Claim (20-0995)",
+      sub:`Can be filed any time with new and relevant evidence — but filing within 1 year of the decision (by ${fmtDate(addYears(dec,1))}) keeps your effective date.`,
+      link:"https://www.va.gov/decision-reviews/supplemental-claim/",ll:"Supplemental Claims"});
+  }
+  if(sep){
+    push(addDays(sep,240),"VGLI — no health questions",
+      "Sign up for VGLI within 240 days of leaving the military and you won't need to prove you're in good health.",
+      "https://www.va.gov/life-insurance/options-eligibility/vgli/","VGLI");
+    push(addDays(sep,485),"VGLI — final application window",
+      "The last chance to apply for VGLI is 1 year and 120 days after leaving the military (evidence of good health required after day 240).",
+      "https://www.va.gov/life-insurance/options-eligibility/vgli/","VGLI");
+  }
+  if(sep||itf||filed||dec){
+    let aug=new Date(now.getFullYear(),7,1);
+    if(aug<now)aug=new Date(now.getFullYear()+1,7,1);
+    out.push({due:aug,daysLeft:Math.round((aug-now)/DAY),recurring:true,
+      t:"Clothing allowance — qualify by Aug 1",
+      sub:"Annual payment if a prosthetic/orthopedic device or skin medication wears out clothing. Form 10-8678 — you need to qualify by August 1 each year.",
+      link:"https://www.va.gov/disability/eligibility/special-claims/clothing-allowance/",ll:"Clothing allowance"});
+  }
+  out.sort((a,b)=>{const ao=a.daysLeft<0,bo=b.daysLeft<0;if(ao!==bo)return ao?-1:1;return a.daysLeft-b.daysLeft;});
+  return out;
+}
+/* ---- deadline rendering: 5-tier language, no red anywhere ---- */
+function tierFor(d){
+  if(d.none) return {cls:"t-steady",name:"No deadline"};
+  if(d.recurring||d.noexpire) return {cls:"t-info",name:"Recurring"};
+  if(d.daysLeft<0 || d.daysLeft<=14) return {cls:"t-urgent",name:"Urgent"};
+  if(d.daysLeft<=90) return {cls:"t-approaching",name:"Approaching"};
+  return {cls:"t-steady",name:"Steady"};
+}
+
+/* ---- catalog deadline rules — declarative dl: format, adapted from Muster's
+   personal-edition deadline engine, stateless: reads the SAME on-device DATES
+   already collected on the Claim tab (no new fields, nothing new persisted).
+   Rule shapes:
+     {anchor:'sep'|'itf'|'filed'|'decision', days:N, label} — dated, anchored to an existing date
+     {recurring:'annual', label}                            — a REAL fixed-calendar-date rule ONLY
+                                                                (hardcoded to Aug 1 below — the VA.gov
+                                                                clothing-allowance date; do not attach
+                                                                this to anything without that exact
+                                                                fixed date, e.g. "confirm periodically"
+                                                                is NOT annual/Aug-1). label (if set) is
+                                                                shown alongside the computed date.
+     {none:'reason'}                                         — never expires / no fixed date, states why
+     {action:'note'}                                         — no fixed date, an action note
+   One deadline engine: this feeds the SAME tierFor() above that drives the Claim tab's .dl cards. ---- */
+function computeDeadline(dl){
+  if(!dl) return null;
+  if(dl.none) return {none:true,reason:dl.none};
+  if(dl.action) return {action:true,reason:dl.action};
+  if(dl.recurring){
+    const now=new Date();now.setHours(0,0,0,0);
+    let next=new Date(now.getFullYear(),7,1);
+    if(next<now) next=new Date(now.getFullYear()+1,7,1);
+    return {recurring:true,due:next,daysLeft:Math.round((next-now)/DAY),label:dl.label};
+  }
+  const anchor=parseDate(DATES[dl.anchor]);
+  if(!anchor) return {unknown:true,anchor:dl.anchor};
+  const now=new Date();now.setHours(0,0,0,0);
+  const due=addDays(anchor,dl.days);
+  return {due,daysLeft:Math.round((due-now)/DAY)};
+}
+function dlBadgeHTML(dl){
+  if(!dl) return "";
+  const r=computeDeadline(dl);
+  if(!r) return "";
+  if(r.unknown){
+    const need={sep:"separation date",itf:"Intent to File date",filed:"claim-filed date",decision:"decision-letter date"}[r.anchor]||"date";
+    return `<div class="dlbadge t-info"><span class="dltag">Add a date</span><span class="dltext">Enter your ${need} on the Claim &amp; Deadlines tab to see this deadline.</span></div>`;
+  }
+  if(r.action) return `<div class="dlbadge t-steady"><span class="dltag">No deadline</span><span class="dltext">${r.reason}</span></div>`;
+  const tier=tierFor(r);
+  if(r.none) return `<div class="dlbadge ${tier.cls}"><span class="dltag">${tier.name}</span><span class="dltext">${r.reason}</span></div>`;
+  let text;
+  if(r.recurring) text=r.label?`${r.label} — next due ${fmtDate(r.due)}.`:`Recurring — next due ${fmtDate(r.due)}.`;
+  else{
+    const over=r.daysLeft<0;
+    const count=over?`${Math.abs(r.daysLeft)} days ago`:r.daysLeft===0?"due today":`${r.daysLeft} days left`;
+    text=`${count} · due ${fmtDate(r.due)}`;
+  }
+  return `<div class="dlbadge ${tier.cls}"><span class="dltag">${tier.name}</span><span class="dltext reg">${text}</span></div>`;
+}
+function renderDeadlines(){
+  const list=buildDeadlines(),box=$("#deadlines");
+  if(!list.length){box.innerHTML=`<div class="empty">Add a date above and your deadlines appear here.</div>`;return;}
+  box.innerHTML=list.map(d=>{
+    const tier=tierFor(d);
+    if(d.noexpire)
+      return `<div class="dl ${tier.cls}"><div class="dnum"><b>∞</b><small>any time</small></div><div class="dbody"><span class="dtier">${tier.name}</span><h4>${d.t}</h4><p class="ddue">No hard deadline</p><p class="dsub">${d.sub} <a href="${d.link}" target="_blank" rel="noopener">${d.ll} ↗</a></p></div></div>`;
+    const over=d.daysLeft<0;
+    const big=over?"!":d.daysLeft, lbl=over?"passed":"days left";
+    return `<div class="dl ${tier.cls}"><div class="dnum"><b>${big}</b><small>${lbl}</small></div><div class="dbody"><span class="dtier">${tier.name}</span><h4>${d.t}</h4><p class="ddue reg">${d.recurring?"Recurring — next":"Due"} ${fmtDate(d.due)}${over?` — ${Math.abs(d.daysLeft)} days ago`:""}</p><p class="dsub">${d.sub} <a href="${d.link}" target="_blank" rel="noopener">${d.ll} ↗</a></p></div></div>`;
+  }).join("");
+}
+
+/* ---- back-pay estimator (math FROZEN) ---- */
+function depsSummary(){
+  const p=[];
+  if(DEPS.spouse)p.push("spouse"+(DEPS.aa?" (A&A)":""));
+  if(DEPS.ku18)p.push(`${DEPS.ku18} kid${DEPS.ku18>1?"s":""} under 18`);
+  if(DEPS.ksch)p.push(`${DEPS.ksch} in school (18–23)`);
+  if(DEPS.parents)p.push(`${DEPS.parents} parent${DEPS.parents>1?"s":""}`);
+  return p.length?p.join(" + "):"none";
+}
+function renderBackpay(){
+  $("#bpDeps").textContent=`Dependents (from the Calculator tab): ${depsSummary()}.`;
+  const eff=parseDate($("#bp-eff").value), nw=+$("#bp-new").value, old=+$("#bp-old").value;
+  const wrap=$("#bpWrap"), sub=$("#bpSub");
+  if(!eff){wrap.hidden=true;sub.textContent="Pick an effective date above to estimate.";return;}
+  const now=new Date();
+  const m=wholeMonths(eff,now);
+  const diff=r2(calcComp(nw,DEPS).monthly - calcComp(old,DEPS).monthly);
+  const total=Math.max(0,r2(m*diff));
+  wrap.hidden=false;
+  countUp($("#bpN"),total,v=>usd0(v),600);
+  sub.textContent=`${m} whole month${m===1?"":"s"} × ${usd(diff)} / month difference (${old}% → ${nw}%)`;
+}
+function initBackpay(){
+  $("#bp-new").innerHTML=[10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${v===(lastRounded||10)?" selected":""}>${v}%</option>`).join("");
+  $("#bp-old").innerHTML=[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${v===0?" selected":""}>${v}%</option>`).join("");
+  $("#bp-eff").onchange=renderBackpay;
+  $("#bp-new").onchange=renderBackpay;
+  $("#bp-old").onchange=renderBackpay;
+  renderBackpay();
+}
+
+/* ---- checklist component — ONE reusable pattern,
+   four instances: the Claim tab's filing checklist (va_chk, unchanged
+   keys/behavior), the P&T Stack's claims-prep checklist (va_chk_pt), the
+   VSO one-pager's action list (va_chk_vso), and the 2-minute check's
+   checklist (va_chk_2min). Each instance gets its own container + its
+   own localStorage key so progress doesn't collide between them. ---- */
+function makeChecklist(containerSel,data,storageKey){
+  let done={};try{done=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){}
+  function render(){
+    const box=$(containerSel);if(!box)return;
+    let h="";
+    data.forEach((g,gi)=>{
+      const total=g[1].length, n=g[1].filter((_,ii)=>done[gi+"-"+ii]).length;
+      h+=`<div class="grp">${g[0].toUpperCase()}<span class="gc" data-gc="${gi}">${n}/${total} done</span></div><div class="pbar"><i data-gp="${gi}" style="width:${(n/total*100).toFixed(1)}%"></i></div>`;
+      g[1].forEach((it,ii)=>{const k=gi+"-"+ii;h+=`<div class="chk${done[k]?" done":""}" data-k="${k}" role="checkbox" aria-checked="${done[k]?"true":"false"}" tabindex="0"><div class="box">✓</div><div class="t">${it[0]}${it[1]?`<small>${it[1]}</small>`:""}</div></div>`;});
+    });
+    box.innerHTML=h;
+    box.querySelectorAll(".chk").forEach(c=>{
+      const toggle=()=>{
+        const k=c.dataset.k;done[k]=!done[k];
+        try{localStorage.setItem(storageKey,JSON.stringify(done))}catch(e){}
+        c.classList.toggle("done",done[k]);c.setAttribute("aria-checked",done[k]?"true":"false");updateProg();
+      };
+      c.onclick=toggle;
+      c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}};
+    });
+  }
+  function updateProg(){
+    const box=$(containerSel);if(!box)return;
+    data.forEach((g,gi)=>{
+      const total=g[1].length, n=g[1].filter((_,ii)=>done[gi+"-"+ii]).length;
+      const c=box.querySelector(`[data-gc="${gi}"]`),p=box.querySelector(`[data-gp="${gi}"]`);
+      if(c)c.textContent=`${n}/${total} done`;
+      if(p)p.style.width=(n/total*100).toFixed(1)+"%";
+    });
+  }
+  return {render};
+}
+const claimChecklist=makeChecklist("#checklist",CHK,"va_chk");
+const prepChecklist=makeChecklist("#ptChecklist",PT_CHK,"va_chk_pt");
+const vsoChecklist=makeChecklist("#vsoChecklist",VSO_CHK,"va_chk_vso");
+const twoMinChecklist=makeChecklist("#twoMinChecklist",TWOMIN_CHK,"va_chk_2min");
+
+/* ---- benefits catalogs (rating-aware, never "you qualify") ----
+   One generic renderer drives both FED and CA (and any future state chapter):
+   nothing state-specific is hardcoded here — only the catalog array, the
+   jurisdiction-chip class/label, and the container id are ever parameters. ---- */
+function thrMet(t){
+  const hasAny=rows.some(d=>d.r>0);
+  if(t==="any"||t==="none")return hasAny;
+  if(t==="dep30"||t==="p30")return lastRounded>=30;
+  if(t==="p50")return lastRounded>=50;
+  if(t==="t100")return lastRounded>=100;
+  return false; // "pt"/"vso"/ownership-or-mobility thresholds ("dvown","scdis") can't be inferred from a rating alone
+}
+function catalogItemHTML(b,chipCls,chipLabel){
+  const m=thrMet(b.thr);
+  const vcls="vnum"+(/\d/.test(THR[b.thr])?"":" txt");
+  const stack=b.val?`<div class="callout stack"><span class="ctag">Stack it</span>Estimated value: <span class="reg">${usd0(b.val)}</span>.</div>`:"";
+  const idAttr=b.slug?` id="bc-${b.slug}"`:"";
+  return `<div class="bcard${m?" met":""}"${idAttr}><div class="bhead"><h4>${b.t}<span class="chip ${chipCls}">${chipLabel}</span></h4><div class="vbadge"><span class="${vcls}">${THR[b.thr]}</span><span class="vunit">eligibility</span></div></div>${m?`<p class="metline">At your rating, likely eligible — confirm.</p>`:""}<p>${b.sum} <a href="${b.link}" target="_blank" rel="noopener">${b.ll} ↗</a></p>${stack}${dlBadgeHTML(b.dl)}</div>`;
+}
+function renderCatalog(containerSel,catalog,chipCls,chipLabel){
+  const box=$(containerSel);if(!box)return;
+  const open=new Set($$(containerSel+" details").filter(d=>d.open).map(d=>d.dataset.g));
+  let h="";
+  BCAT.forEach((name,ci)=>{
+    const items=catalog.filter(b=>b.cat===ci);if(!items.length)return;
+    const mets=items.filter(b=>thrMet(b.thr)).length;
+    h+=`<details class="bgrp" data-g="${ci}"${open.has(String(ci))?" open":""}><summary>${name}<span class="bs-n">${mets?`${mets} likely · `:""}${items.length}</span><span class="chev">▾</span></summary><div class="bitemwrap">`;
+    h+=items.map(b=>catalogItemHTML(b,chipCls,chipLabel)).join("");
+    h+=`</div></details>`;
+  });
+  box.innerHTML=h;
+}
+function renderBenefits(){
+  renderCatalog("#bencat",FED,"fed","Fed");
+  renderCatalog("#bencatCA",CA,"ca","CA");
+}
+
+/* ==================================================================
+   CROSS-REFERENCE ANCHORS (editorial merge) — one benefit, one canonical
+   entry: content in the P&T Stack / Guides tabs that would otherwise
+   duplicate a Benefits-catalog summary instead links to it with a real
+   in-page <a class="xref" href="#id">. Works across tabs (activates the
+   target's tab + opens its accordion group) and into the Guides article
+   view (unhides the target article). Delegated listener, so it also
+   covers links written inside ported P&T/Guides content added later. ---- */
+function xrefTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  if(el.getAttribute&&el.getAttribute("role")==="tab"){activateTab(el);return;}
+  const panel=el.closest(".panel");
+  if(panel){const btn=document.getElementById("tab-"+panel.id.replace("p-",""));if(btn)activateTab(btn);}
+  if(el.classList.contains("garticle"))showGuide(el.id.replace("g-",""));
+  const det=el.closest("details.bgrp");
+  if(det)det.open=true;
+  requestAnimationFrame(()=>{
+    el.scrollIntoView({behavior:RM?"auto":"smooth",block:"start"});
+    el.classList.add("xref-flash");
+    setTimeout(()=>el.classList.remove("xref-flash"),1200);
+    // Focus management: a click on an xref must move keyboard focus to the
+    // landing target too, not just scroll to it — otherwise screen-reader/
+    // keyboard users get no signal anything happened. Most targets (bcard,
+    // garticle, part-wrap) are plain <div>s with no native focusability, so
+    // give them a programmatic tabindex first; preventScroll avoids a
+    // second jump since scrollIntoView already positioned the page.
+    const NATIVE_FOCUSABLE=/^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
+    if(!el.hasAttribute("tabindex")&&!NATIVE_FOCUSABLE.test(el.tagName))el.setAttribute("tabindex","-1");
+    el.focus({preventScroll:true});
+  });
+}
+function initXrefs(){
+  document.addEventListener("click",e=>{
+    const a=e.target.closest("a.xref");
+    if(!a)return;
+    const href=a.getAttribute("href")||"";
+    if(!href.startsWith("#"))return;
+    e.preventDefault();
+    xrefTo(href.slice(1));
+  });
+}
+
+/* ==================================================================
+   GUIDES — TOC / article-view toggle (no routing, no build step: every
+   article's HTML already lives in the DOM, this just shows one at a
+   time). TOC links use the same a.xref mechanism above (href="#g-slug"),
+   so clicking one both switches tab (if needed) and opens the article.
+   ================================================================== */
+function showGuide(slug){
+  const toc=$("#guides-toc"),art=$("#guides-article");
+  if(toc)toc.hidden=true;
+  if(art)art.hidden=false;
+  $$("#guides-article .garticle").forEach(a=>{a.hidden=(a.id!=="g-"+slug);});
+}
+function showGuidesToc(){
+  const toc=$("#guides-toc"),art=$("#guides-article");
+  if(art)art.hidden=true;
+  if(toc)toc.hidden=false;
+}
+function initGuides(){
+  const back=$("#gBack");
+  if(back)back.addEventListener("click",e=>{e.preventDefault();showGuidesToc();});
+}
+
+/* ==================================================================
+   VSO ONE-PAGER — scoped print. The one document in the tool meant to
+   be handed to someone in person needs to print standalone, not buried
+   in a 16-page whole-tab PDF. Mirrors the guide-article print-isolation
+   pattern: toggle a body class, let @media print hide
+   everything except the tagged container. ---- */
+function initPrintVso(){
+  const btn=$("#vsoPrintBtn");
+  if(!btn)return;
+  btn.addEventListener("click",()=>{
+    document.body.classList.add("print-vso-only");
+    window.print();
+  });
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-vso-only"));
+}
+
+/* ---- init ---- */
+renderRows();renderDeps();calc();initDates();renderDeadlines();initBackpay();
+claimChecklist.render();prepChecklist.render();vsoChecklist.render();twoMinChecklist.render();
+renderStamps();initXrefs();initGuides();initPrintVso();
+</script>
+</body>
+</html>

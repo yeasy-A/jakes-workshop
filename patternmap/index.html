@@ -4,21 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PatternMap</title>
-<meta name="description" content="PatternMap — a living constellation of biblical patterns: a node-graph study canvas with Bible integration and Obsidian sync.">
+<meta name="description" content="PatternMap — a living constellation of biblical patterns: a node-graph study canvas with Bible integration.">
 <meta name="color-scheme" content="dark">
-<!-- Google Fonts: one sans (Inter) + one serif (Lora) for scripture. System fallbacks in --font-* keep it fully offline. -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 /* ============================================================================
    PatternMap — Design System (styles.css)
-   Raw CSS only (integrator wraps in a single <style>).
-   Implements every :root token + every state class the JS toggles per CONTRACT.
+   Implements every :root token + every state class the JS toggles.
    ============================================================================ */
 
 /* ---------------------------------------------------------------------------
-   :root tokens (CONTRACT §5.1 — values are normative)
+   Self-hosted fonts: one sans (Inter) + one serif (Lora) for scripture.
+   Variable fonts, Latin-subset. System fallbacks in --font-* keep it fully
+   offline if a font fails to load.
+   --------------------------------------------------------------------------- */
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('fonts/inter-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url('fonts/lora-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url('fonts/lora-italic.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+/* ---------------------------------------------------------------------------
+   :root tokens (values are normative)
    --------------------------------------------------------------------------- */
 :root{
   /* category colors */
@@ -467,11 +471,11 @@ svg{ display:block; }
 /* ---------------------------------------------------------------------------
    Floating glass shell mixin look — applied to toolbar/search/minimap/etc.
    --------------------------------------------------------------------------- */
-.toolbar,.searchbar,.filter-chips,.minimap,.sync-indicator{
+.toolbar,.searchbar,.filter-chips,.minimap{
   position:fixed;
   z-index:var(--z-toolbar);
 }
-.toolbar,.searchbar,.minimap,.sync-indicator{
+.toolbar,.searchbar,.minimap{
   background:var(--glass);
   border:1px solid var(--glass-border);
   box-shadow:var(--shadow);
@@ -695,64 +699,6 @@ svg{ display:block; }
 .minimap__viewport:hover{ border-color:var(--accent); }
 .minimap__viewport:active{ cursor:grabbing; }
 
-/* Global sync indicator (top-right corner; sits left of search visually) */
-.sync-indicator{
-  top:20px; right:316px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  height:44px;
-  padding:0 14px;
-  border-radius:999px;
-  font-size:12.5px;
-  font-weight:600;
-  color:var(--text-dim);
-  transition:color var(--dur) var(--ease);
-}
-.sync-indicator:hover{ color:var(--text); }
-.sync-indicator__dot{
-  width:9px; height:9px;
-  border-radius:50%;
-  background:var(--text-faint);
-  flex:none;
-}
-.sync-indicator__count{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:18px; height:18px; padding:0 5px;
-  border-radius:999px;
-  background:var(--surface-3);
-  color:var(--text);
-  font-size:10.5px; font-weight:700;
-}
-
-/* ---------------------------------------------------------------------------
-   Status dots (shared: sync indicator + settings dashboard + drawer badge)
-   --------------------------------------------------------------------------- */
-.status-dot{ width:9px; height:9px; border-radius:50%; flex:none; display:inline-block; }
-.status-dot--ok,.status-dot--connected,.status-dot--synced{ background:var(--ok); box-shadow:0 0 8px color-mix(in srgb, var(--ok) 70%, transparent); }
-.status-dot--warn,.status-dot--pending{ background:var(--warn); box-shadow:0 0 8px color-mix(in srgb, var(--warn) 70%, transparent); }
-.status-dot--err,.status-dot--error{ background:var(--err); box-shadow:0 0 8px color-mix(in srgb, var(--err) 70%, transparent); }
-.status-dot--unconfigured{ background:var(--text-faint); }
-.status-dot--syncing,.status-dot--spinning{
-  background:var(--info);
-  position:relative;
-  box-shadow:0 0 8px color-mix(in srgb, var(--info) 70%, transparent);
-}
-.status-dot--syncing::after,.status-dot--spinning::after{
-  content:"";
-  position:absolute;
-  inset:-4px;
-  border-radius:50%;
-  border:1.5px solid transparent;
-  border-top-color:var(--info);
-  animation:spin .8s linear infinite;
-}
-/* mirror onto the sync-indicator dot too */
-.sync-indicator__dot.is-connected{ background:var(--ok); box-shadow:0 0 8px color-mix(in srgb, var(--ok) 70%, transparent); }
-.sync-indicator__dot.is-syncing{ background:var(--info); box-shadow:0 0 8px color-mix(in srgb, var(--info) 70%, transparent); animation:pulseDot 1s var(--ease) infinite; }
-.sync-indicator__dot.is-error{ background:var(--err); box-shadow:0 0 8px color-mix(in srgb, var(--err) 70%, transparent); }
-.sync-indicator__dot.is-unconfigured{ background:var(--text-faint); }
-@keyframes pulseDot{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
 @keyframes spin{ to{ transform:rotate(360deg); } }
 
 /* Generic spinner */
@@ -823,8 +769,8 @@ svg{ display:block; }
 .drawer__title[contenteditable]:focus{ background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--border); }
 .drawer__close{
   position:absolute;
-  top:16px; right:16px;
-  width:30px; height:30px;
+  top:12px; right:12px;
+  width:44px; height:44px;
   display:flex; align-items:center; justify-content:center;
   border-radius:8px;
   color:var(--text-dim);
@@ -935,17 +881,6 @@ svg{ display:block; }
 }
 .drawer__meta-k{ color:var(--text-faint); }
 .drawer__meta-v{ color:var(--text-dim); text-align:right; }
-
-/* per-pattern sync row */
-.drawer__sync{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:10px;
-  padding:11px 13px;
-  background:var(--surface-2);
-  border:1px solid var(--border-soft);
-  border-radius:var(--radius-sm);
-}
-.drawer__sync-status{ display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:var(--text-dim); }
 
 /* footer */
 .drawer__footer{
@@ -1380,174 +1315,6 @@ svg{ display:block; }
 .versepicker__searching{ display:flex; align-items:center; justify-content:center; gap:9px; }
 
 /* ---------------------------------------------------------------------------
-   Settings page overlay
-   --------------------------------------------------------------------------- */
-.settings-page{
-  position:fixed; inset:0;
-  z-index:var(--z-modal);
-  display:flex; align-items:center; justify-content:center;
-  padding:40px;
-  background:rgba(6,6,16,.6);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  opacity:0; pointer-events:none;
-  transition:opacity var(--dur) var(--ease);
-}
-.settings-page.is-open{ opacity:1; pointer-events:auto; }
-.settings__panel{
-  width:min(640px,100%);
-  max-height:88vh;
-  display:flex; flex-direction:column;
-  background:var(--surface);
-  border:1px solid var(--glass-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-lg);
-  transform:translateY(16px) scale(.98);
-  opacity:0;
-  transition:transform var(--dur) var(--ease-out), opacity var(--dur) var(--ease);
-}
-.settings-page.is-open .settings__panel{ transform:translateY(0) scale(1); opacity:1; }
-.settings__head{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:20px 24px 16px;
-  border-bottom:1px solid var(--border-soft);
-}
-.settings__title{ font-size:18px; font-weight:700; display:flex; align-items:center; gap:9px; }
-.settings__title svg{ width:20px; height:20px; color:var(--accent); }
-.settings__close{
-  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
-  border-radius:8px; color:var(--text-dim);
-  transition:background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-}
-.settings__close:hover{ background:var(--surface-3); color:var(--text); }
-.settings__close svg{ width:18px; height:18px; }
-.settings__body{ flex:1; overflow-y:auto; padding:22px 24px; display:flex; flex-direction:column; gap:20px; }
-.settings__field{ display:flex; flex-direction:column; gap:8px; }
-
-/* status row */
-.settings__status{
-  display:flex; align-items:center; gap:11px;
-  padding:13px 16px;
-  border-radius:var(--radius);
-  background:var(--surface-2);
-  border:1px solid var(--border-soft);
-}
-.settings__status-text{ font-size:13.5px; font-weight:600; }
-.settings__status--connected{ border-color:color-mix(in srgb, var(--ok) 35%, transparent); }
-.settings__status--connected .settings__status-text{ color:var(--ok); }
-.settings__status--syncing{ border-color:color-mix(in srgb, var(--info) 35%, transparent); }
-.settings__status--syncing .settings__status-text{ color:var(--info); }
-.settings__status--error{ border-color:color-mix(in srgb, var(--err) 35%, transparent); }
-.settings__status--error .settings__status-text{ color:var(--err); }
-.settings__status--unconfigured .settings__status-text{ color:var(--text-dim); }
-.settings__status-msg{ font-size:12px; color:var(--text-faint); margin-left:auto; }
-
-/* onboarding prompt (never configured) */
-.settings__onboard{
-  padding:18px;
-  border-radius:var(--radius);
-  background:color-mix(in srgb, var(--accent) 8%, var(--surface-2));
-  border:1px dashed color-mix(in srgb, var(--accent) 40%, transparent);
-  text-align:center;
-  font-size:13px; color:var(--text-dim);
-  line-height:1.6;
-}
-
-/* progress bar (syncing) */
-.progress{
-  width:100%; height:6px;
-  border-radius:999px;
-  background:var(--surface-3);
-  overflow:hidden;
-}
-.progress__bar{
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--info),var(--accent));
-  width:40%;
-  animation:progressIndet 1.2s var(--ease) infinite;
-}
-@keyframes progressIndet{
-  0%{ transform:translateX(-100%); width:40%; }
-  50%{ width:60%; }
-  100%{ transform:translateX(260%); width:40%; }
-}
-
-/* dashboard stats grid */
-.settings__dash{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:11px;
-}
-.settings__stat{
-  padding:14px;
-  border-radius:var(--radius);
-  background:var(--surface-2);
-  border:1px solid var(--border-soft);
-  text-align:center;
-}
-.settings__stat-num{ font-size:22px; font-weight:800; color:var(--text); }
-.settings__stat-label{ font-size:10.5px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-faint); margin-top:4px; }
-
-/* collapsible error log */
-.settings__errorlog{
-  border-radius:var(--radius);
-  background:var(--surface-2);
-  border:1px solid var(--border-soft);
-  overflow:hidden;
-}
-.settings__errorlog-head{
-  display:flex; align-items:center; gap:9px;
-  padding:11px 14px;
-  font-size:12.5px; font-weight:600; color:var(--text-dim);
-  cursor:pointer;
-}
-.settings__errorlog-head svg{ width:14px; height:14px; transition:transform var(--dur-fast) var(--ease); }
-.settings__errorlog.is-open .settings__errorlog-head svg{ transform:rotate(90deg); }
-.settings__errorlog-head .count{ margin-left:auto; color:var(--err); font-weight:700; }
-.settings__errorlog-body{ display:none; padding:0 14px 12px; max-height:160px; overflow-y:auto; }
-.settings__errorlog.is-open .settings__errorlog-body{ display:block; }
-.settings__errorlog-item{
-  font-size:11.5px; color:var(--text-dim);
-  padding:7px 0; border-top:1px solid var(--border-soft);
-  display:flex; gap:10px;
-}
-.settings__errorlog-item .ts{ color:var(--text-faint); flex:none; }
-.settings__errorlog-item .msg{ color:var(--err); }
-
-/* template editor with .var token highlight */
-.settings__template{ position:relative; }
-.settings__template textarea{
-  width:100%; min-height:170px;
-  padding:13px;
-  background:#0c0c1c;
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  color:var(--text-dim);
-  font-family:"SFMono-Regular",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
-  font-size:12.5px; line-height:1.6;
-  outline:none; tab-size:2;
-  transition:border-color var(--dur-fast) var(--ease);
-}
-.settings__template textarea:focus{ border-color:var(--accent); }
-/* highlighted preview (overlay or rendered chips) — .var tokens */
-.settings__template-preview{
-  margin-top:8px;
-  padding:13px;
-  background:#0c0c1c;
-  border:1px solid var(--border-soft);
-  border-radius:var(--radius-sm);
-  font-family:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
-  font-size:12.5px; line-height:1.6;
-  color:var(--text-dim);
-  white-space:pre-wrap;
-  max-height:160px; overflow-y:auto;
-}
-.settings__footer{
-  display:flex; gap:10px; justify-content:flex-end;
-  padding:16px 24px;
-  border-top:1px solid var(--border-soft);
-}
-
-/* ---------------------------------------------------------------------------
    Toasts — slide-in, success/error/info/warn
    --------------------------------------------------------------------------- */
 .toast-host{
@@ -1688,15 +1455,46 @@ svg{ display:block; }
   .edge{ animation:none; stroke-dasharray:none; }
 }
 
+/* ---------------------------------------------------------------------------
+   Narrow viewports (phone). The fixed-position chrome (toolbar/searchbar/
+   minimap/add-pattern pill) is laid out with enough room on desktop that
+   nothing touches; below ~640px there isn't enough width for all of it side
+   by side, so a few pieces collide with each other or with the graph itself.
+   --------------------------------------------------------------------------- */
+@media (max-width:640px){
+  /* The minimap (bottom-right) physically overlaps the Add Pattern pill
+     (bottom-center) at this width — up to ~half the pill sits under it and
+     is unclickable. The minimap is a secondary wayfinding aid (the toolbar's
+     "Fit all" button covers the same job); hide it rather than shrink it
+     into uselessness. */
+  .minimap{ display:none; }
+
+  /* The searchbar grows from 280px to 330px on focus for breathing room on
+     desktop; at this width that growth pushes its left edge under the
+     toolbar. Keep it at its resting width on focus here instead. */
+  .searchbar:focus-within{ width:280px; }
+
+  /* Bump the smallest tap targets up to a 44px minimum without touching
+     their desktop sizing (icons stay the same size, just more padding). */
+  .toolbar__btn{ width:44px; height:44px; }
+  .drawer__foot-btn{ min-height:44px; }
+
+  /* The Add/Edit Pattern modal's 3-column category grid doesn't fit its own
+     modal at this width — "Prophetic" and "Custom" get clipped against the
+     modal's right edge. Two columns gives every pill enough room for its
+     icon + full label. */
+  .modal__cats{ grid-template-columns:repeat(2,1fr); }
+}
+
 /* ===== Use Lora for scripture serif when the webfont loads (system serif fallback otherwise) ===== */
 :root{ --font-serif:"Lora","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif; }
 
 /* ===========================================================================
-   INTEGRATION BRIDGE — supplemental styles reconciling class-name drift between
-   the JS modules' generated DOM and the base stylesheet. Authored by the
-   integrator; the base styles.css above is left verbatim. Everything here maps
-   real emitted class names (drawer.js / modal.js / bible.js / sync.js / dom.html)
-   onto the existing design tokens so every JS-generated element is styled.
+   INTEGRATION BRIDGE — supplemental styles reconciling class-name drift
+   between the JS modules' generated DOM and the base stylesheet. Everything
+   here maps real emitted class names (drawer.js / modal.js / bible.js /
+   dom.html) onto the existing design tokens so every JS-generated element
+   is styled.
    =========================================================================== */
 
 /* ---- node tooltip: graph.js emits .node__tooltip-meta (css has -count) ---- */
@@ -1821,30 +1619,6 @@ svg{ display:block; }
 }
 .drawer__meta-row dt{ color:var(--text-faint); }
 .drawer__meta-row dd{ margin:0; color:var(--text-dim); text-align:right; }
-
-/* per-pattern sync block */
-.drawer__sync{ display:block; }
-.drawer__sync-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
-.drawer__sync-pill{
-  display:inline-flex; align-items:center; gap:7px;
-  padding:5px 11px; border-radius:999px; font-size:12px; font-weight:600;
-  background:var(--surface-3); color:var(--text-dim);
-}
-.drawer__sync-dot{ width:8px; height:8px; border-radius:50%; background:var(--text-faint); flex:none; }
-.drawer__sync-pill--synced{ color:var(--ok); background:color-mix(in srgb, var(--ok) 14%, var(--surface-2)); }
-.drawer__sync-pill--synced .drawer__sync-dot{ background:var(--ok); box-shadow:0 0 7px color-mix(in srgb, var(--ok) 70%, transparent); }
-.drawer__sync-pill--pending{ color:var(--warn); background:color-mix(in srgb, var(--warn) 14%, var(--surface-2)); }
-.drawer__sync-pill--pending .drawer__sync-dot{ background:var(--warn); box-shadow:0 0 7px color-mix(in srgb, var(--warn) 70%, transparent); }
-.drawer__sync-pill--error{ color:var(--err); background:color-mix(in srgb, var(--err) 14%, var(--surface-2)); }
-.drawer__sync-pill--error .drawer__sync-dot{ background:var(--err); box-shadow:0 0 7px color-mix(in srgb, var(--err) 70%, transparent); }
-.drawer__sync-open{
-  display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600;
-  color:var(--text-dim); padding:6px 10px; border-radius:var(--radius-sm);
-  border:1px solid var(--border); transition:all var(--dur-fast) var(--ease);
-}
-.drawer__sync-open:hover{ color:var(--text); background:var(--surface-3); border-color:var(--accent); }
-.drawer__sync-open svg{ width:13px; height:13px; }
-.drawer__sync-path{ font-size:11px; color:var(--text-faint); font-family:ui-monospace,Menlo,Consolas,monospace; word-break:break-all; }
 
 /* footer buttons */
 .drawer__foot-btn{
@@ -2078,126 +1852,6 @@ svg{ display:block; }
 .versepicker__result--book .versepicker__result-ref{ color:var(--text); }
 .versepicker__hint{ padding:14px; text-align:center; color:var(--text-faint); font-size:12.5px; }
 
-/* =========================================================================
-   SYNC INDICATOR + SETTINGS PAGE — sync.js emitted classes
-   ========================================================================= */
-.sync-indicator{ cursor:default; }
-.sync-indicator.is-clickable{ cursor:pointer; }
-.sync-indicator__text{ display:flex; flex-direction:column; line-height:1.2; }
-.sync-indicator__label{ font-size:12px; font-weight:700; color:var(--text); }
-.sync-indicator__sub{ font-size:10.5px; color:var(--text-faint); }
-.sync-indicator__icon{ width:16px; height:16px; color:var(--text-dim); flex:none; display:inline-flex; }
-.sync-indicator__icon svg{ width:16px; height:16px; }
-.sync-indicator__badge{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:18px; height:18px; padding:0 5px; border-radius:999px;
-  background:var(--warn); color:var(--text-on-accent); font-size:10.5px; font-weight:700;
-}
-.sync-indicator--unconfigured{ opacity:.85; }
-.sync-indicator__progress{ position:absolute; left:10px; right:10px; bottom:5px; height:3px; border-radius:999px; background:var(--surface-3); overflow:hidden; }
-.sync-indicator__progress-fill{ height:100%; background:linear-gradient(90deg,var(--info),var(--accent)); width:0; transition:width .18s linear; }
-.sync-indicator.sync-indicator--pulse{ animation:syncPulse .6s var(--ease); }
-@keyframes syncPulse{ 0%,100%{ box-shadow:var(--shadow); } 50%{ box-shadow:var(--shadow), 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); } }
-
-/* settings page panel: sync.js renders directly into #settingsPage (no inner .settings__panel) */
-.settings-page{ overflow:auto; }
-.settings-page > .settings__head,
-.settings-page > .settings__body,
-.settings-page > .settings__footer{
-  width:min(640px,100%);
-}
-.settings-page{ flex-direction:column; }
-.settings-page > .settings__head{
-  background:var(--surface); border:1px solid var(--glass-border); border-bottom:none;
-  border-radius:var(--radius-lg) var(--radius-lg) 0 0; box-shadow:var(--shadow-lg);
-  transform:translateY(16px) scale(.98); opacity:0;
-  transition:transform var(--dur) var(--ease-out), opacity var(--dur) var(--ease);
-}
-.settings-page > .settings__body{
-  background:var(--surface); border-left:1px solid var(--glass-border); border-right:1px solid var(--glass-border);
-  transform:translateY(16px) scale(.98); opacity:0;
-  transition:transform var(--dur) var(--ease-out), opacity var(--dur) var(--ease);
-}
-.settings-page > .settings__footer{
-  background:var(--surface); border:1px solid var(--glass-border); border-top:1px solid var(--border-soft);
-  border-radius:0 0 var(--radius-lg) var(--radius-lg); box-shadow:var(--shadow-lg);
-  transform:translateY(16px) scale(.98); opacity:0;
-  transition:transform var(--dur) var(--ease-out), opacity var(--dur) var(--ease);
-}
-.settings-page.is-open > .settings__head,
-.settings-page.is-open > .settings__body,
-.settings-page.is-open > .settings__footer{ transform:translateY(0) scale(1); opacity:1; }
-
-.settings__head-title{ display:flex; align-items:center; gap:9px; font-size:18px; font-weight:700; }
-.settings__head-title svg{ width:20px; height:20px; color:var(--accent); }
-
-.settings__onboard{ display:flex; align-items:flex-start; gap:13px; text-align:left; }
-.settings__onboard-icon{ width:34px; height:34px; flex:none; color:var(--accent); }
-.settings__onboard-icon svg{ width:34px; height:34px; }
-.settings__onboard-text strong{ display:block; color:var(--text); margin-bottom:4px; }
-.settings__onboard-text p{ margin:0; }
-
-.settings__status-dot{ width:11px; height:11px; }
-.settings__status-text{ display:flex; flex-direction:column; gap:2px; }
-.settings__status-text strong{ font-size:13.5px; }
-.settings__status-text span{ font-size:11.5px; color:var(--text-faint); font-weight:500; }
-.settings__retry{ margin-left:auto; }
-.status--connected{ border-color:color-mix(in srgb, var(--ok) 35%, transparent); }
-.status--connected .settings__status-text strong{ color:var(--ok); }
-.status--syncing{ border-color:color-mix(in srgb, var(--info) 35%, transparent); }
-.status--syncing .settings__status-text strong{ color:var(--info); }
-.status--error{ border-color:color-mix(in srgb, var(--err) 35%, transparent); }
-.status--error .settings__status-text strong{ color:var(--err); }
-
-.settings__label{ font-size:11.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--text-faint); }
-.settings__input{
-  width:100%; padding:11px 13px; background:var(--surface-2); border:1px solid var(--border);
-  border-radius:var(--radius-sm); color:var(--text); font-size:13.5px; outline:none;
-  transition:border-color var(--dur-fast) var(--ease);
-}
-.settings__input:focus{ border-color:var(--accent); }
-.settings__select{ cursor:pointer; }
-.settings__hint{ font-size:11.5px; color:var(--text-faint); }
-.settings__path-row{ display:flex; gap:8px; }
-.settings__path-row .settings__input{ flex:1; }
-.settings__pick{ flex:none; padding:11px; }
-
-.settings__progress{ width:100%; height:6px; border-radius:999px; background:var(--surface-3); overflow:hidden; }
-.settings__progress-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--info),var(--accent)); width:0; transition:width .18s linear; }
-
-/* Connect Vault Folder block (real File System Access sync) */
-.settings__connect{
-  display:flex; flex-direction:column; gap:12px;
-  padding:14px 16px; border-radius:var(--radius);
-  background:var(--surface-2); border:1px solid var(--border-soft);
-}
-.settings__connect-row{ display:flex; align-items:flex-start; gap:11px; }
-.settings__connect-dot{
-  width:9px; height:9px; flex:none; margin-top:4px; border-radius:50%;
-  background:var(--text-faint); box-shadow:0 0 0 3px color-mix(in srgb, var(--text-faint) 18%, transparent);
-}
-.settings__connect-dot.is-on{ background:var(--ok); box-shadow:0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
-.settings__connect-text{ display:flex; flex-direction:column; gap:3px; }
-.settings__connect-text strong{ font-size:13px; color:var(--text); }
-.settings__connect-text span{ font-size:12px; color:var(--text-dim); line-height:1.5; }
-.settings__connect-text code, .settings__callout-text code, .settings__hint code{
-  font-size:11.5px; padding:1px 5px; border-radius:5px;
-  background:var(--surface-3); color:var(--text);
-}
-.settings__connect-actions{ display:flex; gap:9px; flex-wrap:wrap; }
-
-/* file:// fallback callout */
-.settings__callout{
-  display:flex; gap:12px; padding:14px 16px; border-radius:var(--radius);
-  background:color-mix(in srgb, var(--warn) 12%, var(--surface-2));
-  border:1px solid color-mix(in srgb, var(--warn) 40%, var(--border));
-}
-.settings__callout-icon{ width:20px; height:20px; flex:none; color:var(--warn); }
-.settings__callout-icon svg{ width:20px; height:20px; }
-.settings__callout-text{ display:flex; flex-direction:column; gap:6px; }
-.settings__callout-text strong{ font-size:13px; color:var(--text); }
-.settings__callout-text p{ font-size:12px; color:var(--text-dim); line-height:1.55; margin:0; }
-
 /* ---------------------------------------------------------------------------
    Node scaling — driven by --node-scale on #nodeLayer (PM.graph.setNodeSize)
    --------------------------------------------------------------------------- */
@@ -2257,75 +1911,6 @@ svg{ display:block; }
 .map-popover__range{ width:100%; accent-color:var(--accent); cursor:pointer; }
 .map-popover__build{ font-size:10px; color:var(--text-faint); text-align:center; padding-top:4px; letter-spacing:.02em; opacity:.85; }
 
-/* dashboard cards (sync.js dashCard) */
-.settings__dash{ display:grid; grid-template-columns:repeat(4,1fr); gap:11px; }
-.settings__dash-card{
-  padding:13px 11px; border-radius:var(--radius); background:var(--surface-2);
-  border:1px solid var(--border-soft); text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px;
-}
-.settings__dash-icon{ width:18px; height:18px; color:var(--accent); opacity:.8; }
-.settings__dash-icon svg{ width:18px; height:18px; }
-.settings__dash-value{ font-size:16px; font-weight:800; color:var(--text); }
-.settings__dash-label{ font-size:9.5px; font-weight:600; letter-spacing:.4px; text-transform:uppercase; color:var(--text-faint); }
-
-/* error log (sync.js classes) */
-.settings__errorlog{ border-radius:var(--radius); background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden; }
-.settings__errorlog-head{ display:flex; align-items:center; gap:9px; width:100%; text-align:left; padding:11px 14px; font-size:12.5px; font-weight:600; color:var(--text-dim); cursor:pointer; }
-.settings__errorlog-chev{ display:inline-flex; width:14px; height:14px; transition:transform var(--dur-fast) var(--ease); }
-.settings__errorlog-chev svg{ width:14px; height:14px; }
-.settings__errorlog.is-open .settings__errorlog-chev{ transform:rotate(90deg); }
-.settings__errorlog-count{ margin-left:auto; min-width:18px; height:18px; padding:0 5px; display:inline-flex; align-items:center; justify-content:center; border-radius:999px; background:var(--surface-3); color:var(--text-dim); font-size:10.5px; font-weight:700; }
-.settings__errorlog-clear{ margin-left:8px; font-size:11px; font-weight:600; color:var(--accent); padding:2px 8px; border-radius:6px; }
-.settings__errorlog-clear:hover{ background:color-mix(in srgb, var(--accent) 14%, transparent); }
-.settings__errorlog-list{ display:none; padding:0 14px 12px; max-height:170px; overflow-y:auto; }
-.settings__errorlog.is-open .settings__errorlog-list{ display:block; }
-.settings__errorlog-item{ display:flex; gap:10px; padding:7px 0; border-top:1px solid var(--border-soft); font-size:11.5px; }
-.settings__errorlog-time{ color:var(--text-faint); flex:none; }
-.settings__errorlog-msg{ color:var(--err); }
-.settings__errorlog-empty{ padding:12px 0; font-size:12px; color:var(--text-faint); text-align:center; }
-
-/* template editor (sync.js classes) */
-.settings__template-head{ display:flex; flex-direction:column; gap:4px; margin-bottom:9px; }
-.settings__vars{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
-.settings__var-chip{
-  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; font-weight:600;
-  padding:4px 8px; border-radius:7px; color:var(--c-divine);
-  background:color-mix(in srgb, var(--c-divine) 12%, var(--surface-2));
-  border:1px solid color-mix(in srgb, var(--c-divine) 30%, transparent);
-  transition:all var(--dur-fast) var(--ease);
-}
-.settings__var-chip:hover{ background:color-mix(in srgb, var(--c-divine) 22%, var(--surface-2)); }
-.settings__template-grid{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
-.settings__template-input{
-  width:100%; min-height:300px; padding:13px; background:#0c0c1c; border:1px solid var(--border);
-  border-radius:var(--radius-sm); color:var(--text-dim);
-  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; line-height:1.6; outline:none; tab-size:2; resize:vertical;
-  transition:border-color var(--dur-fast) var(--ease);
-}
-.settings__template-input:focus{ border-color:var(--accent); }
-.settings__template-preview{
-  background:#0c0c1c; border:1px solid var(--border-soft); border-radius:var(--radius-sm);
-  padding:13px; overflow:auto; max-height:330px;
-}
-.settings__template-preview-label{ font-size:9.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--text-faint); margin-bottom:7px; }
-.settings__template-pre{
-  margin:0; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; line-height:1.6;
-  color:var(--text-dim); white-space:pre-wrap; word-break:break-word;
-}
-.tpl-var{ color:var(--c-divine); background:color-mix(in srgb, var(--c-divine) 16%, transparent); border-radius:4px; padding:0 3px; font-weight:600; }
-.tpl-var--unknown{ color:var(--warn); background:color-mix(in srgb, var(--warn) 16%, transparent); }
-
-/* settings buttons (sync.js uses .btn variants) */
-.btn--accent{ background:linear-gradient(135deg,#b79bff,#8b6df0); border-color:transparent; color:var(--text-on-accent); box-shadow:0 6px 20px rgba(139,109,240,.35); }
-.btn--accent:hover{ filter:brightness(1.08); box-shadow:0 8px 26px rgba(139,109,240,.45); }
-.btn--err{ color:var(--err); border-color:color-mix(in srgb, var(--err) 35%, transparent); }
-.btn--err:hover{ background:color-mix(in srgb, var(--err) 16%, transparent); border-color:var(--err); }
-
-@media (max-width:720px){
-  .settings__template-grid{ grid-template-columns:1fr; }
-  .settings__dash{ grid-template-columns:repeat(2,1fr); }
-}
-
 /* toast icon stack already styled; ensure toast enter from data.js (.is-shown) */
 .toast{ opacity:1; }
 </style>
@@ -2351,9 +1936,9 @@ svg{ display:block; }
 <meta name="twitter:image" content="og.png">
 </head>
 <body>
-<a href="../" title="All apps" style="position:fixed;left:10px;bottom:10px;z-index:99999;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(20,20,28,.72);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:11px;text-decoration:none;font-size:19px;backdrop-filter:blur(5px);box-shadow:0 4px 14px rgba(0,0,0,.3)">🏠</a>
+<a href="../" title="All apps" style="position:fixed;left:10px;bottom:10px;z-index:99999;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(20,20,28,.72);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:11px;text-decoration:none;font-size:19px;backdrop-filter:blur(5px);box-shadow:0 4px 14px rgba(0,0,0,.3)">🏠</a>
 <!-- PatternMap static body skeleton (the inner body markup).
-     Containers are static; JS (PM.*) fills the empty shells. ids/classes match CONTRACT.md section 4. -->
+     Containers are static; JS (PM.*) fills the empty shells. -->
 
 <div id="app" class="app">
 
@@ -2421,11 +2006,6 @@ svg{ display:block; }
           <path d="M5 4h11a2 2 0 0 1 2 2v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"></path><path d="M5 17h11"></path><line x1="11" y1="8" x2="11" y2="13"></line><line x1="8.5" y1="10.5" x2="13.5" y2="10.5"></line>
         </svg>
       </button>
-      <button id="settingsBtn" class="toolbar__btn" type="button" title="Obsidian Sync Settings" aria-label="Open settings" aria-pressed="false">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.6l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"></path>
-        </svg>
-      </button>
       <button id="mapCustomizeBtn" class="toolbar__btn" type="button" title="Customize map (layout & node size)" aria-label="Customize map layout and node size" aria-pressed="false" aria-haspopup="dialog">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="6" cy="6" r="2.6"></circle><circle cx="18" cy="6" r="2.6"></circle><circle cx="12" cy="18" r="2.6"></circle><line x1="8.4" y1="7.2" x2="11" y2="15.4"></line><line x1="15.6" y1="7.2" x2="13" y2="15.4"></line><line x1="8.4" y1="6" x2="15.6" y2="6"></line>
@@ -2448,9 +2028,6 @@ svg{ display:block; }
 
     <!-- Filter chips (under searchbar). JS fills. -->
     <div id="filterChips" class="filter-chips" aria-label="Filters"></div>
-
-    <!-- Global sync indicator (top-right corner). JS fills. -->
-    <div id="syncIndicator" class="sync-indicator" title="Obsidian sync status"></div>
 
     <!-- Add pattern pill (bottom-center) -->
     <button id="addPatternBtn" class="add-pattern-pill" type="button" aria-label="Add pattern">
@@ -2503,33 +2080,29 @@ svg{ display:block; }
   <!-- Add / Edit pattern modal. Empty shell (backdrop + modal built by JS). -->
   <div id="addModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Add or edit pattern" aria-hidden="true"></div>
 
-  <!-- Obsidian sync settings page. Empty shell. -->
-  <section id="settingsPage" class="settings-page" role="dialog" aria-modal="true" aria-label="Obsidian sync settings" aria-hidden="true"></section>
-
   <!-- Toast host. JS appends .toast children. -->
   <div id="toastHost" class="toast-host" role="status" aria-live="polite"></div>
 
 </div><!-- /#app -->
 
 <!-- ============================ APPLICATION MODULES ============================
-     Load order is contract-mandated (CONTRACT.md §6): data -> graph -> drawer ->
-     modal -> bible -> sync -> app. app.js is last and self-invokes PM.init() on
-     DOMContentLoaded (or immediately if the DOM is already parsed).
+     Load order: data -> graph -> drawer -> modal -> bible -> app. app.js is
+     last and self-invokes PM.init() on DOMContentLoaded (or immediately if the
+     DOM is already parsed).
      ============================================================================ -->
 <script>
 /* ===== data.js ===== */
 /* =============================================================================
- * PatternMap — data.js  (MODULE 1 of 7, loaded FIRST)
+ * PatternMap — data.js  (MODULE 1 of 6, loaded FIRST)
  * Namespace owner + data layer + persistence + shared helpers + constants +
  * seed content + embedded KJV verses.
  *
- * Conforms to CONTRACT.md §1, §2, §3, §6.1, §7 and the builder task brief.
- * Vanilla JS only. No imports, no build step. Attaches everything to window.PM.
+ *  * Vanilla JS only. No imports, no build step. Attaches everything to window.PM.
  * No DOM side effects at parse time (only function/constant registration).
  * ===========================================================================*/
 
 /* ---------------------------------------------------------------------------
- * §1  Establish the global namespace skeleton (data.js creates it all).
+ * Establish the global namespace skeleton (data.js creates it all).
  * -------------------------------------------------------------------------*/
 window.PM = window.PM || {};
 PM.state  = PM.state  || {};
@@ -2538,11 +2111,10 @@ PM.graph  = PM.graph  || {};
 PM.drawer = PM.drawer || {};
 PM.modal  = PM.modal  || {};
 PM.bible  = PM.bible  || {};
-PM.sync   = PM.sync   || {};
 PM.consts = PM.consts || {};
 
 /* ---------------------------------------------------------------------------
- * §1.1  Top-level cross-cutting helpers.
+ * Top-level cross-cutting helpers.
  * -------------------------------------------------------------------------*/
 
 PM.uid = function (prefix) {
@@ -2680,8 +2252,6 @@ PM.load = function () {
         s[k] = obj.settings[k];
       }
     }
-    if (!Array.isArray(s.errorLog)) { s.errorLog = []; }
-    if (!s.template) { s.template = PM.consts.DEFAULT_TEMPLATE; }
   }
 
   if (obj.transform && typeof obj.transform === 'object') {
@@ -2696,7 +2266,7 @@ PM.load = function () {
 };
 
 /* ---------------------------------------------------------------------------
- * §6.1 PM.consts — storage key, graph math, template, books.
+ * PM.consts — storage key, graph math, template, books.
  * -------------------------------------------------------------------------*/
 
 PM.consts.STORAGE_KEY = 'patternmap.v1';
@@ -2713,41 +2283,6 @@ PM.consts.ZOOM_MAX    = 3;
 PM.consts.ZOOM_STEP   = 1.1;
 PM.consts.NODE_SIZE   = 96;
 PM.consts.BOLLS_BASE  = 'https://bolls.life/get-verse/KJV/';
-
-/* Canonical Obsidian note template. The default produces EXACTLY the canonical
- * graph-friendly format (frontmatter + wikilinked Connected Patterns + verse
- * text). Tokens map 1:1 to keys built in PM.sync (buildVars):
- *   {{title}} {{category}} {{testament}} {{tags}} {{created}} {{modified}}
- *   {{references}} {{description}} {{bibleReferences}} {{connections}} {{observations}}
- * Editing the template still works — tokens are substituted per pattern. */
-PM.consts.DEFAULT_TEMPLATE = [
-  '---',
-  'title: "{{title}}"',
-  'category: {{category}}',
-  'testament: {{testament}}',
-  'tags: {{tags}}',
-  'created: {{created}}',
-  'modified: {{modified}}',
-  'references: {{references}}',
-  'cssclasses: [patternmap]',
-  '---',
-  '',
-  '# {{title}}',
-  '',
-  '{{description}}',
-  '',
-  '## Bible References',
-  '{{bibleReferences}}',
-  '',
-  '## Connected Patterns',
-  '{{connections}}',
-  '',
-  '## Observations',
-  '{{observations}}',
-  '',
-  '---',
-  '> Synced from PatternMap'
-].join('\n');
 
 /* ---- Canonical 66-book table (KJV order; id = bolls.life book id 1..66) ---- */
 
@@ -2831,7 +2366,7 @@ PM.consts.BOOK_BY_NAME = (function () {
 })();
 
 /* ---------------------------------------------------------------------------
- * §3.5 Categories + icons.
+ * Categories + icons.
  * -------------------------------------------------------------------------*/
 
 PM.data.CATEGORIES = [
@@ -2896,7 +2431,7 @@ PM.data.iconSvg = function (name) {
 };
 
 /* ---------------------------------------------------------------------------
- * §2 PM.data.initState — reset PM.state to canonical defaults.
+ * PM.data.initState — reset PM.state to canonical defaults.
  * -------------------------------------------------------------------------*/
 
 PM.data.initState = function () {
@@ -2904,15 +2439,6 @@ PM.data.initState = function () {
   PM.state.edges = [];
   PM.state.transform = { x: 0, y: 0, k: 1 };
   PM.state.settings = {
-    vaultPath: '',
-    syncFolder: 'PatternMap/Patterns',
-    frequency: 'onSave',
-    template: PM.consts.DEFAULT_TEMPLATE,
-    lastSynced: 0,
-    status: 'unconfigured',
-    pending: 0,
-    syncedNotes: 0,
-    errorLog: [],
     layoutType: 'force',
     nodeScale: 1,
     nodeShape: 'circle',
@@ -2931,8 +2457,7 @@ PM.data.initState = function () {
     clusterMode: false,
     drawerOpen: false,
     modalOpen: false,
-    bibleOpen: false,
-    settingsOpen: false
+    bibleOpen: false
   };
   PM.state._layout = {
     running: false,
@@ -2961,13 +2486,11 @@ PM.data.makePattern = function (partial) {
     refs: Array.isArray(partial.refs) ? partial.refs.slice() : [],
     tags: Array.isArray(partial.tags) ? partial.tags.slice() : [],
     observations: Array.isArray(partial.observations) ? partial.observations.slice() : [],
-    obsidianPath: partial.obsidianPath || ('PatternMap/' + title + '.md'),
     created: typeof partial.created === 'number' ? partial.created : t,
     modified: typeof partial.modified === 'number' ? partial.modified : t,
     refCount: typeof partial.refCount === 'number' ? partial.refCount : 0,
     x: typeof partial.x === 'number' ? partial.x : (Math.random() - 0.5) * spread,
-    y: typeof partial.y === 'number' ? partial.y : (Math.random() - 0.5) * spread,
-    synced: partial.synced === true ? true : false
+    y: typeof partial.y === 'number' ? partial.y : (Math.random() - 0.5) * spread
   };
 };
 
@@ -2990,7 +2513,6 @@ PM.data.updatePattern = function (id, patch) {
     }
   }
   p.modified = PM.now();
-  p.synced = false;
   return p;
 };
 
@@ -3018,7 +2540,6 @@ PM.data.touch = function (id) {
   var p = PM.data.getPattern(id);
   if (!p) { return null; }
   p.modified = PM.now();
-  p.synced = false;
   return p;
 };
 
@@ -3226,7 +2747,7 @@ function _afterFilterChange() {
 }
 
 /* renderFilterChips — category chips + Book/Date-added dropdown chips + testament/clear
- * chips into #filterChips. (SPEC §Screens/1: filter by category, by Bible book, by date.) */
+ * chips into #filterChips. Filters by category, by Bible book, and by date. */
 PM.data.renderFilterChips = function () {
   var host = document.getElementById('filterChips');
   if (!host) { return; }
@@ -3454,7 +2975,7 @@ PM.data.statsByBook = function () {
 };
 
 /* ---------------------------------------------------------------------------
- * Embedded KJV verses (public domain). Keyed "Book C:V" per §3.3.
+ * Embedded KJV verses (public domain). Keyed "Book C:V".
  * Covers EVERY reference used by the seed patterns below (plus a few extras).
  * Also exposed as PM.data.verses and via PM.getVerse / PM.fetchVerse.
  * -------------------------------------------------------------------------*/
@@ -3559,7 +3080,7 @@ PM.data.verses = {
 };
 
 /* ---------------------------------------------------------------------------
- * Verse helpers — task-mandated PM.getVerse / PM.fetchVerse.
+ * Verse helpers — PM.getVerse / PM.fetchVerse.
  * (PM.bible.* in bible.js may share PM.data.verses as its embedded source.)
  * -------------------------------------------------------------------------*/
 
@@ -3632,7 +3153,7 @@ PM.fetchVerse = function (ref) {
 };
 
 /* ---------------------------------------------------------------------------
- * §7 Seed content — ~12 interconnected patterns + dense directional edges.
+ * Seed content — ~12 interconnected patterns + dense directional edges.
  * Stored as templates in PM.data.defaultPatterns / defaultEdges; PM.data.seed()
  * (and PM.seed()) materialize a DEEP COPY into / for PM.state.
  *
@@ -3931,19 +3452,9 @@ function _materializePattern(tpl) {
     observations: (tpl.observations || []).map(function (o) {
       return { ts: o.ts, text: o.text };
     }),
-    obsidianPath: 'PatternMap/' + _slug(tpl.title) + '.md',
     created: tpl.created || t,
-    modified: tpl.modified || t,
-    synced: false
+    modified: tpl.modified || t
   });
-}
-
-function _slug(title) {
-  return String(title)
-    .toLowerCase()
-    .replace(/→/g, 'to')          // arrow -> "to"
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 }
 
 /* Build a fresh {patterns, edges} graph from the seed templates. */
@@ -3986,7 +3497,7 @@ function _buildSeed() {
   return { patterns: patterns, edges: edges };
 }
 
-/* §6.1 PM.data.seed — populate PM.state.patterns/edges from templates. */
+/* PM.data.seed — populate PM.state.patterns/edges from templates. */
 PM.data.seed = function () {
   var built = _buildSeed();
   PM.state.patterns = built.patterns;
@@ -3995,8 +3506,8 @@ PM.data.seed = function () {
   return { patterns: PM.state.patterns, edges: PM.state.edges };
 };
 
-/* Task-mandated PM.seed() — returns a fresh DEEP COPY of {patterns, edges}
- * WITHOUT mutating PM.state (a pure factory the integrator/tests can use). */
+/* PM.seed() — returns a fresh DEEP COPY of {patterns, edges} WITHOUT
+ * mutating PM.state (a pure factory, safe to call from tests). */
 PM.seed = function () {
   var built = _buildSeed();
   // refCount on the copy.
@@ -4028,7 +3539,7 @@ PM.data.books = {
 /* ============================================================================
  * PatternMap — PM.graph
  * The canvas engine: force layout, pan/zoom, drag, render (nodes+edges+minimap+
- * clusters), highlight, selection, hover. Follows CONTRACT.md §6.2 + §8 exactly.
+ * clusters), highlight, selection, hover.
  * Vanilla JS, no libraries. Attaches everything to window.PM.graph.
  * ==========================================================================*/
 (function () {
@@ -4197,7 +3708,7 @@ PM.data.books = {
       if (e.button !== 0) return;
       if (e.target.closest && e.target.closest('.node')) return; // node handles itself
       // ignore clicks on floating overlays inside viewport
-      if (e.target.closest && e.target.closest('.toolbar, .searchbar, .filter-chips, .minimap, .sync-indicator, .add-pattern-pill, .empty-state, .map-popover')) return;
+      if (e.target.closest && e.target.closest('.toolbar, .searchbar, .filter-chips, .minimap, .add-pattern-pill, .empty-state, .map-popover')) return;
       panning = true;
       pointerId = e.pointerId;
       lastX = e.clientX;
@@ -4229,7 +3740,7 @@ PM.data.books = {
     // Click on empty canvas clears selection.
     vp.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('.node')) return;
-      if (e.target.closest && e.target.closest('.toolbar, .searchbar, .filter-chips, .minimap, .sync-indicator, .add-pattern-pill')) return;
+      if (e.target.closest && e.target.closest('.toolbar, .searchbar, .filter-chips, .minimap, .add-pattern-pill')) return;
       if (PM.state.selection) G.select(null);
     });
   }
@@ -4652,6 +4163,32 @@ PM.data.books = {
     if (L.raf) { cancelAnimationFrame(L.raf); L.raf = 0; }
   };
 
+  // Fit the viewport once the cooling sim has actually settled, instead of
+  // guessing a fixed delay. A guessed delay computes fit() against whatever
+  // (still-expanding) bounding box exists at that instant; once the sim keeps
+  // cooling past that point the final node positions drift and the pan/zoom
+  // is left pointing at a stale centroid. The pixel error is the same in both
+  // cases, but on a narrow (phone) viewport it's large enough relative to the
+  // viewport width to push the entire graph off-screen. maxWaitMs caps how
+  // long we'll wait in case the sim never fully settles.
+  var _fitAfterSettleGen = 0;
+  G.fitAfterSettle = function (maxWaitMs) {
+    var start = (typeof performance !== 'undefined') ? performance.now() : Date.now();
+    var cap = (typeof maxWaitMs === 'number') ? maxWaitMs : 6000;
+    var gen = ++_fitAfterSettleGen;   // supersede any still-polling earlier call
+    function poll(nowTs) {
+      if (gen !== _fitAfterSettleGen) return;   // a newer fitAfterSettle took over
+      var now = (typeof nowTs === 'number') ? nowTs : ((typeof performance !== 'undefined') ? performance.now() : Date.now());
+      var stillRunning = PM.state && PM.state._layout && PM.state._layout.running;
+      if (!stillRunning || (now - start) > cap) {
+        if (G.fit) G.fit();
+        return;
+      }
+      requestAnimationFrame(poll);
+    }
+    requestAnimationFrame(poll);
+  };
+
   // ============================================================ LAYOUT TYPES
   // Compute target {x,y} per pattern for a named layout, then animate into place.
   // 'force' just (re)starts the cooling sim. Persists settings.layoutType.
@@ -4674,8 +4211,7 @@ PM.data.books = {
       var L = layout();
       L.nodes.forEach(function (n) { n.pinned = false; });
       G.startLayout();
-      if (_layoutFitTimer) clearTimeout(_layoutFitTimer);
-      _layoutFitTimer = setTimeout(function () { if (G.fit) G.fit(); }, 1400);
+      G.fitAfterSettle(6000);
       if (PM.save) PM.save();
       if (PM.toast) PM.toast('Layout: ' + lbl, 'info', 1300);
       return;
@@ -4696,7 +4232,6 @@ PM.data.books = {
       if (PM.toast) PM.toast('Layout failed: ' + lbl, 'error');
     }
   };
-  var _layoutFitTimer = 0;
 
   function nodeRadius() {
     var ns = (C().NODE_SIZE || 96);
@@ -5850,7 +5385,7 @@ PM.data.books = {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && _popOpen) {
         var ui = PM.state.ui || {};
-        if (!ui.settingsOpen && !ui.modalOpen && !ui.bibleOpen) {
+        if (!ui.modalOpen && !ui.bibleOpen) {
           G.closeCustomizer();
           e.stopPropagation();
         }
@@ -5875,9 +5410,9 @@ PM.data.books = {
  * PatternMap — drawer.js  (PM.drawer)
  * The right-hand Pattern Detail Drawer.
  *
- * Conforms to CONTRACT.md §6.3. Public surface (closed):
+ * Public surface (closed):
  *   PM.drawer.mount open close render renderRefs renderConnections
- *   renderObservations renderSyncStatus addReference addConnection
+ *   renderObservations addReference addConnection
  *   addObservation confirmDelete
  *
  * Everything else here is a private local. No <style> injection, no parse-time
@@ -5983,7 +5518,7 @@ PM.data.books = {
   }
 
   /* ----------------------------------------------------------------------- *
-   * mount() — one-time wiring (CONTRACT §6.3)
+   * mount() — one-time wiring
    * ----------------------------------------------------------------------- */
   PM.drawer.mount = function () {
     if (mounted) return;
@@ -6058,12 +5593,6 @@ PM.data.books = {
         obsExpanded = !obsExpanded;
         PM.drawer.render();
         break;
-
-      case 'open-obsidian': {
-        var p = current();
-        if (p) openInObsidian(p);
-        break;
-      }
 
       case 'edit-full': {
         var pp = current();
@@ -6158,7 +5687,7 @@ PM.data.books = {
     }
     if (PM.graph && typeof PM.graph.renderNodes === 'function') PM.graph.renderNodes();
     if (typeof PM.save === 'function') PM.save();
-    // Refresh the metadata "modified" line + sync badge without a full rebuild flash.
+    // Refresh the metadata "modified" line.
     PM.drawer.render();
   }
 
@@ -6172,12 +5701,11 @@ PM.data.books = {
     }
     if (PM.graph && typeof PM.graph.renderNodes === 'function') PM.graph.renderNodes(); // tooltip desc
     if (typeof PM.save === 'function') PM.save();
-    PM.drawer.renderSyncStatus(current());
     refreshMeta(current());
   }
 
   /* ----------------------------------------------------------------------- *
-   * open / close / render  (CONTRACT §6.3)
+   * open / close / render
    * ----------------------------------------------------------------------- */
 
   PM.drawer.open = function (id) {
@@ -6188,14 +5716,14 @@ PM.data.books = {
       connectSearchOpen = false;
       teardownPicker();
     }
-    // Selection is owned by PM.graph.select (single setter, per §9). It will
-    // call back into PM.drawer.open — guard against the resulting recursion by
+    // Selection is owned by PM.graph.select (the single setter). It will call
+    // back into PM.drawer.open — guard against the resulting recursion by
     // checking whether selection already equals id before delegating.
     if (PM.graph && typeof PM.graph.select === 'function'
         && PM.state && PM.state.selection !== id) {
       PM.graph.select(id);  // sets selection, toggles node classes, applies highlight,
-                            // and (per its contract) re-opens the drawer — which lands
-                            // back here with selection===id, so we proceed to build.
+                            // and re-opens the drawer — which lands back here with
+                            // selection===id, so we proceed to build.
       // If select() already rebuilt + opened, selection is now id; continue to ensure open.
     } else if (PM.state) {
       PM.state.selection = id;
@@ -6249,7 +5777,6 @@ PM.data.books = {
     PM.drawer.renderRefs(p);
     PM.drawer.renderConnections(p);
     PM.drawer.renderObservations(p);
-    PM.drawer.renderSyncStatus(p);
 
     // Drive the category color bar via the node-color custom prop (consistent w/ graph).
     var bar = d.querySelector('.drawer__catbar');
@@ -6257,7 +5784,7 @@ PM.data.books = {
   };
 
   /* ----------------------------------------------------------------------- *
-   * Loading-content state (DetailDrawer: "loading content" per SPEC)
+   * Loading-content state for the detail drawer.
    * Exposed for graph/app to show while a pattern's data is being prepared.
    * Public-surface-safe: implemented as a private, but the open() path uses it
    * implicitly. We also render it if open() is called before data is ready.
@@ -6283,7 +5810,7 @@ PM.data.books = {
   }
 
   // Public helper for graph to flip the drawer into loading-content state before
-  // data resolves. Kept off the closed public list per §10, so used internally
+  // data resolves. Kept off the public surface, so used internally
   // and reachable via open() if a pattern isn't found yet.
   function showLoading() {
     var d = el();
@@ -6293,7 +5820,7 @@ PM.data.books = {
     d.setAttribute('aria-hidden', 'false');
   }
   // expose privately on a non-public path so graph.select can optionally use it
-  // (not part of §10 closed surface; safe internal extension under PM.drawer._).
+  // (not part of the public surface; a safe internal extension under PM.drawer._).
   PM.drawer._showLoading = showLoading;
 
   function buildEmptyShell() {
@@ -6307,7 +5834,7 @@ PM.data.books = {
   }
 
   /* ----------------------------------------------------------------------- *
-   * Shell builder — full drawer markup (sections per SPEC §2 + CONTRACT §4.2)
+   * Shell builder — full drawer markup
    * ----------------------------------------------------------------------- */
   function buildShell(p) {
     var cat = categoryOf(p.category);
@@ -6379,9 +5906,6 @@ PM.data.books = {
       +   '</div>'
       + '</div>'
 
-      // ----- OBSIDIAN SYNC -----
-      + '<div class="drawer__section drawer__sync" data-role="sync"></div>'
-
       // ----- METADATA -----
       + '<div class="drawer__section">'
       +   '<div class="drawer__section-title">Metadata</div>'
@@ -6400,7 +5924,7 @@ PM.data.books = {
   }
 
   function metaRows(p, refCount) {
-    // SPEC §Screens/2 metadata: date created, date modified, times referenced.
+    // Metadata row: date created, date modified, times referenced.
     // "Times referenced" = how often this pattern is cited/linked (its edge count).
     return ''
       + '<div class="drawer__meta-row"><dt>Created</dt><dd>' + esc(fmt(p.created, 'date')) + '</dd></div>'
@@ -6603,35 +6127,6 @@ PM.data.books = {
     }
   };
 
-  /* ----------------------------------------------------------------------- *
-   * renderSyncStatus — per-pattern Obsidian sync block
-   * ----------------------------------------------------------------------- */
-  PM.drawer.renderSyncStatus = function (pattern) {
-    var p = pattern || current();
-    if (!p) return;
-    var host = d_query('[data-role="sync"]');
-    if (!host) return;
-
-    var status = 'pending';
-    if (PM.sync && typeof PM.sync.statusOf === 'function') {
-      try { status = PM.sync.statusOf(p) || 'pending'; } catch (e) { status = 'pending'; }
-    } else {
-      status = p.synced ? 'synced' : 'pending';
-    }
-
-    var pillLabel = ({ synced: 'Synced', pending: 'Pending', error: 'Error' })[status] || status;
-
-    host.innerHTML = ''
-      + '<div class="drawer__section-title">Obsidian Sync</div>'
-      + '<div class="drawer__sync-row">'
-      +   '<span class="drawer__sync-pill drawer__sync-pill--' + esc(status) + '">'
-      +     '<span class="drawer__sync-dot"></span>' + esc(pillLabel)
-      +   '</span>'
-      +   '<button class="drawer__sync-open" type="button" data-action="open-obsidian" '
-      +     'title="Open this note in Obsidian">' + icon('external') + '<span>Open in Obsidian</span></button>'
-      + '</div>'
-      + '<div class="drawer__sync-path">' + esc(p.obsidianPath || '—') + '</div>';
-  };
 
   /* ----------------------------------------------------------------------- *
    * addReference — open verse picker; on pick, push Ref onto pattern
@@ -6668,7 +6163,6 @@ PM.data.books = {
 
       PM.drawer.renderRefs(current());
       refreshMeta(current());
-      PM.drawer.renderSyncStatus(current());
       if (typeof PM.toast === 'function') PM.toast('Added ' + key, 'success');
     });
   };
@@ -6685,7 +6179,6 @@ PM.data.books = {
     if (PM.graph && typeof PM.graph.render === 'function') PM.graph.render();
     PM.drawer.renderRefs(current());
     refreshMeta(current());
-    PM.drawer.renderSyncStatus(current());
   }
 
   function teardownPicker() {
@@ -6777,7 +6270,7 @@ PM.data.books = {
     }
   }
 
-  // Public contract name: addConnection() — opens the inline search.
+  // addConnection() — opens the inline connect-search.
   PM.drawer.addConnection = function () {
     toggleConnectSearch(true);
   };
@@ -6815,29 +6308,9 @@ PM.data.books = {
     if (PM.graph && typeof PM.graph.render === 'function') PM.graph.render();
 
     PM.drawer.renderObservations(current());
-    PM.drawer.renderSyncStatus(current());
     refreshMeta(current());
     if (typeof PM.toast === 'function') PM.toast('Observation added.', 'success');
   };
-
-  /* ----------------------------------------------------------------------- *
-   * Open in Obsidian
-   * ----------------------------------------------------------------------- */
-  function openInObsidian(p) {
-    var uri = '';
-    if (PM.sync && typeof PM.sync.obsidianUri === 'function') {
-      try { uri = PM.sync.obsidianUri(p) || ''; } catch (e) { uri = ''; }
-    }
-    if (!uri) {
-      if (typeof PM.toast === 'function') PM.toast('No Obsidian vault configured.', 'warn');
-      return;
-    }
-    try {
-      window.location.href = uri;   // obsidian:// deep link
-    } catch (e) {
-      if (typeof PM.toast === 'function') PM.toast('Could not open Obsidian.', 'error');
-    }
-  }
 
   /* ----------------------------------------------------------------------- *
    * confirmDelete — confirm → delete pattern + edges → close → re-render
@@ -6874,9 +6347,9 @@ PM.data.books = {
  * PatternMap — modal.js
  * PM.modal: Add/Edit pattern modal + shared verse picker (VersePickerSearch).
  *
- * Conforms to CONTRACT §6.4. Public surface:
+ * Public surface:
  *   PM.modal.mount / openAdd / openEdit / close / render / collect / validate
- *           / submit / setSubmitting / suggestPath / openVersePicker
+ *           / submit / setSubmitting / openVersePicker
  *   PM.slug(title)            (top-level slug helper, idempotent guard)
  *
  * No DOM side effects at parse time; all wiring happens in PM.modal.mount(),
@@ -6889,10 +6362,8 @@ PM.data.books = {
   PM.modal = PM.modal || {};
 
   /* ----------------------------------------------------------------------- *
-   * PM.slug — slugify a title into a filesystem-friendly note basename.
-   * Kept readable (spaces preserved as spaces is NOT desired for a slug; the
-   * Obsidian path uses the human title via suggestPath, but slug is the safe
-   * machine form used as a fallback / id-ish helper). Idempotent define guard.
+   * PM.slug — slugify a title into a filesystem-friendly basename.
+   * Kept readable and used as a fallback / id-ish helper. Idempotent define guard.
    * ----------------------------------------------------------------------- */
   if (typeof PM.slug !== 'function') {
     PM.slug = function (title) {
@@ -6919,7 +6390,6 @@ PM.data.books = {
     refs: [],           // Ref[] collected from the tag input
     tags: [],           // string[] freeform tags
     connectIds: [],     // string[] ids of patterns to initially connect
-    pathEdited: false,  // true once the user manually edits the Obsidian path
     submitting: false,  // submitting state
     mounted: false      // mount() ran
   };
@@ -6985,21 +6455,6 @@ PM.data.books = {
   }
 
   /* ----------------------------------------------------------------------- *
-   * PM.modal.suggestPath — auto-suggested Obsidian note path from a title.
-   * Uses settings.syncFolder (default "PatternMap/"). Human title preserved
-   * (Obsidian filenames allow spaces); illegal path chars are stripped.
-   * ----------------------------------------------------------------------- */
-  PM.modal.suggestPath = function (title) {
-    var folder = (PM.state && PM.state.settings && PM.state.settings.syncFolder) || 'PatternMap/';
-    if (folder && folder.charAt(folder.length - 1) !== '/') folder += '/';
-    var name = String(title == null ? '' : title).trim();
-    // Strip characters illegal in common filesystems; keep spaces & case.
-    name = name.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim();
-    if (!name) name = PM.slug(title);
-    return folder + name + '.md';
-  };
-
-  /* ----------------------------------------------------------------------- *
    * mount — one-time wiring. Backdrop click, ESC, delegated submit/cancel/close.
    * The modal inner DOM is (re)built per-open by render(), but we wire the
    * backdrop + global key handler once here.
@@ -7023,8 +6478,6 @@ PM.data.books = {
       if (ev.key !== 'Escape') return;
       if (!PM.state || !PM.state.ui || !PM.state.ui.modalOpen) return;
       if (session.submitting) return;
-      // Don't steal ESC if settings is open above us (app.js priority).
-      if (PM.state.ui.settingsOpen) return;
       PM.modal.close();
     });
 
@@ -7057,7 +6510,6 @@ PM.data.books = {
     session.refs = [];
     session.tags = [];
     session.connectIds = [];
-    session.pathEdited = false;
     session.submitting = false;
     openCommon(null);
   };
@@ -7081,7 +6533,6 @@ PM.data.books = {
     session.connectIds = (PM.data && PM.data.neighborsOf)
       ? PM.data.neighborsOf(id).map(function (n) { return n.id; })
       : [];
-    session.pathEdited = true; // existing path is authoritative; don't auto-overwrite
     session.submitting = false;
     openCommon(p);
   };
@@ -7115,7 +6566,6 @@ PM.data.books = {
     session.refs = [];
     session.tags = [];
     session.connectIds = [];
-    session.pathEdited = false;
     // Leave the inner DOM; it is rebuilt on next open.
   };
 
@@ -7128,9 +6578,6 @@ PM.data.books = {
 
     var titleVal = pattern ? pattern.title : '';
     var descVal = pattern ? (pattern.description || '') : '';
-    var pathVal = pattern && pattern.obsidianPath
-      ? pattern.obsidianPath
-      : PM.modal.suggestPath(titleVal);
 
     var headTitle = (mode === 'edit') ? 'Edit Pattern' : 'Add Pattern';
     var submitLabel = (mode === 'edit') ? 'Save Changes' : 'Create Pattern';
@@ -7164,7 +6611,6 @@ PM.data.books = {
     body.appendChild(fieldRefs());
     body.appendChild(fieldConnections());
     body.appendChild(fieldTags());
-    body.appendChild(fieldPath(pathVal));
 
     /* --- footer --- */
     var footer = el('div', 'modal__footer');
@@ -7229,11 +6675,6 @@ PM.data.books = {
       if (input.value.trim()) {
         input.classList.remove('is-invalid');
         vh.style.display = 'none';
-      }
-      // Auto-suggest the Obsidian path from the title until manually edited.
-      if (!session.pathEdited) {
-        var pathEl = $('mPath');
-        if (pathEl) pathEl.value = PM.modal.suggestPath(input.value);
       }
       refreshSubmitEnabled();
     });
@@ -7572,21 +7013,6 @@ PM.data.books = {
     });
   }
 
-  function fieldPath(val) {
-    var f = field('Obsidian Note Path', 'mPath',
-      'Auto-suggested from the title; edit to override.');
-    var input = el('input', 'modal__input modal__input--mono');
-    input.id = 'mPath';
-    input.type = 'text';
-    input.value = val || '';
-    input.setAttribute('autocomplete', 'off');
-    input.addEventListener('input', function () {
-      session.pathEdited = true;
-    });
-    f.appendChild(input);
-    return f;
-  }
-
   /* ----------------------------------------------------------------------- *
    * Button wiring (per render, since DOM is rebuilt).
    * ----------------------------------------------------------------------- */
@@ -7614,7 +7040,6 @@ PM.data.books = {
   PM.modal.collect = function () {
     var title = $('mTitle');
     var desc = $('mDesc');
-    var path = $('mPath');
     return {
       title: title ? title.value.trim() : '',
       category: session.category,
@@ -7622,8 +7047,7 @@ PM.data.books = {
       testament: session.testament,
       refs: session.refs.slice(),
       tags: session.tags.slice(),
-      connectIds: session.connectIds.slice(),
-      obsidianPath: path ? path.value.trim() : ''
+      connectIds: session.connectIds.slice()
     };
   };
 
@@ -7729,7 +7153,7 @@ PM.data.books = {
           PM.graph.render();
         }
 
-        // Pan/zoom to the node (centerOn is the contract's "panTo").
+        // Pan/zoom to the node (centerOn doubles as "pan to").
         // For an add, the cooling layout keeps moving every node for ~hundreds of rAF
         // ticks, so centering immediately would frame a stale position the new node then
         // drifts out of. Defer until the layout has roughly settled (matches app.init's
@@ -7771,8 +7195,7 @@ PM.data.books = {
       description: data.description,
       testament: data.testament,
       refs: data.refs,
-      tags: data.tags,
-      obsidianPath: data.obsidianPath || PM.modal.suggestPath(data.title)
+      tags: data.tags
     });
     if (!p) return null;
     createEdges(p.id, data.connectIds);
@@ -7788,14 +7211,13 @@ PM.data.books = {
       description: data.description,
       testament: data.testament,
       refs: data.refs,
-      tags: data.tags,
-      obsidianPath: data.obsidianPath || PM.modal.suggestPath(data.title)
+      tags: data.tags
     });
     if (!p) return null;
 
     // Reconcile connections: add newly-chosen edges. (We do not auto-remove
-    // edges the user deselected here — edge removal is the drawer's job per
-    // contract — but addEdge dedups so re-adding existing is harmless.)
+    // edges the user deselected here — edge removal is the drawer's job —
+    // but addEdge dedups so re-adding existing is harmless.)
     createEdges(id, data.connectIds);
     return p;
   }
@@ -7814,7 +7236,7 @@ PM.data.books = {
    * States: idle, searching, results, no-results, selected.
    * Reused by the drawer's "+ Add Reference". Returns a close() function.
    *
-   * Rendered as a lightweight overlay using the contract's verse-picker class
+   * Rendered as a lightweight overlay using the shared verse-picker class
    * names (.versepicker / #versePickerInput / .versepicker__results /
    * .versepicker__result). Resolves user typing into Ref objects via bible.
    * ======================================================================= */
@@ -7988,7 +7410,7 @@ PM.data.books = {
 /* ============================================================================
  * bible.js — PM.bible
  * Left Bible Explorer drawer + HeatmapStrip + embedded KJV verse text + parser.
- * Conforms to CONTRACT.md §6.5. Vanilla JS, no libs, no build step.
+ * Vanilla JS, no libs, no build step.
  * Attaches everything to window.PM.bible. No DOM side effects at parse time
  * (all wiring happens inside PM.bible.mount(), called by PM.init).
  * ==========================================================================*/
@@ -8000,8 +7422,8 @@ PM.data.books = {
 
   /* ---------------------------------------------------------------------------
    * 1. Embedded KJV verse text (public domain).
-   *    Keyed by the canonical "Book C:V" verseKey (CONTRACT §3.3).
-   *    MUST cover EVERY ref used by any seed pattern (§7) so the app works
+   *    Keyed by the canonical "Book C:V" verseKey.
+   *    MUST cover EVERY ref used by any seed pattern so the app works
    *    fully offline. fetchVerse() lazily fills more for user-added refs.
    * -------------------------------------------------------------------------*/
   PM.bible.VERSES = {
@@ -8902,1304 +8324,12 @@ PM.data.books = {
 })();
 </script>
 <script>
-/* ===== sync.js ===== */
-/* ============================================================================
-   PM.sync — Obsidian sync simulation + settings page + global indicator
-   Contract §6.6. Defines exactly the closed surface listed in §10.
-   ========================================================================== */
-(function () {
-  'use strict';
-
-  window.PM = window.PM || {};
-  PM.sync = PM.sync || {};
-
-  /* ---- private module state (not on the public surface) ------------------ */
-  var _intervalId = null;     // setInterval handle for frequency-based sync
-  var _syncTimer = null;      // setTimeout handle for the simulated async sync
-  var _errorLogOpen = false;  // collapsible error-log open/closed (ephemeral UI)
-  var _progress = 0;          // 0..100 progress bar value during a sync
-  var _progTimer = null;      // interval handle animating the progress bar
-
-  /* small helpers ---------------------------------------------------------- */
-  function settings() { return PM.state.settings; }
-
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  function icon(name) {
-    return (PM.data && PM.data.iconSvg) ? PM.data.iconSvg(name) : '';
-  }
-
-  function fmt(ts, mode) {
-    return (PM.fmtDate ? PM.fmtDate(ts, mode) : (ts ? new Date(ts).toLocaleString() : '—'));
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* REAL Obsidian sync — File System Access API + IndexedDB handle store      */
-  /* When window.showDirectoryPicker exists (http://localhost / https) we can  */
-  /* write real .md files. On file:// it is undefined → simulated + export.    */
-  /* ------------------------------------------------------------------------ */
-
-  var _dirHandle = null;          // live FileSystemDirectoryHandle (in-memory)
-
-  PM.sync.fsSupported = function () {
-    return (typeof window !== 'undefined') && (typeof window.showDirectoryPicker === 'function');
-  };
-
-  PM.sync.hasHandle = function () { return !!_dirHandle; };
-
-  // --- tiny IndexedDB wrapper: db 'patternmap', store 'handles', key 'vault' ---
-  function idbOpen() {
-    return new Promise(function (resolve, reject) {
-      if (typeof indexedDB === 'undefined') { reject(new Error('no indexedDB')); return; }
-      var req = indexedDB.open('patternmap', 1);
-      req.onupgradeneeded = function () {
-        var db = req.result;
-        if (!db.objectStoreNames.contains('handles')) db.createObjectStore('handles');
-      };
-      req.onsuccess = function () { resolve(req.result); };
-      req.onerror = function () { reject(req.error || new Error('idb open failed')); };
-    });
-  }
-
-  function idbPut(key, val) {
-    return idbOpen().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction('handles', 'readwrite');
-        tx.objectStore('handles').put(val, key);
-        tx.oncomplete = function () { db.close(); resolve(true); };
-        tx.onerror = function () { db.close(); reject(tx.error); };
-      });
-    });
-  }
-
-  function idbGet(key) {
-    return idbOpen().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction('handles', 'readonly');
-        var rq = tx.objectStore('handles').get(key);
-        rq.onsuccess = function () { db.close(); resolve(rq.result || null); };
-        rq.onerror = function () { db.close(); reject(rq.error); };
-      });
-    });
-  }
-
-  function idbDel(key) {
-    return idbOpen().then(function (db) {
-      return new Promise(function (resolve) {
-        var tx = db.transaction('handles', 'readwrite');
-        tx.objectStore('handles').delete(key);
-        tx.oncomplete = function () { db.close(); resolve(true); };
-        tx.onerror = function () { db.close(); resolve(false); };
-      });
-    }).catch(function () { return false; });
-  }
-
-  function verifyPermission(handle, rw) {
-    var opts = { mode: rw ? 'readwrite' : 'read' };
-    if (!handle || typeof handle.queryPermission !== 'function') return Promise.resolve(true);
-    return handle.queryPermission(opts).then(function (p) {
-      if (p === 'granted') return true;
-      if (typeof handle.requestPermission !== 'function') return false;
-      return handle.requestPermission(opts).then(function (p2) { return p2 === 'granted'; });
-    }).catch(function () { return false; });
-  }
-
-  // "Connect Vault Folder": pick a dir, persist its handle, mark connected.
-  PM.sync.connectVault = function () {
-    if (!PM.sync.fsSupported()) {
-      PM.toast && PM.toast('Live writing needs the local server (http://localhost)', 'warn', 5000);
-      return Promise.resolve(false);
-    }
-    return window.showDirectoryPicker({ mode: 'readwrite' }).then(function (handle) {
-      _dirHandle = handle;
-      return verifyPermission(handle, true).then(function (ok) {
-        if (!ok) { PM.toast && PM.toast('Write permission denied', 'error'); return false; }
-        return idbPut('vault', handle).catch(function () { return false; }).then(function () {
-          var s = settings();
-          if (!s.vaultPath || !String(s.vaultPath).trim()) s.vaultPath = handle.name || 'Vault';
-          s.status = 'connected';
-          PM.save && PM.save();
-          PM.sync.renderIndicator();
-          if (PM.state.ui && PM.state.ui.settingsOpen) PM.sync.renderSettings();
-          PM.toast && PM.toast('Vault folder connected', 'success');
-          return true;
-        });
-      });
-    }).catch(function () { /* user cancelled / denied */ return false; });
-  };
-
-  // Reconnect a persisted handle on load (re-prompts for permission if needed).
-  PM.sync.restoreHandle = function () {
-    if (!PM.sync.fsSupported()) return Promise.resolve(false);
-    return idbGet('vault').then(function (handle) {
-      if (!handle) return false;
-      return verifyPermission(handle, true).then(function (ok) {
-        if (!ok) return false;
-        _dirHandle = handle;
-        if (settings().status === 'unconfigured') settings().status = 'connected';
-        PM.sync.renderIndicator();
-        if (PM.state.ui && PM.state.ui.settingsOpen) PM.sync.renderSettings();
-        return true;
-      });
-    }).catch(function () { return false; });
-  };
-
-  PM.sync.disconnectVault = function () {
-    _dirHandle = null;
-    return idbDel('vault').then(function () {
-      var s = settings();
-      s.status = (s.vaultPath && String(s.vaultPath).trim()) ? 'connected' : 'unconfigured';
-      PM.save && PM.save();
-      PM.sync.renderIndicator();
-      if (PM.state.ui && PM.state.ui.settingsOpen) PM.sync.renderSettings();
-      PM.toast && PM.toast('Vault folder disconnected', 'info');
-      return true;
-    });
-  };
-
-  // Resolve the sync subfolder handle inside the vault (creates it if needed).
-  function targetDir() {
-    if (!_dirHandle) return Promise.reject(new Error('no handle'));
-    var folder = String(settings().syncFolder || 'PatternMap/').replace(/^\/+|\/+$/g, '');
-    if (!folder) return Promise.resolve(_dirHandle);
-    // walk nested segments e.g. "PatternMap/sub"
-    var parts = folder.split('/').filter(Boolean);
-    var chain = Promise.resolve(_dirHandle);
-    parts.forEach(function (seg) {
-      chain = chain.then(function (dir) { return dir.getDirectoryHandle(seg, { create: true }); });
-    });
-    return chain;
-  }
-
-  function writeFile(dir, name, contents) {
-    return dir.getFileHandle(name, { create: true }).then(function (fh) {
-      return fh.createWritable().then(function (w) {
-        return w.write(contents).then(function () { return w.close(); });
-      });
-    });
-  }
-
-  // Build the index MOC linking every pattern by [[wikilink]], grouped by category.
-  PM.sync.indexMarkdown = function () {
-    var ps = (PM.state && PM.state.patterns) || [];
-    var groups = {};
-    var order = [];
-    for (var i = 0; i < ps.length; i++) {
-      var key = ps[i].category || 'custom';
-      if (!groups[key]) { groups[key] = []; order.push(key); }
-      groups[key].push(ps[i]);
-    }
-    var out = [
-      '---',
-      'title: "PatternMap"',
-      'cssclasses: [patternmap, patternmap-moc]',
-      'tags: [patternmap, MOC]',
-      '---',
-      '',
-      '# PatternMap',
-      '',
-      'A map of content linking every pattern, grouped by category.',
-      ''
-    ];
-    order.sort();
-    for (var g = 0; g < order.length; g++) {
-      var cat = order[g];
-      var label = (PM.data && PM.data.category) ? (PM.data.category(cat).label || cat) : cat;
-      out.push('## ' + label);
-      var members = groups[cat].slice().sort(function (a, b) {
-        return String(a.title || '').localeCompare(String(b.title || ''));
-      });
-      for (var m = 0; m < members.length; m++) {
-        var slug = PM.sync.slugFor(members[m]);
-        out.push('- [[' + slug + '|' + (members[m].title || slug) + ']]');
-      }
-      out.push('');
-    }
-    out.push('---');
-    out.push('> Synced from PatternMap');
-    return out.join('\n');
-  };
-
-  // REAL write of all patterns + the index MOC. Reports per-file progress via cb.
-  // Resolves to the number of pattern notes written; rejects on FS error.
-  function writeAll(onProgress) {
-    return targetDir().then(function (dir) {
-      var ps = (PM.state && PM.state.patterns) || [];
-      var total = ps.length + 1; // + index MOC
-      var done = 0;
-      function bump() { done++; if (onProgress) onProgress(Math.round((done / total) * 100)); }
-      var chain = Promise.resolve();
-      ps.forEach(function (p) {
-        chain = chain.then(function () {
-          var name = PM.sync.slugFor(p) + '.md';
-          return writeFile(dir, name, PM.sync.noteMarkdown(p)).then(function () {
-            p.synced = true;
-            bump();
-          });
-        });
-      });
-      chain = chain.then(function () {
-        return writeFile(dir, 'PatternMap.md', PM.sync.indexMarkdown()).then(bump);
-      });
-      return chain.then(function () { return ps.length; });
-    });
-  }
-
-  // Concatenated .md of every note + the index (file:// export fallback).
-  PM.sync.exportAllMarkdown = function () {
-    var ps = (PM.state && PM.state.patterns) || [];
-    var blocks = [];
-    blocks.push('<!-- PatternMap.md -->\n\n' + PM.sync.indexMarkdown());
-    for (var i = 0; i < ps.length; i++) {
-      var name = PM.sync.slugFor(ps[i]) + '.md';
-      blocks.push('<!-- ' + name + ' -->\n\n' + PM.sync.noteMarkdown(ps[i]));
-    }
-    return blocks.join('\n\n\n');
-  };
-
-  PM.sync.downloadAllMarkdown = function () {
-    var text = PM.sync.exportAllMarkdown();
-    try {
-      var blob = new Blob([text], { type: 'text/markdown' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'PatternMap-notes.md';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      PM.toast && PM.toast('Exported ' + ((PM.state.patterns || []).length) + ' notes (.md)', 'success');
-    } catch (e) {
-      PM.toast && PM.toast('Export failed', 'error');
-    }
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* Status model                                                             */
-  /* ------------------------------------------------------------------------ */
-
-  // Map the global settings.status -> presentation metadata.
-  var STATUS_META = {
-    unconfigured: { dot: 'is-unconfigured', label: 'Not configured', cls: 'sync-indicator--unconfigured' },
-    connected:    { dot: 'is-connected',    label: 'Connected',      cls: 'sync-indicator--connected' },
-    syncing:      { dot: 'is-syncing',      label: 'Syncing…',  cls: 'sync-indicator--syncing' },
-    error:        { dot: 'is-error',        label: 'Sync error',     cls: 'sync-indicator--error' }
-  };
-
-  // Derive the *effective* status (unconfigured always wins when no vault path
-  // AND no connected directory handle).
-  function effectiveStatus() {
-    var s = settings();
-    var configured = (s.vaultPath && String(s.vaultPath).trim()) || _dirHandle || (_helper.available === true);
-    if (!configured) {
-      // never lie: with no vault path / handle we are unconfigured (unless mid-sync)
-      if (s.status !== 'syncing') return 'unconfigured';
-    }
-    return s.status || 'connected';
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.computePending / statusOf                                        */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.computePending = function () {
-    var n = 0, ps = PM.state.patterns || [];
-    for (var i = 0; i < ps.length; i++) if (ps[i].synced === false) n++;
-    settings().pending = n;
-    return n;
-  };
-
-  PM.sync.statusOf = function (pattern) {
-    if (!pattern) return 'pending';
-    if (settings().status === 'error') return 'error';
-    return pattern.synced ? 'synced' : 'pending';
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.noteMarkdown — template rendering                                */
-  /* ------------------------------------------------------------------------ */
-
-  // Render a single template, substituting {{vars}} for a pattern.
-  // The default template + buildVars together emit the CANONICAL Obsidian
-  // note format (frontmatter + wikilinked Connected Patterns + verse text).
-  // Unknown {{x}} tokens are left as-is (per contract).
-  PM.sync.noteMarkdown = function (pattern) {
-    var tpl = settings().template || (PM.consts && PM.consts.DEFAULT_TEMPLATE) || '';
-    var vars = buildVars(pattern);
-    return tpl.replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, function (whole, key) {
-      return Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : whole;
-    });
-  };
-
-  /* ---- slug rule: basename of obsidianPath sans .md, else slugify title ---- */
-  PM.sync.slugFor = function (pattern) {
-    var p = pattern || {};
-    var path = String(p.obsidianPath || '');
-    if (path.trim()) {
-      var base = path.replace(/\\/g, '/').split('/').pop();   // basename
-      base = base.replace(/\.md$/i, '');
-      if (base.trim()) return slugify(base);
-    }
-    return slugify(p.title || 'untitled');
-  };
-
-  function slugify(s) {
-    return String(s == null ? '' : s)
-      .toLowerCase()
-      .replace(/→/g, 'to')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '') || 'untitled';
-  }
-
-  // ISO date (YYYY-MM-DD) for frontmatter / observation lines.
-  function isoDate(ts) {
-    if (!ts) return '';
-    var d = new Date(ts);
-    if (isNaN(d.getTime())) return '';
-    var mo = d.getMonth() + 1, da = d.getDate();
-    return d.getFullYear() + '-' + (mo < 10 ? '0' + mo : mo) + '-' + (da < 10 ? '0' + da : da);
-  }
-
-  // YAML tag-array form: tags: [a, b]  (or tags: [] when none).
-  function yamlTags(tags) {
-    var t = (tags || []).filter(function (x) { return x != null && String(x).trim(); });
-    if (!t.length) return '[]';
-    return '[' + t.map(function (x) { return String(x).trim(); }).join(', ') + ']';
-  }
-
-  // "## Bible References" body: one bullet per ref, with KJV verse text when known.
-  function bibleRefsBody(p) {
-    var refs = (p.refs || []);
-    if (!refs.length) return '_No references yet._';
-    return refs.map(function (r) {
-      var key = (PM.bible && PM.bible.verseKey) ? PM.bible.verseKey(r)
-        : (r.book + ' ' + r.chapter + ':' + r.verse);
-      var text = (typeof PM.getVerse === 'function') ? PM.getVerse(r) : null;
-      if (text) return '- **' + key + '** — "' + text + '"';
-      return '- **' + key + '**';
-    }).join('\n');
-  }
-
-  // "## Connected Patterns" body: every edge touching this pattern, as
-  // [[other-slug|Other Title]] — _label_ . "_None yet._" when no connections.
-  function connectionsBody(p) {
-    if (!p || !p.id) return '_None yet._';
-    var es = (PM.state && PM.state.edges) || [];
-    var lines = [];
-    for (var i = 0; i < es.length; i++) {
-      var e = es[i];
-      if (e.from !== p.id && e.to !== p.id) continue;
-      var otherId = (e.from === p.id) ? e.to : e.from;
-      var other = (PM.data && PM.data.getPattern) ? PM.data.getPattern(otherId) : null;
-      if (!other) continue;
-      var slug = PM.sync.slugFor(other);
-      var title = other.title || slug;
-      var label = e.label || 'related';
-      lines.push('- [[' + slug + '|' + title + ']] — _' + label + '_');
-    }
-    return lines.length ? lines.join('\n') : '_None yet._';
-  }
-
-  // "## Observations" body, most-recent first; "_No observations yet._" when none.
-  function observationsBody(p) {
-    var obs = (p.observations || []).slice();
-    if (!obs.length) return '_No observations yet._';
-    obs.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
-    return obs.map(function (o) {
-      return '- ' + isoDate(o.ts) + ' — ' + (o.text || '');
-    }).join('\n');
-  }
-
-  function buildVars(pattern) {
-    var p = pattern || {};
-    return {
-      title: p.title || '',
-      category: p.category || 'custom',
-      description: p.description || '',
-      testament: p.testament || 'both',
-      tags: yamlTags(p.tags),
-      references: String((p.refs || []).length),
-      created: isoDate(p.created),
-      modified: isoDate(p.modified),
-      bibleReferences: bibleRefsBody(p),
-      connections: connectionsBody(p),
-      observations: observationsBody(p),
-      // legacy aliases kept so older custom templates still resolve
-      refs: bibleRefsBody(p),
-      id: p.id || ''
-    };
-  }
-
-  // expose the var keys for the template-editor preview/legend
-  function templateVarNames() {
-    return ['title', 'category', 'testament', 'tags', 'created', 'modified',
-      'references', 'description', 'bibleReferences', 'connections', 'observations'];
-  }
-
-  // keep a public-ish alias requested by spec text (PM.sync.generateMarkdown)
-  // without expanding the closed §10 surface meaningfully — noteMarkdown is canonical.
-  PM.sync.generateMarkdown = function (pattern) { return PM.sync.noteMarkdown(pattern); };
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.obsidianUri                                                      */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.obsidianUri = function (pattern) {
-    var s = settings();
-    var vault = String(s.vaultPath || '').replace(/\/+$/, '');
-    var rel = pattern ? String(pattern.obsidianPath || '') : '';
-    // Build an absolute file path: vaultPath + '/' + obsidianPath (rel may already include syncFolder)
-    var full = rel;
-    if (vault) full = vault + '/' + rel.replace(/^\/+/, '');
-    return 'obsidian://open?path=' + encodeURIComponent(full);
-  };
-
-  // Build the openInObsidian(id) helper the spec describes (resolve id -> pattern -> uri -> navigate)
-  PM.sync.openInObsidian = function (id) {
-    var p = (PM.data && PM.data.getPattern) ? PM.data.getPattern(id) : null;
-    if (!p) { PM.toast && PM.toast('Pattern not found', 'error'); return ''; }
-    var uri = PM.sync.obsidianUri(p);
-    try { window.open(uri, '_blank'); } catch (e) { /* sandbox-safe */ }
-    PM.toast && PM.toast('Opening in Obsidian…', 'info');
-    return uri;
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.setStatus                                                        */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.setStatus = function (status, msg) {
-    var s = settings();
-    s.status = status;
-    if (status === 'error') {
-      s.errorLog = s.errorLog || [];
-      s.errorLog.push({ ts: PM.now ? PM.now() : Date.now(), message: msg || 'Sync failed' });
-      // keep the log from growing unbounded
-      if (s.errorLog.length > 50) s.errorLog = s.errorLog.slice(-50);
-    }
-    PM.sync.renderIndicator();
-    if (PM.state.ui && PM.state.ui.settingsOpen) PM.sync.renderSettings();
-    PM.save && PM.save();
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.syncNow / retry                                                  */
-  /* ------------------------------------------------------------------------ */
-
-  /* ------------------------------------------------------------------------ */
-  /* Local sync helper (patternmap-serve) — zero-friction real writes over    */
-  /* http://localhost. POSTs rendered notes to a tiny local server that writes */
-  /* them into the vault. Preferred over the FS Access API when reachable.     */
-  /* ------------------------------------------------------------------------ */
-  var _helper = { available: null, info: null };
-  var _helperSyncing = false;
-
-  function canUseHelper() {
-    try {
-      return (typeof fetch === 'function') && (typeof location !== 'undefined') &&
-        /^https?:$/.test(location.protocol);
-    } catch (e) { return false; }
-  }
-
-  PM.sync.helperAvailable = function () { return _helper.available === true; };
-
-  PM.sync.helperCheck = function () {
-    if (!canUseHelper()) { _helper.available = false; return Promise.resolve(false); }
-    return fetch('api/status', { method: 'GET' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { _helper.available = !!(j && j.ok); _helper.info = j || null; return _helper.available; })
-      .catch(function () { _helper.available = false; return false; });
-  };
-
-  function helperSync() {
-    var s = settings();
-    if (_helperSyncing) return Promise.resolve();
-    _helperSyncing = true;
-    s.status = 'syncing';
-    _progress = 8;
-    PM.sync.computePending();
-    PM.sync.renderIndicator();
-    if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-
-    var ps = (PM.state && PM.state.patterns) || [];
-    var notes = ps.map(function (p) {
-      return { name: PM.sync.slugFor(p) + '.md', content: PM.sync.noteMarkdown(p) };
-    });
-    notes.push({ name: 'PatternMap.md', content: PM.sync.indexMarkdown() });
-    var folder = String(s.syncFolder || 'PatternMap/').replace(/^\/+|\/+$/g, '') || 'PatternMap';
-
-    return fetch('api/sync', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ folder: folder, notes: notes })
-    }).then(function (r) {
-      return r.json().catch(function () { return null; }).then(function (j) { return { ok: r.ok, j: j }; });
-    }).then(function (res) {
-      _helperSyncing = false;
-      _progress = 100; updateProgressBar();
-      if (!res.ok || !res.j || !res.j.ok) {
-        throw new Error((res.j && res.j.error) || 'Local server could not write the notes.');
-      }
-      for (var i = 0; i < ps.length; i++) ps[i].synced = true;
-      s.lastSynced = PM.now ? PM.now() : Date.now();
-      s.status = 'connected';
-      s.syncedNotes = (res.j.written != null) ? res.j.written : notes.length;
-      if (res.j.path) s.vaultResolved = res.j.path;
-      PM.sync.computePending();
-      PM.sync.renderIndicator();
-      if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-      PM.toast && PM.toast('Synced ' + s.syncedNotes + ' notes to your vault', 'success');
-      PM.save && PM.save();
-      _progress = 0;
-    }).catch(function (err) {
-      _helperSyncing = false;
-      _progress = 0;
-      PM.sync.setStatus('error', (err && err.message) ? err.message : 'Local server sync failed.');
-      PM.toast && PM.toast('Sync failed — ' + ((err && err.message) || 'local server error'), 'error');
-    });
-  }
-
-  PM.sync.syncNow = function () {
-    // 0) Prefer the local sync helper (patternmap-serve) when reachable.
-    if (canUseHelper()) {
-      if (_helper.available === true) return helperSync();
-      if (_helper.available === null) {
-        return PM.sync.helperCheck().then(function (ok) {
-          return ok ? helperSync() : syncNowNoHelper();
-        });
-      }
-    }
-    return syncNowNoHelper();
-  };
-
-  function syncNowNoHelper() {
-    var s = settings();
-
-    // When a real directory handle is connected, do REAL writes.
-    if (_dirHandle) return realSync();
-
-    if (!s.vaultPath || !String(s.vaultPath).trim()) {
-      PM.toast && PM.toast('Connect a vault folder before syncing', 'warn');
-      // bounce the user to settings so they can fix it
-      if (!PM.state.ui.settingsOpen) PM.sync.openSettings();
-      return;
-    }
-    if (_syncTimer) return; // already syncing; ignore re-entrancy
-
-    // -> syncing (SIMULATED path: no FS access, e.g. file:// without a handle)
-    s.status = 'syncing';
-    _progress = 0;
-    PM.sync.computePending();
-    PM.sync.renderIndicator();
-    if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-
-    // animate the progress bar while "writing"
-    if (_progTimer) clearInterval(_progTimer);
-    _progTimer = setInterval(function () {
-      _progress = Math.min(96, _progress + Math.random() * 22 + 6);
-      updateProgressBar();
-    }, 180);
-
-    var ms = 900 + Math.random() * 900;
-    _syncTimer = setTimeout(function () {
-      _syncTimer = null;
-      if (_progTimer) { clearInterval(_progTimer); _progTimer = null; }
-      _progress = 100;
-      updateProgressBar();
-
-      // ~18% chance to simulate an error (per spec "a chance to show error state")
-      var fail = Math.random() < 0.18;
-      if (fail) {
-        PM.sync.setStatus('error', 'Could not write notes to vault (simulated network/FS error).');
-        PM.toast && PM.toast('Sync failed — tap retry', 'error');
-      } else {
-        // success: mark all patterns synced, bump lastSynced, recompute pending
-        var ps = PM.state.patterns || [];
-        var wrote = 0;
-        for (var i = 0; i < ps.length; i++) {
-          if (ps[i].synced === false) wrote++;
-          ps[i].synced = true;
-        }
-        s.lastSynced = PM.now ? PM.now() : Date.now();
-        s.status = 'connected';
-        s.syncedNotes = ps.length;
-        PM.sync.computePending();
-        PM.sync.renderIndicator();
-        if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-        PM.toast && PM.toast(
-          wrote > 0 ? ('Synced ' + wrote + ' note' + (wrote === 1 ? '' : 's')) : 'Up to date',
-          'success');
-        PM.save && PM.save();
-      }
-      _progress = 0;
-    }, ms);
-  };
-
-  // Real File System Access write of every note + the index MOC.
-  function realSync() {
-    var s = settings();
-    if (_realSyncing) return Promise.resolve(); // re-entrancy guard
-    _realSyncing = true;
-    s.status = 'syncing';
-    _progress = 0;
-    PM.sync.computePending();
-    PM.sync.renderIndicator();
-    if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-
-    return verifyPermission(_dirHandle, true).then(function (ok) {
-      if (!ok) throw new Error('Write permission was denied for the vault folder.');
-      return writeAll(function (pct) {
-        _progress = Math.min(99, pct);
-        updateProgressBar();
-      });
-    }).then(function (count) {
-      _progress = 100;
-      updateProgressBar();
-      s.lastSynced = PM.now ? PM.now() : Date.now();
-      s.status = 'connected';
-      s.syncedNotes = count;
-      s.pending = 0;
-      PM.sync.computePending();
-      PM.sync.renderIndicator();
-      if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-      PM.toast && PM.toast('Wrote ' + count + ' note' + (count === 1 ? '' : 's') + ' + index to vault', 'success');
-      PM.save && PM.save();
-      _progress = 0;
-    }).catch(function (err) {
-      PM.sync.setStatus('error', (err && err.message) ? err.message : 'Could not write notes to the vault folder.');
-      PM.toast && PM.toast('Sync failed — tap retry', 'error');
-      _progress = 0;
-    }).then(function () {
-      _realSyncing = false;
-    });
-  }
-  var _realSyncing = false;
-
-  PM.sync.retry = function () {
-    // clear error visual then re-run
-    settings().status = 'connected';
-    PM.sync.renderIndicator();
-    PM.sync.syncNow();
-  };
-
-  function updateProgressBar() {
-    var bar = document.getElementById('syncProgressFill');
-    if (bar) bar.style.width = Math.round(_progress) + '%';
-    var ind = document.querySelector('#syncIndicator .sync-indicator__progress-fill');
-    if (ind) ind.style.width = Math.round(_progress) + '%';
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.applyFrequency / maybeAutoSync                                   */
-  /* ------------------------------------------------------------------------ */
-
-  var FREQ_MS = { '5m': 5 * 60 * 1000, '15m': 15 * 60 * 1000, '1h': 60 * 60 * 1000 };
-
-  PM.sync.applyFrequency = function () {
-    if (_intervalId) { clearInterval(_intervalId); _intervalId = null; }
-    var f = settings().frequency;
-    if (FREQ_MS[f]) {
-      _intervalId = setInterval(function () {
-        // only fire when configured (handle or path) and not already syncing
-        var s = settings();
-        var configured = _dirHandle || (s.vaultPath && String(s.vaultPath).trim());
-        if (configured && s.status !== 'syncing') {
-          PM.sync.syncNow();
-        }
-      }, FREQ_MS[f]);
-    }
-  };
-
-  // Called by app.js after mutations. On 'onSave' it debounces a sync — REAL
-  // FS write when a directory handle is connected, simulated otherwise.
-  PM.sync.maybeAutoSync = function () {
-    var f = settings().frequency;
-    PM.sync.computePending();
-    if (f === 'onSave') {
-      pulseIndicator();
-      var configured = _dirHandle || (settings().vaultPath && String(settings().vaultPath).trim());
-      if (configured && !_syncTimer && !_realSyncing) {
-        // gentle: defer a sync so rapid edits coalesce
-        if (_progTimer) return;
-        clearTimeout(_onSaveDebounce);
-        _onSaveDebounce = setTimeout(function () { PM.sync.syncNow(); }, 600);
-      }
-    }
-    PM.sync.renderIndicator();
-  };
-  var _onSaveDebounce = null;
-
-  function pulseIndicator() {
-    var el = document.getElementById('syncIndicator');
-    if (!el) return;
-    el.classList.remove('sync-indicator--pulse');
-    // force reflow so the animation can restart
-    void el.offsetWidth;
-    el.classList.add('sync-indicator--pulse');
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.renderIndicator — global always-visible status (criterion 6)     */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.renderIndicator = function () {
-    var el = document.getElementById('syncIndicator');
-    if (!el) return;
-    var st = effectiveStatus();
-    var meta = STATUS_META[st] || STATUS_META.connected;
-    var s = settings();
-    var pending = PM.sync.computePending();
-
-    // base class set
-    el.className = 'sync-indicator ' + meta.cls + ' is-clickable';
-
-    var sub;
-    if (st === 'unconfigured') {
-      sub = 'Set up Obsidian sync';
-    } else if (st === 'syncing') {
-      sub = 'Writing notes…';
-    } else if (st === 'error') {
-      sub = 'Click to retry';
-    } else {
-      sub = pending > 0
-        ? (pending + ' pending')
-        : ('Synced ' + fmt(s.lastSynced, 'rel'));
-    }
-
-    var pendingBadge = (pending > 0 && st !== 'unconfigured' && st !== 'syncing')
-      ? '<span class="sync-indicator__badge">' + pending + '</span>'
-      : '';
-
-    var progress = (st === 'syncing')
-      ? '<div class="sync-indicator__progress"><div class="sync-indicator__progress-fill" style="width:' +
-        Math.round(_progress) + '%"></div></div>'
-      : '';
-
-    el.innerHTML =
-      '<span class="sync-indicator__dot ' + meta.dot + '"></span>' +
-      '<span class="sync-indicator__text">' +
-      '<span class="sync-indicator__label">' + esc(meta.label) + '</span>' +
-      '<span class="sync-indicator__sub">' + esc(sub) + '</span>' +
-      '</span>' +
-      pendingBadge +
-      '<span class="sync-indicator__icon">' + icon('sync') + '</span>' +
-      progress;
-
-    el.title = 'Obsidian sync: ' + meta.label +
-      (st === 'connected' && s.lastSynced ? (' — last ' + fmt(s.lastSynced, 'datetime')) : '');
-
-    // wire the click (idempotent: replace handler each render)
-    el.onclick = function () {
-      var cur = effectiveStatus();
-      if (cur === 'error') { PM.sync.retry(); return; }
-      if (cur === 'unconfigured') { PM.sync.openSettings(); return; }
-      // connected/idle -> open settings dashboard (never navigate away to *check*, but allow opening)
-      PM.sync.openSettings();
-    };
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* Settings page open/close                                                 */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.openSettings = function () {
-    var page = document.getElementById('settingsPage');
-    if (!page) return;
-    PM.state.ui.settingsOpen = true;
-    PM.sync.renderSettings();
-    page.classList.add('is-open');
-    page.setAttribute('aria-hidden', 'false');
-    var btn = document.getElementById('settingsBtn');
-    if (btn) btn.classList.add('is-active');
-    // Probe the local sync helper (patternmap-serve); re-render to reflect it.
-    if (_helper.available === null && canUseHelper()) {
-      PM.sync.helperCheck().then(function () {
-        if (PM.state.ui.settingsOpen) PM.sync.renderSettings();
-        PM.sync.renderIndicator();
-      });
-    }
-    // focus the vault path input for quick setup
-    var vp = document.getElementById('vaultPathInput');
-    if (vp) setTimeout(function () { try { vp.focus(); } catch (e) {} }, 60);
-  };
-
-  PM.sync.closeSettings = function () {
-    var page = document.getElementById('settingsPage');
-    if (!page) return;
-    PM.state.ui.settingsOpen = false;
-    page.classList.remove('is-open');
-    page.setAttribute('aria-hidden', 'true');
-    var btn = document.getElementById('settingsBtn');
-    if (btn) btn.classList.remove('is-active');
-  };
-
-  // contract alias used by app.js (#settingsBtn -> toggle)
-  PM.sync.close = function () { PM.sync.closeSettings(); };
-
-  /* ------------------------------------------------------------------------ */
-  /* Settings page render                                                     */
-  /* ------------------------------------------------------------------------ */
-
-  var FREQ_OPTIONS = [
-    { v: 'manual', label: 'Manual only' },
-    { v: 'onSave', label: 'On every save' },
-    { v: '5m', label: 'Every 5 minutes' },
-    { v: '15m', label: 'Every 15 minutes' },
-    { v: '1h', label: 'Every hour' }
-  ];
-
-  PM.sync.renderSettings = function () {
-    var page = document.getElementById('settingsPage');
-    if (!page) return;
-    var s = settings();
-    var st = effectiveStatus();
-    var configured = !!(s.vaultPath && String(s.vaultPath).trim());
-
-    page.innerHTML =
-      head() +
-      '<div class="settings__body">' +
-        (configured ? '' : onboarding()) +
-        statusBlock(st) +
-        connectBlock() +
-        fieldsBlock() +
-        dashboardBlock() +
-        errorLogBlock() +
-        templateBlock() +
-      '</div>' +
-      footer();
-
-    wireSettings();
-  };
-
-  // "Connect Vault Folder" via File System Access — or a file:// fallback callout.
-  function connectBlock() {
-    if (_helper.available === true) {
-      var hp = (_helper.info && _helper.info.path) ? _helper.info.path : 'your notes folder';
-      return '' +
-        '<div class="settings__connect">' +
-          '<div class="settings__connect-row"><span class="settings__connect-dot is-on"></span>' +
-            '<div class="settings__connect-text"><strong>Connected via local server</strong>' +
-            '<span>PatternMap is running through <code>patternmap-serve</code> and writes notes straight to <code>' + hp + '</code>. Just click <em>Sync Now</em>.</span></div>' +
-          '</div>' +
-        '</div>';
-    }
-    if (PM.sync.fsSupported()) {
-      var connected = PM.sync.hasHandle();
-      var dot = connected
-        ? '<span class="settings__connect-dot is-on"></span>'
-        : '<span class="settings__connect-dot"></span>';
-      var label = connected
-        ? 'Vault folder connected — notes write directly to disk.'
-        : 'Pick your vault folder once. PatternMap writes real <code>.md</code> files there and remembers the folder across reloads.';
-      var btns = connected
-        ? '<button id="connectVaultBtn" class="btn btn--accent" type="button">' + icon('book') + 'Reconnect folder</button>' +
-          '<button id="disconnectVaultBtn" class="btn btn--ghost" type="button">Disconnect</button>'
-        : '<button id="connectVaultBtn" class="btn btn--accent" type="button">' + icon('book') + 'Connect Vault Folder</button>';
-      return '' +
-        '<div class="settings__connect">' +
-          '<div class="settings__connect-row">' + dot +
-            '<div class="settings__connect-text"><strong>Live folder writing</strong>' +
-            '<span>' + label + '</span></div>' +
-          '</div>' +
-          '<div class="settings__connect-actions">' + btns + '</div>' +
-        '</div>';
-    }
-    // file:// fallback: no File System Access API in this context.
-    return '' +
-      '<div class="settings__callout">' +
-        '<div class="settings__callout-icon">' + icon('alert') + '</div>' +
-        '<div class="settings__callout-text">' +
-          '<strong>Live writing needs the local server</strong>' +
-          '<p>This page is running from <code>file://</code>, where browsers do not expose ' +
-          'the folder-picker API. To write notes straight to disk, run the ' +
-          '<code>patternmap-serve</code> helper (it opens <code>http://localhost</code>), then ' +
-          'reload and click <em>Connect Vault Folder</em>.</p>' +
-          '<p>Your notes folder already exists at <code>/path/to/notes/PatternMap</code> ' +
-          '(kept in sync), so anything you export lands right beside it.</p>' +
-        '</div>' +
-      '</div>';
-  }
-
-  function head() {
-    return '' +
-      '<div class="settings__head">' +
-        '<div class="settings__head-title">' + icon('settings') +
-          '<span>Obsidian Sync</span></div>' +
-        '<button id="settingsCloseBtn" class="settings__close drawer__close" ' +
-          'type="button" aria-label="Close settings">' + icon('close') + '</button>' +
-      '</div>';
-  }
-
-  function onboarding() {
-    return '' +
-      '<div class="settings__onboard">' +
-        '<div class="settings__onboard-icon">' + icon('book') + '</div>' +
-        '<div class="settings__onboard-text">' +
-          '<strong>Connect your Obsidian vault</strong>' +
-          '<p>Point PatternMap at a local vault folder and your patterns ' +
-          'will be written as Markdown notes you can open right in Obsidian.</p>' +
-        '</div>' +
-      '</div>';
-  }
-
-  function statusBlock(st) {
-    var meta = STATUS_META[st] || STATUS_META.connected;
-    var s = settings();
-    var desc;
-    if (st === 'unconfigured') desc = 'Add a vault path below to get started.';
-    else if (st === 'syncing') desc = 'Writing notes to your vault…';
-    else if (st === 'error') {
-      var last = (s.errorLog && s.errorLog.length) ? s.errorLog[s.errorLog.length - 1].message : 'Last sync failed.';
-      desc = last;
-    } else {
-      desc = s.lastSynced ? ('Last synced ' + fmt(s.lastSynced, 'rel') + '.') : 'Ready to sync.';
-    }
-
-    var retry = (st === 'error')
-      ? '<button id="retrySyncBtn" class="btn btn--err settings__retry" type="button">' +
-          icon('sync') + 'Retry sync</button>'
-      : '';
-
-    var bar = (st === 'syncing')
-      ? '<div class="settings__progress"><div id="syncProgressFill" ' +
-        'class="settings__progress-fill" style="width:' + Math.round(_progress) + '%"></div></div>'
-      : '';
-
-    return '' +
-      '<div class="settings__status ' + meta.cls.replace('sync-indicator--', 'status--') + '">' +
-        '<span class="settings__status-dot sync-indicator__dot ' + meta.dot + '"></span>' +
-        '<div class="settings__status-text">' +
-          '<strong>' + esc(meta.label) + '</strong>' +
-          '<span>' + esc(desc) + '</span>' +
-        '</div>' +
-        retry +
-      '</div>' + bar;
-  }
-
-  function fieldsBlock() {
-    var s = settings();
-    var freqOpts = FREQ_OPTIONS.map(function (o) {
-      return '<option value="' + o.v + '"' + (s.frequency === o.v ? ' selected' : '') +
-        '>' + esc(o.label) + '</option>';
-    }).join('');
-
-    return '' +
-      '<div class="settings__field">' +
-        '<label class="settings__label" for="vaultPathInput">Vault path</label>' +
-        '<div class="settings__path-row">' +
-          '<input id="vaultPathInput" class="settings__input" type="text" spellcheck="false" ' +
-            'placeholder="/path/to/notes" value="' + esc(s.vaultPath) + '">' +
-          '<button id="pickVaultBtn" class="btn btn--ghost settings__pick" type="button" ' +
-            'title="Choose folder">' + icon('book') + '</button>' +
-        '</div>' +
-        '<span class="settings__hint">The absolute path to your local Obsidian vault. ' +
-          'Notes resolve to <code>&lt;vault path&gt;/PatternMap</code>.</span>' +
-      '</div>' +
-
-      '<div class="settings__field">' +
-        '<label class="settings__label" for="syncFolderInput">Sync folder</label>' +
-        '<input id="syncFolderInput" class="settings__input" type="text" spellcheck="false" ' +
-          'placeholder="PatternMap/" value="' + esc(s.syncFolder) + '">' +
-        '<span class="settings__hint">Folder inside the vault where notes are written.</span>' +
-      '</div>' +
-
-      '<div class="settings__field">' +
-        '<label class="settings__label" for="frequencySelect">Sync frequency</label>' +
-        '<select id="frequencySelect" class="settings__input settings__select">' + freqOpts + '</select>' +
-        '<span class="settings__hint">How often PatternMap writes changes to the vault.</span>' +
-      '</div>';
-  }
-
-  function dashboardBlock() {
-    var s = settings();
-    var synced = (PM.state.patterns || []).filter(function (p) { return p.synced; }).length;
-    var pending = PM.sync.computePending();
-    var errs = (s.errorLog || []).length;
-
-    return '' +
-      '<div class="settings__dash">' +
-        dashCard(icon('check'), fmt(s.lastSynced, s.lastSynced ? 'datetime' : 'rel'), 'Last synced') +
-        dashCard(icon('book'), String(synced), 'Synced notes') +
-        dashCard(icon('sync'), String(pending), 'Pending changes') +
-        dashCard(icon('alert'), String(errs), 'Errors logged') +
-      '</div>';
-  }
-
-  function dashCard(ic, value, label) {
-    return '' +
-      '<div class="settings__dash-card">' +
-        '<div class="settings__dash-icon">' + ic + '</div>' +
-        '<div class="settings__dash-value">' + esc(value) + '</div>' +
-        '<div class="settings__dash-label">' + esc(label) + '</div>' +
-      '</div>';
-  }
-
-  function errorLogBlock() {
-    var log = settings().errorLog || [];
-    var rows = log.length
-      ? log.slice().reverse().map(function (e) {
-          return '<li class="settings__errorlog-item">' +
-            '<span class="settings__errorlog-time">' + esc(fmt(e.ts, 'datetime')) + '</span>' +
-            '<span class="settings__errorlog-msg">' + esc(e.message) + '</span>' +
-            '</li>';
-        }).join('')
-      : '<li class="settings__errorlog-empty">No errors logged. 🎉</li>';
-
-    var clearBtn = log.length
-      ? '<button id="clearErrorLogBtn" class="settings__errorlog-clear" type="button">Clear</button>'
-      : '';
-
-    return '' +
-      '<div class="settings__errorlog' + (_errorLogOpen ? ' is-open' : '') + '">' +
-        '<button id="errorLogToggle" class="settings__errorlog-head" type="button" ' +
-          'aria-expanded="' + (_errorLogOpen ? 'true' : 'false') + '">' +
-          '<span class="settings__errorlog-chev">' + icon('chevron') + '</span>' +
-          '<span>Error log</span>' +
-          '<span class="settings__errorlog-count">' + log.length + '</span>' +
-          clearBtn +
-        '</button>' +
-        '<ul class="settings__errorlog-list">' + rows + '</ul>' +
-      '</div>';
-  }
-
-  function templateBlock() {
-    var tpl = settings().template || (PM.consts && PM.consts.DEFAULT_TEMPLATE) || '';
-    var vars = templateVarNames();
-    var legend = vars.map(function (v) {
-      return '<button class="settings__var-chip" type="button" data-var="' + v + '">{{' + v + '}}</button>';
-    }).join('');
-
-    return '' +
-      '<div class="settings__template">' +
-        '<div class="settings__template-head">' +
-          '<label class="settings__label" for="templateInput">Note template</label>' +
-          '<span class="settings__hint">Click a variable to insert it. {{tokens}} are filled per pattern.</span>' +
-        '</div>' +
-        '<div class="settings__vars">' + legend + '</div>' +
-        '<div class="settings__template-grid">' +
-          '<textarea id="templateInput" class="settings__template-input" spellcheck="false" ' +
-            'rows="14">' + esc(tpl) + '</textarea>' +
-          '<div class="settings__template-preview" aria-label="Template preview">' +
-            '<div class="settings__template-preview-label">Highlighted</div>' +
-            '<pre id="templatePreview" class="settings__template-pre">' + highlightTemplate(tpl) + '</pre>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-  }
-
-  // Render template text with {{var}} tokens wrapped in colored spans.
-  function highlightTemplate(tpl) {
-    var known = {};
-    templateVarNames().forEach(function (v) { known[v] = true; });
-    // escape everything first, then re-inject token spans against the escaped text
-    var escd = esc(tpl);
-    return escd.replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, function (whole, key) {
-      var cls = known[key] ? 'tpl-var' : 'tpl-var tpl-var--unknown';
-      return '<span class="' + cls + '">' + whole + '</span>';
-    });
-  }
-
-  function footer() {
-    var configured = !!(settings().vaultPath && String(settings().vaultPath).trim());
-    return '' +
-      '<div class="settings__footer">' +
-        '<button id="exportNotesBtn" class="btn btn--ghost" type="button">' +
-          icon('external') + 'Export all notes (.md)</button>' +
-        '<button id="openVaultBtn" class="btn btn--ghost" type="button"' +
-          (configured ? '' : ' disabled') + '>' +
-          icon('external') + 'Open Vault Folder</button>' +
-        '<button id="syncNowBtn" class="btn btn--accent settings__sync-now" type="button"' +
-          (settings().status === 'syncing' ? ' disabled' : '') + '>' +
-          icon('sync') + 'Sync Now</button>' +
-      '</div>';
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* Settings page wiring (re-bound on each render — handlers are idempotent)  */
-  /* ------------------------------------------------------------------------ */
-
-  function wireSettings() {
-    on('settingsCloseBtn', 'click', function () { PM.sync.closeSettings(); });
-    on('syncNowBtn', 'click', function () { PM.sync.syncNow(); });
-    on('retrySyncBtn', 'click', function () { PM.sync.retry(); });
-    on('openVaultBtn', 'click', openVaultFolder);
-    on('pickVaultBtn', 'click', pickVault);
-    on('connectVaultBtn', 'click', function () { PM.sync.connectVault(); });
-    on('disconnectVaultBtn', 'click', function () { PM.sync.disconnectVault(); });
-    on('exportNotesBtn', 'click', function () { PM.sync.downloadAllMarkdown(); });
-
-    var vp = document.getElementById('vaultPathInput');
-    if (vp) vp.addEventListener('change', function () {
-      var was = !!(settings().vaultPath && settings().vaultPath.trim());
-      settings().vaultPath = vp.value.trim();
-      var now = !!settings().vaultPath;
-      if (now && settings().status === 'unconfigured') settings().status = 'connected';
-      if (!now) settings().status = 'unconfigured';
-      PM.save && PM.save();
-      PM.sync.renderIndicator();
-      PM.sync.renderSettings();
-      if (!was && now) PM.toast && PM.toast('Vault connected', 'success');
-    });
-
-    var sf = document.getElementById('syncFolderInput');
-    if (sf) sf.addEventListener('change', function () {
-      var v = sf.value.trim();
-      if (v && !/\/$/.test(v)) v += '/';
-      settings().syncFolder = v || 'PatternMap/';
-      PM.save && PM.save();
-    });
-
-    var freq = document.getElementById('frequencySelect');
-    if (freq) freq.addEventListener('change', function () {
-      settings().frequency = freq.value;
-      PM.sync.applyFrequency();
-      PM.save && PM.save();
-      PM.toast && PM.toast('Sync frequency: ' + labelForFreq(freq.value), 'info');
-    });
-
-    on('errorLogToggle', 'click', function (e) {
-      // ignore clicks bubbling from the clear button
-      if (e.target && e.target.id === 'clearErrorLogBtn') return;
-      _errorLogOpen = !_errorLogOpen;
-      PM.sync.renderSettings();
-    });
-
-    on('clearErrorLogBtn', 'click', function (e) {
-      e.stopPropagation();
-      settings().errorLog = [];
-      if (settings().status === 'error') settings().status =
-        (settings().vaultPath ? 'connected' : 'unconfigured');
-      PM.save && PM.save();
-      PM.sync.renderIndicator();
-      PM.sync.renderSettings();
-    });
-
-    // template editor: live preview + persist (debounced)
-    var ta = document.getElementById('templateInput');
-    if (ta) {
-      ta.addEventListener('input', function () {
-        var pre = document.getElementById('templatePreview');
-        if (pre) pre.innerHTML = highlightTemplate(ta.value);
-        settings().template = ta.value;
-        clearTimeout(_tplDebounce);
-        _tplDebounce = setTimeout(function () { PM.save && PM.save(); }, 400);
-      });
-    }
-
-    // variable chips: insert token at cursor
-    var chips = document.querySelectorAll('.settings__var-chip');
-    for (var i = 0; i < chips.length; i++) {
-      chips[i].addEventListener('click', function () {
-        insertVar(this.getAttribute('data-var'));
-      });
-    }
-  }
-  var _tplDebounce = null;
-
-  function insertVar(name) {
-    var ta = document.getElementById('templateInput');
-    if (!ta) return;
-    var token = '{{' + name + '}}';
-    var start = ta.selectionStart || 0;
-    var end = ta.selectionEnd || 0;
-    ta.value = ta.value.slice(0, start) + token + ta.value.slice(end);
-    var pos = start + token.length;
-    ta.selectionStart = ta.selectionEnd = pos;
-    ta.focus();
-    var pre = document.getElementById('templatePreview');
-    if (pre) pre.innerHTML = highlightTemplate(ta.value);
-    settings().template = ta.value;
-    PM.save && PM.save();
-  }
-
-  function labelForFreq(v) {
-    for (var i = 0; i < FREQ_OPTIONS.length; i++) if (FREQ_OPTIONS[i].v === v) return FREQ_OPTIONS[i].label;
-    return v;
-  }
-
-  function openVaultFolder() {
-    var s = settings();
-    var base = String(s.vaultPath || '').trim();
-    if (!base && PM.sync.hasHandle()) base = '/path/to/notes';
-    if (!base) { PM.toast && PM.toast('No vault path set', 'warn'); return; }
-    var folder = base.replace(/\/+$/, '') + '/' + String(s.syncFolder || '').replace(/^\/+/, '');
-    // Best-effort: try a file:// open; otherwise just inform (sandbox-safe simulation)
-    try { window.open('file://' + folder, '_blank'); } catch (e) {}
-    PM.toast && PM.toast('Vault folder: ' + folder, 'info', 5000);
-  }
-
-  function pickVault() {
-    // File System Access API → connect a real folder handle. Otherwise the
-    // input is text-only (file:// fallback).
-    if (PM.sync.fsSupported()) {
-      PM.sync.connectVault();
-    } else {
-      var vp2 = document.getElementById('vaultPathInput');
-      if (vp2) { vp2.focus(); }
-      PM.toast && PM.toast('Type your vault path here, or run patternmap-serve for live writing', 'info', 5000);
-    }
-  }
-
-  function on(id, evt, fn) {
-    var el = document.getElementById(id);
-    if (el) el.addEventListener(evt, fn);
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* PM.sync.mount — one-time wiring                                          */
-  /* ------------------------------------------------------------------------ */
-
-  PM.sync.mount = function () {
-    // Render the global indicator immediately so it's always visible.
-    PM.sync.renderIndicator();
-
-    // Try to silently restore a previously-connected vault folder handle.
-    if (PM.sync.fsSupported()) {
-      PM.sync.restoreHandle().catch(function () {});
-    }
-
-    // Keyboard: Escape inside settings closes it (app.js also handles global ESC,
-    // but we guard our own state defensively).
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && PM.state.ui && PM.state.ui.settingsOpen) {
-        var ae = document.activeElement;
-        var typing = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT');
-        if (!typing) PM.sync.closeSettings();
-      }
-    });
-
-    // Backdrop click on the settings page (clicking the dim area, not the panel) closes it.
-    var page = document.getElementById('settingsPage');
-    if (page) {
-      page.addEventListener('mousedown', function (e) {
-        if (e.target === page) PM.sync.closeSettings();
-      });
-    }
-  };
-
-  /* ------------------------------------------------------------------------ */
-  /* Aliases requested by SPEC narrative (kept thin; canonical names above)   */
-  /* ------------------------------------------------------------------------ */
-  PM.sync.render = function () { PM.sync.renderSettings(); };
-  PM.sync.updateIndicator = function () { PM.sync.renderIndicator(); };
-
-})();
-</script>
-<script>
 /* ===== app.js ===== */
 /* =============================================================================
  * PatternMap — app.js
  * Bootstrap / glue. LOADS LAST. Owns PM.init() and PM.render().
  *
- * Per CONTRACT.md §6.7, this file is the single boot entrypoint and the broad
+ * This file is the single boot entrypoint and the broad
  * "reconcile everything visible from PM.state" function. The cross-cutting
  * helpers (uid/now/fmtDate/toast/save/load) are owned by data.js; here they are
  * provided ONLY as a defensive backstop (guarded by typeof) so that if data.js
@@ -10226,7 +8356,6 @@ PM.data.books = {
   PM.drawer = PM.drawer || {};
   PM.modal  = PM.modal  || {};
   PM.bible  = PM.bible  || {};
-  PM.sync   = PM.sync   || {};
   PM.consts = PM.consts || {};
 
   /* ---------------------------------------------------------------------------
@@ -10276,7 +8405,7 @@ PM.data.books = {
   }
 
   if (!isFn(PM.fmtDate)) {
-    // Contract §1.1: PM.fmtDate(ts:number, mode?) — epoch ms in, formatted out.
+    // PM.fmtDate(ts:number, mode?) — epoch ms in, formatted out.
     PM.fmtDate = function (ts, mode) {
       if (!ts) return '—';
       var d = new Date(ts);
@@ -10312,7 +8441,7 @@ PM.data.books = {
   }
 
   if (!isFn(PM.toast)) {
-    // Contract §1.1: transient toast in #toastHost; success/error/info/warn; auto-dismiss.
+    // Transient toast in #toastHost; success/error/info/warn; auto-dismiss.
     PM.toast = function (message, kind, ms) {
       var host = $('toastHost');
       if (!host) return;
@@ -10376,11 +8505,6 @@ PM.data.books = {
       } catch (err) {
         if (window.console && console.warn) console.warn('[PatternMap] save failed:', err);
       }
-      // Reflect persistence in the sync indicator; trigger on-save sync hook.
-      safe(PM.sync && PM.sync.renderIndicator);
-      if (PM.state && PM.state.settings && PM.state.settings.frequency === 'onSave') {
-        safe(PM.sync && PM.sync.maybeAutoSync);
-      }
     };
   }
 
@@ -10428,7 +8552,7 @@ PM.data.books = {
 
   /* ===========================================================================
    * 2. PM.state default shape (backstop; data.js.initState owns canonical reset)
-   * Per CONTRACT §2. Installed only if data.js has not already populated it.
+   * Installed only if data.js has not already populated it.
    * =========================================================================== */
   function defaultState() {
     return {
@@ -10437,15 +8561,6 @@ PM.data.books = {
       edges: [],
       transform: { x: 0, y: 0, k: 1 },
       settings: {
-        vaultPath: '',
-        syncFolder: 'PatternMap/Patterns',
-        frequency: 'onSave',
-        template: (PM.consts && PM.consts.DEFAULT_TEMPLATE) || '',
-        lastSynced: 0,
-        status: 'unconfigured',
-        pending: 0,
-        syncedNotes: 0,
-        errorLog: [],
         layoutType: 'force',
         nodeScale: 1,
         nodeShape: 'circle',
@@ -10465,8 +8580,7 @@ PM.data.books = {
         clusterMode: false,
         drawerOpen: false,
         modalOpen: false,
-        bibleOpen: false,
-        settingsOpen: false
+        bibleOpen: false
       },
       // runtime-only graph bookkeeping
       _layout: {
@@ -10506,13 +8620,12 @@ PM.data.books = {
 
   /* ===========================================================================
    * 3. PM.render — broad reconcile of everything visible from PM.state.
-   * Idempotent. Order per CONTRACT §1.1 / §6.7.
+   * Idempotent.
    * =========================================================================== */
   PM.render = function () {
     safe(PM.graph.render);
     safe(PM.bible.renderHeatmap);
     safe(PM.drawer.render);
-    safe(PM.sync.renderIndicator);
     safe(PM.data.renderFilterChips);
     updateEmptyState();
   };
@@ -10536,7 +8649,7 @@ PM.data.books = {
   }
 
   /* ===========================================================================
-   * 4. Global event wiring (CONTRACT §6.7.1). All wiring lives here, attached
+   * 4. Global event wiring. All wiring lives here, attached
    *    inside PM.init so nothing touches the DOM at parse time.
    * =========================================================================== */
 
@@ -10551,9 +8664,8 @@ PM.data.books = {
     on('fitBtn',     'click', function () { safe(PM.graph.fit); });
     on('lockBtn',    'click', function () { safe(PM.graph.toggleLock); });
     on('clusterBtn', 'click', function () { safe(PM.graph.toggleCluster); });
-    // bibleBtn + settingsBtn are toggles owned by their modules.
+    // bibleBtn is a toggle owned by its module.
     on('bibleBtn',    'click', function () { toggleBible(); });
-    on('settingsBtn', 'click', function () { toggleSettings(); });
     on('mapCustomizeBtn', 'click', function () { safe(PM.graph.toggleCustomizer); });
   }
 
@@ -10563,13 +8675,6 @@ PM.data.books = {
     if (!open && isFn(PM.bible.open)) { safe(PM.bible.open); return; }
     // Backstop: if open/close not split, call open() as a toggle.
     safe(PM.bible.open);
-  }
-
-  function toggleSettings() {
-    var open = PM.state.ui && PM.state.ui.settingsOpen;
-    if (open && isFn(PM.sync.closeSettings)) { safe(PM.sync.closeSettings); return; }
-    if (!open && isFn(PM.sync.openSettings)) { safe(PM.sync.openSettings); return; }
-    safe(PM.sync.openSettings);
   }
 
   function wireAddButtons() {
@@ -10586,8 +8691,8 @@ PM.data.books = {
       PM.state.search = e.target.value || '';
       if (searchTimer) clearTimeout(searchTimer);
       searchTimer = setTimeout(function () {
-        // Contract registry: applyHighlight is the single highlight pass.
-        // Task references applySearch; prefer applyHighlight (canonical), fall back.
+        // applyHighlight is the canonical highlight pass; fall back to
+        // applySearch if a build ever ships without it.
         if (isFn(PM.graph.applyHighlight)) { safe(PM.graph.applyHighlight); }
         else if (isFn(PM.graph.applySearch)) { safe(PM.graph.applySearch, PM.state.search); }
       }, 120);
@@ -10635,13 +8740,9 @@ PM.data.books = {
   }
 
   // Escape closes the top-most open overlay by priority:
-  //   settings > modal > bible > drawer ; else clear selection.
+  //   modal > bible > drawer ; else clear selection.
   function handleEscape() {
     var ui = PM.state.ui || {};
-    if (ui.settingsOpen) {
-      if (isFn(PM.sync.closeSettings)) safe(PM.sync.closeSettings);
-      return;
-    }
     if (ui.modalOpen) {
       if (isFn(PM.modal.close)) safe(PM.modal.close);
       return;
@@ -10672,32 +8773,7 @@ PM.data.books = {
   }
 
   /* ===========================================================================
-   * 5. Interval sync timer backstop.
-   * sync.js owns PM.sync.applyFrequency() (CONTRACT §6.6 / §6.7 step 8). We call
-   * it. If it is missing, we run our own interval honoring settings.frequency.
-   * =========================================================================== */
-  var _intervalHandle = 0;
-  var FREQ_MS = { '5m': 5 * 60 * 1000, '15m': 15 * 60 * 1000, '1h': 60 * 60 * 1000 };
-
-  function applyFrequencyBackstop() {
-    if (_intervalHandle) { clearInterval(_intervalHandle); _intervalHandle = 0; }
-    var freq = (PM.state.settings && PM.state.settings.frequency) || 'manual';
-    var ms = FREQ_MS[freq];
-    if (ms && isFn(PM.sync.syncNow)) {
-      _intervalHandle = setInterval(function () { safe(PM.sync.syncNow); }, ms);
-    }
-  }
-
-  function setupSyncTimer() {
-    if (isFn(PM.sync.applyFrequency)) {
-      safe(PM.sync.applyFrequency);
-    } else {
-      applyFrequencyBackstop();
-    }
-  }
-
-  /* ===========================================================================
-   * 6. PM.init — the single boot entrypoint (CONTRACT §6.7).
+   * 5. PM.init — the single boot entrypoint.
    * =========================================================================== */
   PM.init = function () {
     showLoading();
@@ -10705,12 +8781,6 @@ PM.data.books = {
     // 1. Default state.
     if (isFn(PM.data.initState)) safe(PM.data.initState);
     ensureStateShape();
-
-    // Ensure settings carries a usable default template if data.js didn't.
-    if (PM.state.settings && !PM.state.settings.template &&
-        PM.consts && PM.consts.DEFAULT_TEMPLATE) {
-      PM.state.settings.template = PM.consts.DEFAULT_TEMPLATE;
-    }
 
     // 2. Restore or seed.
     var restored = false;
@@ -10729,7 +8799,6 @@ PM.data.books = {
     safe(PM.drawer.mount);
     safe(PM.modal.mount);
     safe(PM.bible.mount);
-    safe(PM.sync.mount);
 
     // 5. Wire global controls.
     wireToolbar();
@@ -10757,9 +8826,14 @@ PM.data.books = {
       // Relax the freshly-seeded (or position-less) graph, then fit.
       if (isFn(PM.graph.startLayout)) {
         safe(PM.graph.startLayout);
-        // Fit once after layout has had a moment to relax. The layout cooling
-        // loop auto-stops; fit a bit after to frame the constellation.
-        setTimeout(function () { safe(PM.graph.fit); }, 700);
+        // Fit once the cooling sim actually settles (not a guessed delay) so
+        // the transform always frames the FINAL constellation, not a
+        // mid-simulation snapshot — a stale snapshot fit is off by the same
+        // absolute pixel error on any viewport, but that error is large enough
+        // relative to a narrow (phone) viewport to push the whole graph
+        // off-screen. See PM.graph.fitAfterSettle.
+        if (isFn(PM.graph.fitAfterSettle)) safe(PM.graph.fitAfterSettle, 6000);
+        else setTimeout(function () { safe(PM.graph.fit); }, 700);
       } else {
         safe(PM.graph.render);
         safe(PM.graph.fit);
@@ -10768,10 +8842,7 @@ PM.data.books = {
       safe(PM.graph.render);
     }
 
-    // 8. Arm the interval sync timer per settings.frequency.
-    setupSyncTimer();
-
-    // 9. Broad render.
+    // 8. Broad render.
     PM.render();
 
     // 6 (visibility). Hide loading; show empty state if needed.
@@ -10783,9 +8854,9 @@ PM.data.books = {
   };
 
   /* ===========================================================================
-   * 7. Auto-boot. Call PM.init() once the DOM is ready. The integrator places
-   *    app.js LAST inside <body>, so the static skeleton already exists, but we
-   *    still guard on readyState for safety.
+   * 6. Auto-boot. Call PM.init() once the DOM is ready. app.js loads LAST
+   *    inside <body>, so the static skeleton already exists, but we still
+   *    guard on readyState for safety.
    * =========================================================================== */
   function boot() {
     if (PM.__booted) return;
