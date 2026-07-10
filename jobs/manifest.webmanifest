@@ -1,0 +1,31 @@
+{
+  "name": "Billet",
+  "short_name": "Billet",
+  "description": "An AI job-hunt pipeline \u2014 harvest listings, filter by a geo/remote compass, score fit & joy, and swipe keep/kill. A live showcase of a real run \u2014 copy it to run your own.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#d7cdad",
+  "theme_color": "#d7cdad",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#141b33" />
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Faith" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Jake&#39;s Workshop" />
+<meta property="og:title" content="Faith" />
+<meta property="og:description" content="A Catholic companion — Daily Examen, the Rosary with today's mysteries, the Divine Mercy Chaplet, plus a Verse & Saint of the day." />
+<meta property="og:image" content="og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Faith" />
+<meta name="twitter:description" content="A Catholic companion — Daily Examen, the Rosary with today's mysteries, the Divine Mercy Chaplet, plus a Verse & Saint of the day." />
+<meta name="twitter:image" content="og.png" />
+<title>Faith</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#141b33;--bg2:#1b2444;--card:#212c52;--ink:#eef1fb;--soft:#a8b2d6;--line:#33406e;--gold:#e7c46a;--gold-d:#caa14a;--rose:#c98aa6}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{font-family:"Space Grotesk",system-ui,sans-serif;color:var(--ink);background:radial-gradient(ellipse at 50% -10%,#26305a 0%,#141b33 60%);min-height:100%;-webkit-font-smoothing:antialiased}
+  .serif{font-family:"Lora",Georgia,serif}
+  .wrap{max-width:560px;margin:0 auto;padding:16px 18px calc(34px + env(safe-area-inset-bottom))}
+  header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .home{border:1px solid var(--line);background:var(--card);width:40px;height:40px;border-radius:12px;display:grid;place-items:center;text-decoration:none;font-size:18px;color:var(--ink);cursor:pointer}
+  header h1{font-size:22px;margin:0;letter-spacing:.5px}
+  header .date{margin-left:auto;font-size:12.5px;color:var(--soft);text-align:right;line-height:1.3}
+  .screen{display:none;animation:f .3s ease}.screen.on{display:block}
+  @keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px -18px rgba(0,0,0,.7)}
+  .lbl{font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:600}
+  .verse{font-size:20px;line-height:1.45;margin:10px 0 8px}
+  .ref{color:var(--gold);font-weight:600;font-size:14px}
+  .saint .nm{font-size:21px;margin:8px 0 2px}
+  .saint .feast{font-size:12px;color:var(--soft);letter-spacing:1px}
+  .saint .bl{color:var(--soft);font-size:14.5px;line-height:1.5;margin-top:8px}
+  .tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 8px;text-align:center;cursor:pointer;transition:transform .07s}
+  .tile:active{transform:translateY(2px)}
+  .tile .i{font-size:30px}.tile .n{font-size:13px;font-weight:600;margin-top:6px}
+  .backrow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .back{border:1px solid var(--line);background:var(--card);border-radius:11px;width:38px;height:38px;font-size:17px;color:var(--ink);cursor:pointer}
+  .backrow h2{font-size:19px;margin:0}
+  /* prayer walk */
+  .walk{text-align:center}
+  .progress{font-size:12px;letter-spacing:1.5px;color:var(--gold);margin:4px 0 2px}
+  .beads{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:10px 0 4px;max-width:340px;margin-left:auto;margin-right:auto}
+  .bead{width:9px;height:9px;border-radius:50%;background:var(--line)}.bead.on{background:var(--gold)}.bead.cur{background:var(--rose);transform:scale(1.4)}
+  .pray-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 20px;margin:14px 0;min-height:220px;display:flex;flex-direction:column;justify-content:center}
+  .pray-lbl{font-size:13px;letter-spacing:2px;color:var(--gold);font-weight:600;margin-bottom:4px}
+  .pray-sub{color:var(--rose);font-size:14px;margin-bottom:12px;font-style:italic}
+  .pray-text{font-size:19px;line-height:1.6}
+  .nav{display:flex;gap:10px}
+  .nav .b{flex:1;border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:14px;padding:16px;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+  .nav .b.next{flex:2;background:var(--gold);color:#241a05;border-color:var(--gold)}
+  .nav .b:active{transform:translateY(1px)}
+  /* examen */
+  .dots{display:flex;gap:7px;justify-content:center;margin:8px 0 14px}
+  .dots .d{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots .d.on{background:var(--gold)}
+  .ex-step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin-bottom:14px;min-height:230px}
+  .ex-step .n{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:600}
+  .ex-step h3{font-size:24px;margin:8px 0 12px}
+  .ex-step p{font-size:17px;line-height:1.6;color:var(--ink)}
+  .ex-step .scr{margin-top:14px;color:var(--soft);font-size:14.5px;font-style:italic;line-height:1.5}
+  .center{text-align:center;color:var(--soft);font-size:14px;line-height:1.6;padding:20px}
+  /* tiles: 2x2, depth, lift */
+  .tiles{grid-template-columns:1fr 1fr}
+  .tile{box-shadow:0 12px 28px -20px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.05);transition:transform .15s cubic-bezier(.2,.8,.2,1),box-shadow .15s,border-color .15s}
+  .tile .i{filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+  @media(hover:hover){.tile:hover{transform:translateY(-3px);border-color:var(--gold-d);box-shadow:0 20px 36px -18px rgba(0,0,0,.8)}}
+  .card{box-shadow:0 12px 32px -20px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.045)}
+  /* prayers library */
+  .pgroup{margin-bottom:16px}.pgroup .lbl{display:block;margin:0 2px 9px}
+  .prow{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:9px;color:var(--ink);font:inherit;font-size:16px;cursor:pointer;transition:transform .12s,border-color .12s;box-shadow:0 9px 24px -20px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.04)}
+  .prow .chev{color:var(--gold);font-weight:700;flex:0 0 auto;font-size:15px}
+  .prow:active{transform:scale(.99)}
+  @media(hover:hover){.prow:hover{border-color:var(--gold-d);transform:translateX(2px)}}
+  .back2{border:1px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:11px;padding:10px 15px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px}
+  .ptitle{font-size:24px;margin:2px 0 14px;color:var(--ink)}
+  /* rosary mystery picker */
+  .mystpick{display:flex;flex-direction:column;gap:12px}
+  .myst{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;color:var(--ink);font:inherit;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;box-shadow:0 11px 26px -19px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.045)}
+  .myst:active{transform:scale(.99)}
+  @media(hover:hover){.myst:hover{border-color:var(--gold-d);transform:translateY(-2px);box-shadow:0 20px 36px -18px rgba(0,0,0,.8)}}
+  .myst .mhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .myst .mname{font-size:18px}
+  .myst .today{font-size:10px;letter-spacing:1.5px;font-weight:700;color:#241a05;background:var(--gold);border-radius:999px;padding:2px 9px}
+  .myst .mlist{margin:0;padding-left:20px;color:var(--soft);font-size:13.5px;line-height:1.65}
+  .myst .mlist li{margin:1px 0}
+  /* footer + a11y */
+  .suite-foot{text-align:center;color:var(--soft);font-size:12px;opacity:.7;margin-top:22px;letter-spacing:.3px}
+  :focus-visible{outline:2.5px solid var(--gold);outline-offset:2px;border-radius:4px}
+  @media(prefers-reduced-motion:reduce){.screen{animation:none}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="home" id="homeBtn" title="Home">✝️</div>
+    <h1 class="serif" id="hTitle">Faith</h1>
+    <div class="date" id="hDate"></div>
+  </header>
+
+  <!-- HOME -->
+  <section class="screen on" id="s-home">
+    <div class="card">
+      <div class="lbl">VERSE OF THE DAY</div>
+      <div class="verse serif" id="vText"></div>
+      <div class="ref" id="vRef"></div>
+    </div>
+    <div class="card saint">
+      <div class="lbl">SAINT OF THE DAY</div>
+      <div class="nm serif" id="sName"></div>
+      <div class="feast" id="sFeast"></div>
+      <div class="bl" id="sBlurb"></div>
+    </div>
+    <div class="tiles">
+      <div class="tile" data-go="examen"><div class="i">🕊️</div><div class="n">Daily Examen</div></div>
+      <div class="tile" data-go="rosary"><div class="i">📿</div><div class="n">Holy Rosary</div></div>
+      <div class="tile" data-go="chaplet"><div class="i">🩸</div><div class="n">Divine Mercy</div></div>
+      <div class="tile" data-go="prayers"><div class="i">📖</div><div class="n">Prayers</div></div>
+    </div>
+  </section>
+
+  <!-- EXAMEN -->
+  <section class="screen" id="s-examen">
+    <div class="backrow"><button class="back" data-home>←</button><h2 class="serif">Daily Examen</h2></div>
+    <div class="dots" id="exDots"></div>
+    <div class="ex-step" id="exStep"></div>
+    <div class="nav"><button class="b" id="exBack">Back</button><button class="b next" id="exNext">Next</button></div>
+  </section>
+
+  <!-- WALK (rosary + chaplet share) -->
+  <section class="screen" id="s-walk">
+    <div class="backrow"><button class="back" data-home>←</button><h2 class="serif" id="walkTitle">Rosary</h2></div>
+    <div class="walk">
+      <div class="progress" id="walkProg"></div>
+      <div class="beads" id="walkBeads"></div>
+      <div class="pray-card">
+        <div class="pray-lbl" id="prayLbl"></div>
+        <div class="pray-sub" id="praySub" style="display:none"></div>
+        <div class="pray-text serif" id="prayText"></div>
+      </div>
+      <div class="nav"><button class="b" id="walkBack">Back</button><button class="b next" id="walkNext">Next bead →</button></div>
+    </div>
+  </section>
+
+  <!-- ROSARY MYSTERY PICKER -->
+  <section class="screen" id="s-pick">
+    <div class="backrow"><button class="back" data-home>←</button><h2 class="serif">Holy Rosary</h2></div>
+    <p class="center" style="padding:2px 4px 14px">Choose a set of mysteries to pray. Today's set is marked.</p>
+    <div class="mystpick" id="mystPick"></div>
+  </section>
+
+  <!-- PRAYERS LIBRARY -->
+  <section class="screen" id="s-prayers">
+    <div class="backrow"><button class="back" data-home>←</button><h2 class="serif">Prayers</h2></div>
+    <div id="prayersList"></div>
+    <div id="prayerRead" style="display:none"></div>
+  </section>
+
+  <div class="suite-foot">🧰 Jake's Workshop</div>
+</div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const now=new Date();
+function doy(d){const s=Date.UTC(d.getFullYear(),0,0);return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-s)/864e5);}
+$("#hDate").textContent=now.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+
+/* ---------- content ---------- */
+const VERSES=[
+["The Lord is my shepherd; I shall not want.","Psalm 23:1"],
+["I can do all things through Christ who strengtheneth me.","Philippians 4:13"],
+["Be still, and know that I am God.","Psalm 46:10"],
+["The Lord is my light and my salvation; whom shall I fear?","Psalm 27:1"],
+["Come to me, all you that labour and are burdened, and I will refresh you.","Matthew 11:28"],
+["Trust in the Lord with all thy heart, and lean not on thine own understanding.","Proverbs 3:5"],
+["For God so loved the world, that he gave his only begotten Son.","John 3:16"],
+["I have called thee by thy name: thou art mine.","Isaiah 43:1"],
+["Cast all your care upon him, for he hath care of you.","1 Peter 5:7"],
+["Weeping may endure for a night, but joy cometh in the morning.","Psalm 30:5"],
+["The Lord is nigh unto them that are of a contrite heart.","Psalm 34:18"],
+["My grace is sufficient for thee: for power is made perfect in weakness.","2 Corinthians 12:9"],
+["Let not your heart be troubled. You believe in God, believe also in me.","John 14:1"],
+["Charity is patient, is kind; charity envieth not.","1 Corinthians 13:4"],
+["I am the way, and the truth, and the life.","John 14:6"],
+["Fear not, for I am with thee.","Isaiah 41:10"],
+["The joy of the Lord is your strength.","Nehemiah 8:10"],
+["Seek ye first the kingdom of God, and his justice.","Matthew 6:33"],
+["Whither shall I go from thy spirit? or whither shall I flee from thy face?","Psalm 139:7"],
+["A clean heart create in me, O God.","Psalm 51:10"],
+["He healeth the broken of heart, and bindeth up their bruises.","Psalm 147:3"],
+["The Lord is good to them that hope in him, to the soul that seeketh him.","Lamentations 3:25"],
+["Be not overcome by evil, but overcome evil by good.","Romans 12:21"],
+["Greater love than this no man hath, that a man lay down his life for his friends.","John 15:13"],
+["My soul doth magnify the Lord.","Luke 1:46"],
+["Thy word is a lamp to my feet, and a light to my paths.","Psalm 119:105"],
+["Rejoice in the Lord always: again, I say, rejoice.","Philippians 4:4"],
+["The Lord will give strength to his people: the Lord will bless his people with peace.","Psalm 29:11"],
+["Wait on the Lord, do manfully, and let thy heart take courage.","Psalm 27:14"],
+["He that dwelleth in the aid of the most High shall abide under the protection of the God of heaven.","Psalm 91:1"],
+["Blessed are the clean of heart: for they shall see God.","Matthew 5:8"],
+["Ask, and it shall be given you; seek, and you shall find.","Matthew 7:7"],
+["In all things we suffer tribulation, but are not distressed.","2 Corinthians 4:8"],
+["The Lord is my helper: I will not fear what man shall do to me.","Hebrews 13:6"],
+["Behold, I make all things new.","Revelation 21:5"],
+["This is the day which the Lord hath made: let us be glad and rejoice therein.","Psalm 118:24"],
+["Be it done to me according to thy word.","Luke 1:38"],
+["Thou hast made us for thyself, and our heart is restless until it rests in thee.","St. Augustine"],
+["Cast thy care upon the Lord, and he shall sustain thee.","Psalm 55:22"],
+["The eternal God is thy refuge, and underneath are the everlasting arms.","Deuteronomy 33:27"],
+["Let all that you do be done in charity.","1 Corinthians 16:14"],
+["I have fought a good fight, I have finished my course, I have kept the faith.","2 Timothy 4:7"],
+["The peace of God, which surpasseth all understanding, keep your hearts.","Philippians 4:7"],
+["Blessed are they that mourn: for they shall be comforted.","Matthew 5:4"],
+["My help is from the Lord, who made heaven and earth.","Psalm 121:2"],
+];
+const SAINTS={
+"1-1":["Mary, Mother of God","Solemnity","The Church begins the year honoring Mary's divine motherhood — she who bore the Word made flesh."],
+"1-3":["The Holy Name of Jesus","Memorial","At the name of Jesus every knee shall bend. A day to pray His name with love."],
+"1-21":["St. Agnes","Memorial","A young Roman martyr who gave her life rather than her purity — patroness of girls and chastity."],
+"1-24":["St. Francis de Sales","Memorial","Gentle bishop and Doctor; taught that holiness is for everyone, in every walk of life."],
+"1-25":["Conversion of St. Paul","Feast","Struck on the road to Damascus, the persecutor became the Apostle. No one is beyond grace."],
+"1-28":["St. Thomas Aquinas","Memorial","The Angelic Doctor, who wedded faith and reason and called it all 'straw' before God."],
+"1-31":["St. John Bosco","Memorial","Father and teacher of the young; won souls with kindness, reason, and joy."],
+"2-2":["The Presentation of the Lord","Feast","Candlemas — the Light of the nations brought to the Temple."],
+"2-3":["St. Blaise","Memorial","Bishop and martyr; invoked for ailments of the throat."],
+"2-11":["Our Lady of Lourdes","Memorial","Mary appeared to St. Bernadette: 'I am the Immaculate Conception.' A day for the sick."],
+"2-14":["Ss. Cyril & Methodius","Memorial","Brothers who brought the Gospel to the Slavs — patrons of Europe."],
+"3-17":["St. Patrick","Memorial","Returned to the land of his captivity to bring it Christ; apostle of Ireland."],
+"3-19":["St. Joseph","Solemnity","Husband of Mary, foster-father of Jesus — the just man, patron of the universal Church and of a happy death."],
+"3-25":["The Annunciation","Solemnity","The angel to Mary; the Word becomes flesh in her 'yes.'"],
+"4-25":["St. Mark","Feast","Evangelist; his Gospel runs with urgency — 'and immediately.'"],
+"4-29":["St. Catherine of Siena","Memorial","Mystic, reformer, Doctor — 'Be who God meant you to be and you will set the world on fire.'"],
+"5-1":["St. Joseph the Worker","Memorial","The carpenter who sanctified ordinary labor. Patron of workers."],
+"5-13":["Our Lady of Fatima","Memorial","Mary's call to prayer, penance, and the Rosary, given to three shepherd children."],
+"5-26":["St. Philip Neri","Memorial","The joyful saint of Rome — holiness with a light heart."],
+"5-31":["The Visitation","Feast","Mary hurries to Elizabeth; the unborn John leaps for joy."],
+"6-13":["St. Anthony of Padua","Memorial","Wonder-worker and finder of lost things; preacher of the Gospel."],
+"6-24":["Birth of St. John the Baptist","Solemnity","The voice crying in the wilderness: 'Prepare the way of the Lord.'"],
+"6-29":["Ss. Peter & Paul","Solemnity","The rock and the apostle to the nations — pillars of the Church."],
+"7-3":["St. Thomas","Feast","From 'unless I see' to 'My Lord and my God' — faith born of mercy."],
+"7-11":["St. Benedict","Memorial","Father of Western monasticism — 'pray and work.' Patron of Europe."],
+"7-22":["St. Mary Magdalene","Feast","Apostle to the Apostles, first witness of the Resurrection."],
+"7-25":["St. James","Feast","Apostle, first of the Twelve to be martyred; the pilgrim's saint."],
+"7-26":["Ss. Joachim & Anne","Memorial","Parents of Mary, grandparents of the Lord."],
+"7-31":["St. Ignatius of Loyola","Memorial","Soldier turned saint; founder of the Jesuits and author of the Spiritual Exercises — and this Examen."],
+"8-4":["St. John Vianney","Memorial","The Curé of Ars; spent his life in the confessional, patron of priests."],
+"8-8":["St. Dominic","Memorial","Founder of the Order of Preachers; spread the Rosary."],
+"8-10":["St. Lawrence","Feast","Deacon and martyr who gave the Church's treasure to the poor."],
+"8-11":["St. Clare","Memorial","Follower of Francis, foundress of the Poor Clares; her gaze was fixed on Christ."],
+"8-14":["St. Maximilian Kolbe","Memorial","Gave his life for a stranger at Auschwitz — 'greater love hath no man.'"],
+"8-15":["The Assumption","Solemnity","Mary taken body and soul into heaven — the pledge of our own hope."],
+"8-20":["St. Bernard","Memorial","Doctor of the Church, the 'mellifluous' preacher of Mary and of love."],
+"8-27":["St. Monica","Memorial","Wept and prayed for years for her son Augustine — patroness of mothers."],
+"8-28":["St. Augustine","Memorial","'Late have I loved Thee.' Bishop, Doctor, restless heart finally at rest in God."],
+"9-8":["The Nativity of Mary","Feast","The birth of her through whom salvation dawned."],
+"9-14":["Exaltation of the Holy Cross","Feast","We adore the Cross by which joy came to the whole world."],
+"9-21":["St. Matthew","Feast","Tax collector called from his table to follow — and to write the Gospel."],
+"9-23":["St. Pio of Pietrelcina","Memorial","Padre Pio — confessor, stigmatist: 'Pray, hope, and don't worry.'"],
+"9-29":["Ss. Michael, Gabriel & Raphael","Feast","The archangels — protector, messenger, and healer of God."],
+"10-1":["St. Thérèse of Lisieux","Memorial","The Little Flower; her 'little way' of love and trust. Doctor of the Church."],
+"10-2":["The Holy Guardian Angels","Memorial","God gives His angels charge over you, to guard you in all your ways."],
+"10-4":["St. Francis of Assisi","Memorial","The poor man of Assisi who married Lady Poverty and preached to all creation."],
+"10-7":["Our Lady of the Rosary","Memorial","A day for the Rosary — the Gospel prayed on beads through Mary."],
+"10-15":["St. Teresa of Ávila","Memorial","Mystic and reformer, Doctor — 'Let nothing disturb you; God alone suffices.'"],
+"10-18":["St. Luke","Feast","Evangelist and physician; gave us the Magnificat and the prodigal son."],
+"10-22":["St. John Paul II","Memorial","'Be not afraid!' Pilgrim pope who opened wide the doors to Christ."],
+"10-28":["Ss. Simon & Jude","Feast","Apostles; Jude, patron of hopeless and impossible causes."],
+"11-1":["All Saints","Solemnity","The great multitude no one can number — and the call for each of us to join them."],
+"11-2":["All Souls","Commemoration","We pray for the faithful departed, that they may rest in the light of God."],
+"11-3":["St. Martin de Porres","Memorial","Humble Dominican brother of Lima; servant of the poor and the sick."],
+"11-11":["St. Martin of Tours","Memorial","Soldier who cut his cloak for a beggar — and met Christ in him."],
+"11-22":["St. Cecilia","Memorial","Martyr and patroness of music; sang to God in her heart."],
+"11-30":["St. Andrew","Feast","First-called Apostle; brought his brother Peter to Jesus."],
+"12-3":["St. Francis Xavier","Memorial","Tireless missionary to the East; patron of missions."],
+"12-6":["St. Nicholas","Memorial","Bishop of Myra; secret giver to the poor — the true Santa Claus."],
+"12-8":["The Immaculate Conception","Solemnity","Mary conceived without sin, the all-pure dawn before the Sun of Justice."],
+"12-12":["Our Lady of Guadalupe","Feast","'Am I not here, who am your Mother?' — patroness of the Americas."],
+"12-13":["St. Lucy","Memorial","Martyr whose name means light; invoked in the dark of December."],
+"12-14":["St. John of the Cross","Memorial","Mystic and Doctor of the dark night and the living flame of love."],
+"12-25":["The Nativity of the Lord","Solemnity","Christmas — the Word made flesh, God with us. Glory to God in the highest."],
+"12-26":["St. Stephen","Feast","First martyr; died forgiving, seeing heaven opened."],
+"12-27":["St. John","Feast","The beloved Apostle and Evangelist who leaned on the Lord's breast."],
+"12-28":["The Holy Innocents","Feast","The little ones of Bethlehem, martyrs for a King they never knew."],
+};
+const POOL=[
+["St. Joan of Arc","Maid of Orléans; followed her voices in faith and courage to the end."],
+["St. Padre Pio","'Pray, hope, and don't worry.'"],
+["St. Faustina","Apostle of Divine Mercy — 'Jesus, I trust in You.'"],
+["St. Maximilian Kolbe","Gave his life for another. Martyr of charity."],
+["St. Anthony of Padua","Finder of what is lost; preacher of the Word."],
+["St. Michael the Archangel","Defend us in battle; be our protection against wickedness."],
+["St. Teresa of Calcutta","Did small things with great love among the poorest."],
+["St. Jude Thaddeus","Patron of impossible causes — do not lose hope."],
+["St. Benedict","'Pray and work.' Father of monks."],
+["St. Catherine of Siena","'Be who God meant you to be.'"],
+["St. Francis of Assisi","Make me a channel of your peace."],
+["St. Thomas Aquinas","Faith seeking understanding."],
+["St. Augustine","Our hearts are restless till they rest in You."],
+["St. Thérèse of Lisieux","The little way — love in the small things."],
+["St. Monica","Persevered in prayer for her son."],
+["St. Joseph","The silent, just man; guardian of the Holy Family."],
+["St. John Paul II","'Be not afraid.'"],
+["St. Peter","The rock; wept, was forgiven, and fed the flock."],
+["St. Paul","'I have fought the good fight.'"],
+["St. Mary Magdalene","First to meet the Risen Lord."],
+["St. Cecilia","Sang to God in her heart."],
+["St. Martin de Porres","Servant of the poor and the sick."],
+["St. Gianna Molla","A mother who gave her life for her child."],
+["St. Damien of Molokai","Lived and died among the lepers he loved."],
+];
+
+/* verse + saint of day */
+const vi=doy(now)%VERSES.length; $("#vText").textContent='"'+VERSES[vi][0]+'"'; $("#vRef").textContent=VERSES[vi][1];
+const key=(now.getMonth()+1)+"-"+now.getDate();
+if(SAINTS[key]){ const s=SAINTS[key]; $("#sName").textContent=s[0]; $("#sFeast").textContent=s[1].toUpperCase(); $("#sBlurb").textContent=s[2]; }
+else{ const p=POOL[doy(now)%POOL.length]; $("#sName").textContent=p[0]; $("#sFeast").textContent="A SAINT TO KNOW TODAY"; $("#sBlurb").textContent=p[1]; }
+
+/* ---------- prayers ---------- */
+const P={
+cross:"In the name of the Father, and of the Son, and of the Holy Spirit. Amen.",
+creed:"I believe in God, the Father almighty, Creator of heaven and earth, and in Jesus Christ, His only Son, our Lord, who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died and was buried; He descended into hell; on the third day He rose again from the dead; He ascended into heaven, and is seated at the right hand of God the Father almighty; from there He will come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.",
+our:"Our Father, who art in heaven, hallowed be Thy name; Thy kingdom come; Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen.",
+hail:"Hail Mary, full of grace, the Lord is with thee; blessed art thou amongst women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.",
+glory:"Glory be to the Father, and to the Son, and to the Holy Spirit: as it was in the beginning, is now, and ever shall be, world without end. Amen.",
+fatima:"O my Jesus, forgive us our sins, save us from the fires of hell; lead all souls to Heaven, especially those in most need of Thy mercy.",
+salve:"Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope. To thee do we cry, poor banished children of Eve; to thee do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious Advocate, thine eyes of mercy toward us; and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary.",
+dmEternal:"Eternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world.",
+dmPassion:"For the sake of His sorrowful Passion, have mercy on us and on the whole world.",
+dmHoly:"Holy God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world. (×3)"
+};
+const PRAYERS=[
+{g:"Everyday",title:"Sign of the Cross",text:P.cross},
+{g:"Everyday",title:"Our Father",text:P.our},
+{g:"Everyday",title:"Hail Mary",text:P.hail},
+{g:"Everyday",title:"Glory Be",text:P.glory},
+{g:"Everyday",title:"Apostles' Creed",text:P.creed},
+{g:"Everyday",title:"Act of Contrition",text:"O my God, I am heartily sorry for having offended Thee, and I detest all my sins because of Thy just punishments, but most of all because they offend Thee, my God, who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to sin no more and to avoid the near occasions of sin. Amen."},
+{g:"Everyday",title:"Morning Offering",text:"O Jesus, through the Immaculate Heart of Mary, I offer You my prayers, works, joys, and sufferings of this day, in union with the Holy Sacrifice of the Mass throughout the world. I offer them for all the intentions of Your Sacred Heart: the salvation of souls, reparation for sin, and the reunion of all Christians. Amen."},
+{g:"Everyday",title:"Grace Before Meals",text:"Bless us, O Lord, and these Thy gifts, which we are about to receive from Thy bounty, through Christ our Lord. Amen."},
+{g:"Everyday",title:"Guardian Angel",text:"Angel of God, my guardian dear, to whom God's love commits me here, ever this day be at my side, to light and guard, to rule and guide. Amen."},
+{g:"To Our Lady",title:"Hail, Holy Queen",text:P.salve},
+{g:"To Our Lady",title:"The Memorare",text:"Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to thy protection, implored thy help, or sought thy intercession was left unaided. Inspired by this confidence, I fly unto thee, O Virgin of virgins, my Mother; to thee do I come, before thee I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in thy mercy hear and answer me. Amen."},
+{g:"To Our Lady",title:"The Angelus",text:"V. The Angel of the Lord declared unto Mary.\nR. And she conceived of the Holy Spirit.\n— Hail Mary —\nV. Behold the handmaid of the Lord.\nR. Be it done unto me according to thy word.\n— Hail Mary —\nV. And the Word was made flesh.\nR. And dwelt among us.\n— Hail Mary —\nV. Pray for us, O holy Mother of God.\nR. That we may be made worthy of the promises of Christ.\n\nLet us pray: Pour forth, we beseech Thee, O Lord, Thy grace into our hearts; that we, to whom the Incarnation of Christ Thy Son was made known by the message of an angel, may by His Passion and Cross be brought to the glory of His Resurrection. Through the same Christ our Lord. Amen."},
+{g:"To Our Lady",title:"Fatima Prayer",text:P.fatima},
+{g:"Devotions & Protection",title:"St. Michael the Archangel",text:"St. Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray; and do thou, O Prince of the heavenly host, by the power of God, cast into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls. Amen."},
+{g:"Devotions & Protection",title:"Come, Holy Spirit",text:"Come, Holy Spirit, fill the hearts of Thy faithful and kindle in them the fire of Thy love. Send forth Thy Spirit and they shall be created. And Thou shalt renew the face of the earth.\n\nLet us pray: O God, who didst instruct the hearts of the faithful by the light of the Holy Spirit, grant us by the same Spirit to be truly wise, and ever to rejoice in His consolation. Through Christ our Lord. Amen."},
+{g:"Devotions & Protection",title:"Anima Christi",text:"Soul of Christ, sanctify me. Body of Christ, save me. Blood of Christ, inebriate me. Water from the side of Christ, wash me. Passion of Christ, strengthen me. O good Jesus, hear me. Within Thy wounds hide me. Suffer me not to be separated from Thee. From the malicious enemy defend me. In the hour of my death call me, and bid me come unto Thee, that with Thy saints I may praise Thee for ever and ever. Amen."},
+{g:"Devotions & Protection",title:"Acts of Faith, Hope & Love",text:"FAITH — O my God, I firmly believe that Thou art one God in three divine Persons, Father, Son, and Holy Spirit; I believe that Thy divine Son became man and died for our sins, and that He will come to judge the living and the dead. I believe these and all the truths which the holy Catholic Church teaches, because Thou hast revealed them, who canst neither deceive nor be deceived.\n\nHOPE — O my God, relying on Thy infinite goodness and promises, I hope to obtain pardon of my sins, the help of Thy grace, and life everlasting, through the merits of Jesus Christ, my Lord and Redeemer.\n\nLOVE — O my God, I love Thee above all things, with my whole heart and soul, because Thou art all-good and worthy of all my love. I love my neighbor as myself for the love of Thee. Amen."},
+{g:"Devotions & Protection",title:"Divine Mercy — decade prayers",text:"On the Our Father bead:\nEternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world.\n\nOn the ten beads:\nFor the sake of His sorrowful Passion, have mercy on us and on the whole world.\n\nConcluding (×3):\nHoly God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world."},
+];
+const MYST={
+joyful:["The Annunciation","The Visitation","The Nativity","The Presentation in the Temple","The Finding of Jesus in the Temple"],
+sorrowful:["The Agony in the Garden","The Scourging at the Pillar","The Crowning with Thorns","The Carrying of the Cross","The Crucifixion"],
+glorious:["The Resurrection","The Ascension","The Descent of the Holy Spirit","The Assumption of Mary","The Coronation of Mary"],
+luminous:["The Baptism in the Jordan","The Wedding at Cana","The Proclamation of the Kingdom","The Transfiguration","The Institution of the Eucharist"]
+};
+const ORD=["First","Second","Third","Fourth","Fifth"];
+function todaySet(){return [["glorious","Glorious"],["joyful","Joyful"],["sorrowful","Sorrowful"],["glorious","Glorious"],["luminous","Luminous"],["sorrowful","Sorrowful"],["joyful","Joyful"]][now.getDay()];}
+
+function rosarySteps(setKey){
+  const [k,name]= setKey ? [setKey, setKey[0].toUpperCase()+setKey.slice(1)] : todaySet();
+  const m=MYST[k]; const s=[];
+  s.push({l:"Sign of the Cross",t:P.cross});
+  s.push({l:"The Apostles' Creed",t:P.creed});
+  s.push({l:"Our Father",t:P.our});
+  ["faith","hope","charity"].forEach(v=>s.push({l:"Hail Mary — for "+v,t:P.hail}));
+  s.push({l:"Glory Be",t:P.glory});
+  for(let d=0;d<5;d++){
+    s.push({l:ORD[d]+" "+name+" Mystery",sub:m[d],t:"Announce the mystery and pause to picture it. Pray this decade for its fruit."});
+    s.push({l:"Our Father",t:P.our});
+    for(let h=1;h<=10;h++) s.push({l:"Hail Mary "+h+"/10",sub:m[d],t:P.hail});
+    s.push({l:"Glory Be",t:P.glory});
+    s.push({l:"Fatima Prayer",t:P.fatima});
+  }
+  s.push({l:"Hail, Holy Queen",t:P.salve});
+  s.push({l:"Sign of the Cross",t:P.cross});
+  return {title:name+" Mysteries",steps:s};
+}
+function chapletSteps(){
+  const s=[];
+  s.push({l:"Sign of the Cross",t:P.cross});
+  s.push({l:"Our Father",t:P.our});
+  s.push({l:"Hail Mary",t:P.hail});
+  s.push({l:"The Apostles' Creed",t:P.creed});
+  for(let d=0;d<5;d++){
+    s.push({l:"Eternal Father (decade "+(d+1)+")",t:P.dmEternal});
+    for(let h=1;h<=10;h++) s.push({l:"Sorrowful Passion "+h+"/10",t:P.dmPassion});
+  }
+  s.push({l:"Holy God (×3)",t:P.dmHoly});
+  s.push({l:"Closing",t:"Jesus, I trust in You."});
+  s.push({l:"Sign of the Cross",t:P.cross});
+  return {title:"Chaplet of Divine Mercy",steps:s};
+}
+
+/* ---------- prayer walk engine ---------- */
+let walk=null,wi=0;
+function startWalk(which,setKey){
+  walk = which==="rosary"? rosarySteps(setKey) : chapletSteps(); wi=0;
+  $("#walkTitle").textContent=walk.title; renderWalk(); go("walk");
+}
+function renderWalk(){
+  const st=walk.steps[wi];
+  $("#prayLbl").textContent=st.l;
+  const sub=$("#praySub"); if(st.sub){sub.style.display="block";sub.textContent=st.sub;}else sub.style.display="none";
+  $("#prayText").textContent=st.t;
+  $("#walkProg").textContent="Step "+(wi+1)+" of "+walk.steps.length;
+  // beads: show a compact bead row of the whole rosary/chaplet
+  const n=walk.steps.length;
+  $("#walkBeads").innerHTML=walk.steps.map((_,i)=>`<span class="bead${i<wi?' on':''}${i===wi?' cur':''}"></span>`).join("");
+  $("#walkBack").disabled=wi===0; $("#walkNext").textContent = wi>=n-1? "Finish ✓" : "Next bead →";
+}
+$("#walkNext").onclick=()=>{ if(wi>=walk.steps.length-1){ go("home"); } else { wi++; renderWalk(); window.scrollTo(0,0); } };
+$("#walkBack").onclick=()=>{ if(wi>0){wi--;renderWalk();} };
+
+/* ---------- examen ---------- */
+const EX=[
+["PRESENCE","Be still","Pause. Become aware that God is here with you, right now — closer than your own breath. Take a slow breath and ask the Holy Spirit to walk back through this day with you.","'Be still, and know that I am God.' — Psalm 46:10"],
+["GRATITUDE","Give thanks","Look back over your day and notice the gifts — the small mercies and the large. A face, a meal, a moment of rest. Name a few, and give thanks for each.","'Give thanks to the Lord, for he is good.' — Psalm 118:1"],
+["REVIEW","Walk the hours","Replay the day, hour by hour. Where did you feel close to God — alive, loving, at peace? Where did you feel pulled away — anxious, irritable, empty? Notice your feelings without judging them; they are telling you something.","'Search me, O God, and know my heart.' — Psalm 139:23"],
+["SORROW","Ask for mercy","Is there a moment you turned from love, or fell short? Tell God simply and honestly. Ask for His mercy — and receive it. He is gentle, and slow to anger, and rich in kindness.","'A contrite and humbled heart, O God, thou wilt not despise.' — Psalm 51:17"],
+["RESOLVE","Toward tomorrow","Look to the day ahead. Choose one thing — a person to love, a task, a temptation — and ask now for the grace you'll need. Then close with the Our Father, and rest in His care.","'Cast all your care upon him, for he hath care of you.' — 1 Peter 5:7"],
+];
+let ei=0;
+function renderEx(){
+  const e=EX[ei];
+  $("#exStep").innerHTML=`<div class="n">STEP ${ei+1} · ${e[0]}</div><h3 class="serif">${e[1]}</h3><p>${e[2]}</p><div class="scr">${e[3]}</div>`;
+  $("#exDots").innerHTML=EX.map((_,i)=>`<span class="d${i===ei?' on':''}"></span>`).join("");
+  $("#exBack").disabled=ei===0; $("#exNext").textContent= ei>=EX.length-1? "Amen ✓":"Next";
+}
+$("#exNext").onclick=()=>{ if(ei>=EX.length-1){ go("home"); } else { ei++; renderEx(); } };
+$("#exBack").onclick=()=>{ if(ei>0){ei--;renderEx();} };
+
+/* ---------- rosary mystery picker ---------- */
+function openPick(){ renderPick(); go("pick"); }
+function renderPick(){
+  const today=todaySet()[0];
+  const sets=[["joyful","Joyful"],["sorrowful","Sorrowful"],["glorious","Glorious"],["luminous","Luminous"]];
+  $("#mystPick").innerHTML=sets.map(([k,name])=>
+    `<button class="myst" data-set="${k}">
+       <div class="mhead"><span class="mname serif">${name} Mysteries</span>${k===today?'<span class="today">TODAY</span>':''}</div>
+       <ol class="mlist">${MYST[k].map(x=>`<li>${x}</li>`).join("")}</ol>
+     </button>`).join("");
+  $$("#mystPick .myst").forEach(b=>b.onclick=()=>startWalk("rosary",b.dataset.set));
+}
+
+/* ---------- prayers library ---------- */
+function openPrayers(){ showPrayerList(); go("prayers"); }
+function showPrayerList(){
+  const groups=[];
+  PRAYERS.forEach((p,i)=>{ let grp=groups.find(x=>x.g===p.g); if(!grp){grp={g:p.g,items:[]};groups.push(grp);} grp.items.push([p,i]); });
+  $("#prayersList").innerHTML=groups.map(grp=>
+    `<div class="pgroup"><span class="lbl">${grp.g.toUpperCase()}</span>`+
+    grp.items.map(([p,i])=>`<button class="prow" data-i="${i}"><span>${p.title}</span><span class="chev">→</span></button>`).join("")+
+    `</div>`).join("");
+  $$("#prayersList .prow").forEach(b=>b.onclick=()=>openPrayer(+b.dataset.i));
+  $("#prayerRead").style.display="none"; $("#prayersList").style.display="block"; window.scrollTo(0,0);
+}
+function openPrayer(i){
+  const p=PRAYERS[i];
+  $("#prayerRead").innerHTML=`<button class="back2" id="pBack">← All prayers</button>`+
+    `<div class="pray-card"><div class="pray-lbl">${p.g.toUpperCase()}</div>`+
+    `<div class="ptitle serif">${p.title}</div>`+
+    `<div class="pray-text serif">${p.text.replace(/\n/g,"<br>")}</div></div>`;
+  $("#pBack").onclick=showPrayerList;
+  $("#prayersList").style.display="none"; $("#prayerRead").style.display="block"; window.scrollTo(0,0);
+}
+
+/* ---------- nav ---------- */
+function go(id){ $$(".screen").forEach(s=>s.classList.remove("on")); $("#s-"+id).classList.add("on"); window.scrollTo(0,0);
+  $("#hTitle").textContent = id==="home"?"Faith":({examen:"Examen",walk:walk?walk.title:"Rosary",pick:"Rosary",prayers:"Prayers"})[id]||"Faith"; }
+$$("[data-go]").forEach(t=>t.onclick=()=>{ const g=t.dataset.go;
+  if(g==="examen"){ei=0;renderEx();go("examen");}
+  else if(g==="rosary"){openPick();}
+  else if(g==="prayers"){openPrayers();}
+  else startWalk(g); });
+$$("[data-home]").forEach(b=>b.onclick=()=>go("home"));
+$("#homeBtn").onclick=()=>{ // ✝️ acts as: home if not on home, else back to launcher
+  if($("#s-home").classList.contains("on")) location.href="../"; else go("home"); };
+</script>
+</body>
+</html>

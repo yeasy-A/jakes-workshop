@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1220">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tongues">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jake's Workshop">
+<meta property="og:title" content="Tongues — Spanish, together">
+<meta property="og:description" content="A real Spanish A1 unit — Saludos y presentaciones. Play it free; your progress stays on your own device.">
+<meta property="og:image" content="og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tongues — Spanish, together">
+<meta name="twitter:description" content="A real Spanish A1 unit — Saludos y presentaciones. Play it free; your progress stays on your own device.">
+<meta name="twitter:image" content="og.png">
+<title>Tongues — Spanish, together</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#0d1220; --bg2:#141b30; --card:#161d34; --card2:#1c2542; --line:#2b3560;
+    --ink:#eef1fb; --soft:#98a3c4;
+    --accent:#e2934a; --accent-rgb:226,147,74;
+    --gold:#e0a840; --green:#5fc27a; --green-d:#2e7b3e; --yellow:#e0c840; --red:#e2604f; --red-d:#a83f30;
+    --radius:18px; --radius-lg:24px;
+    --sh-sm:0 1px 3px rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.03);
+    --sh-md:0 2px 6px rgba(0,0,0,.4),0 16px 38px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.04);
+    --motion:180ms;
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --scale:1;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:var(--font);color:var(--ink);
+    background:
+      radial-gradient(ellipse 70% 40% at 50% -6%, rgba(var(--accent-rgb),.12) 0%, transparent 62%),
+      radial-gradient(rgba(255,255,255,.025) 1px, transparent 1.4px) 0 0/24px 24px,
+      linear-gradient(170deg,var(--bg2) 0%,var(--bg) 55%);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+    transition:background var(--motion) ease-out;
+  }
+  button,input{font-family:inherit}
+  .mono{font-family:var(--mono)}
+  .serif{font-family:var(--serif)}
+  h1,h2,h3,p{margin:0}
+  :focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+  /* ================= kid mode ================= */
+  body.kid-mode{ --scale:1.16; --radius:22px; --radius-lg:28px; }
+  body.kid-mode .cardstage,
+  body.kid-mode .scene,
+  body.kid-mode .lessonrow{ letter-spacing:.1px }
+  body.kid-mode .accentwarm{ color:#ffb37a }
+
+  /* ================= app shell ================= */
+  .app{min-height:100%;display:flex;flex-direction:column}
+  .topbar{
+    display:flex;align-items:center;gap:10px;padding:14px 18px;
+    position:sticky;top:0;z-index:40;
+    background:linear-gradient(180deg,rgba(13,18,32,.94),rgba(13,18,32,.78));
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:-.2px}
+  .brand .mark{font-size:19px}
+  .topbar .spacer{flex:1}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;
+    background:var(--card2);border:1px solid var(--line);border-radius:999px;
+    padding:7px 12px;cursor:pointer;color:var(--ink);min-height:34px;
+    transition:border-color var(--motion) ease-out;
+  }
+  .pill:hover{border-color:rgba(var(--accent-rgb),.6)}
+  .streakpill{color:var(--gold);border-color:rgba(224,168,64,.35);background:rgba(224,168,64,.09)}
+  .iconbtn{
+    border:1px solid var(--line);background:var(--card2);width:38px;height:38px;border-radius:12px;
+    display:grid;place-items:center;color:var(--ink);font-size:16px;cursor:pointer;
+  }
+  .iconbtn:active{transform:translateY(1px)}
+
+  .shell{max-width:620px;margin:0 auto;padding:20px 18px calc(48px + env(safe-area-inset-bottom));width:100%;flex:1}
+  .screen{display:none}
+  .screen.active{display:block;animation:pop .26s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ================= generic pieces ================= */
+  .kicker{font-size:11px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:700;margin-bottom:10px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;margin-bottom:14px;box-shadow:var(--sh-sm);
+  }
+  .btn{
+    font:inherit;font-weight:700;font-size:calc(14.5px*var(--scale));border-radius:14px;padding:13px 18px;
+    min-height:48px;cursor:pointer;border:1.5px solid var(--line);background:var(--card2);color:var(--ink);
+    transition:transform 100ms ease-out,border-color var(--motion) ease-out,background var(--motion) ease-out,opacity var(--motion) ease-out;
+    width:100%;
+  }
+  .btn:hover{border-color:rgba(var(--accent-rgb),.55)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.primary{background:linear-gradient(180deg,rgba(var(--accent-rgb),.9),rgba(var(--accent-rgb),.72));border-color:var(--accent);color:#1a1204;font-weight:800;box-shadow:0 6px 0 rgba(160,95,25,.55),var(--sh-sm)}
+  .btn.primary:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(160,95,25,.55)}
+  .btn.ghost{background:transparent}
+  .btn.green{background:rgba(95,194,122,.18);border-color:var(--green);color:var(--green)}
+  .btn.danger{background:rgba(226,96,79,.14);border-color:var(--red);color:var(--red)}
+  .btnrow{display:flex;gap:10px}
+  .btnrow .btn{flex:1}
+
+  .chiprow{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font-size:13.5px;font-weight:700;color:var(--ink);
+    background:var(--card2);border:1.5px solid var(--line);border-radius:12px;
+    padding:9px 14px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+    transition:border-color var(--motion) ease-out,background var(--motion) ease-out,transform 100ms ease-out;
+  }
+  .chip:hover{border-color:rgba(var(--accent-rgb),.55)}
+  .chip[aria-pressed="true"]{border-color:var(--accent);background:rgba(var(--accent-rgb),.16)}
+
+  input[type=text]{
+    width:100%;font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;
+    border:1.5px solid var(--line);background:var(--card2);color:var(--ink);min-height:46px;
+  }
+  input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.24)}
+  label{display:block;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}
+
+  /* ================= profile screen ================= */
+  .profilegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+  .profilecard{
+    background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
+    padding:18px 14px;text-align:center;cursor:pointer;box-shadow:var(--sh-sm);
+  }
+  .profilecard:hover{border-color:rgba(var(--accent-rgb),.55)}
+  .profilecard .av{font-size:34px;line-height:1}
+  .profilecard .nm{font-weight:800;margin-top:8px;font-size:14.5px}
+  .profilecard .kd{font-size:11.5px;color:var(--soft);margin-top:2px;text-transform:uppercase;letter-spacing:.6px}
+  .profilecard.addnew{border-style:dashed;color:var(--soft)}
+
+  /* ================= scene / home ================= */
+  .scene{
+    background:radial-gradient(ellipse 120% 90% at 50% -30%, rgba(95,194,122,.16), transparent 60%),
+               linear-gradient(160deg,var(--card2),var(--card));
+    border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px 22px;margin-bottom:16px;
+    box-shadow:var(--sh-md);position:relative;overflow:hidden;
+  }
+  .scene .sceneline{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);font-weight:700}
+  .scene .sceneline .em{font-size:16px}
+  .scene p.hook{font-size:calc(15.5px*var(--scale));color:var(--soft);margin:10px 0 16px;line-height:1.5}
+  .spine{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .spine .q{font-size:calc(22px*var(--scale));font-weight:800;letter-spacing:-.3px}
+  .spine .qen{font-size:13px;color:var(--soft);margin-top:2px}
+  .spine .arrow{color:var(--accent);font-size:13px;margin:8px 0;font-weight:700}
+  .spine .a{font-size:calc(18px*var(--scale));font-weight:700;color:var(--accent)}
+  .spine .aen{font-size:12.5px;color:var(--soft);margin-top:2px}
+
+  .gamify{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+  .gstat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center}
+  .gstat .v{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+  .gstat .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-top:2px}
+  .gstat.streak .v{color:var(--gold)}
+
+  .slipcue{
+    display:flex;align-items:center;gap:10px;background:rgba(226,96,79,.12);border:1px solid rgba(226,96,79,.4);
+    border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13.5px;color:#ffb2a3;
+  }
+  .slipcue .em{font-size:18px}
+
+  .todaybtn{margin-bottom:18px}
+  .todaybtn .sub{display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:2px}
+
+  .lessonlist .lessonrow{
+    display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;
+  }
+  .lessonrow .num{width:26px;height:26px;border-radius:8px;background:var(--card2);display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--soft);flex:0 0 auto}
+  .lessonrow .lname{flex:1;min-width:0}
+  .lessonrow .lname .t{font-weight:700;font-size:14px}
+  .lessonrow .lname .s{font-size:11.5px;color:var(--soft);margin-top:1px}
+  .lessonrow .lbar{width:56px;height:6px;border-radius:99px;background:var(--card2);overflow:hidden;flex:0 0 auto}
+  .lessonrow .lbar .f{height:100%;background:var(--green);border-radius:99px}
+  .lessonrow .lpct{font-size:11px;color:var(--soft);width:34px;text-align:right;flex:0 0 auto}
+
+  /* ================= session ================= */
+  .sessionhead{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .steppos{font-size:12px;color:var(--soft);font-weight:700}
+  .progtrack{flex:1;height:6px;background:var(--card2);border-radius:99px;overflow:hidden}
+  .progtrack .f{height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+  .combo{font-size:12.5px;font-weight:800;color:var(--gold);white-space:nowrap;display:flex;align-items:center;gap:3px}
+  .combo.zero{opacity:.4}
+
+  .modetoggle{display:flex;gap:8px;margin-bottom:14px}
+  .modetoggle .chip{flex:1;justify-content:center}
+
+  .cardstage{min-height:300px}
+  .stepcard{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:26px 22px;box-shadow:var(--sh-md);
+  }
+  .steptag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .steptag .box-dot{width:9px;height:9px;border-radius:50%}
+
+  .lemma{font-size:calc(30px*var(--scale));font-weight:800;letter-spacing:-.5px;line-height:1.1}
+  .lemma .g{font-size:15px;color:var(--soft);font-weight:600;margin-left:8px}
+  .ipa{font-family:var(--mono);color:var(--soft);font-size:14px;margin-top:4px}
+  .translation{font-size:calc(18px*var(--scale));color:var(--accent);font-weight:700;margin-top:10px}
+  .examplebox{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:14px}
+  .examplebox .ex-t{font-weight:700;font-size:calc(15px*var(--scale))}
+  .examplebox .ex-e{color:var(--soft);font-size:13px;margin-top:3px}
+  .kidtrack{background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.32);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:calc(15.5px*var(--scale));line-height:1.55}
+  .adultnotes{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .adultnotes .note{font-size:13.5px;color:var(--soft);line-height:1.5;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .adultnotes .note b{color:var(--ink)}
+
+  .audiorow{display:flex;gap:8px;margin-top:14px}
+  .audiobtn{
+    display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;
+    background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:9px 13px;cursor:pointer;color:var(--ink);
+  }
+  .audiobtn.rec{border-color:rgba(95,194,122,.5);color:var(--green)}
+
+  .recallprompt{font-size:calc(16px*var(--scale));color:var(--soft);margin-bottom:6px}
+  .recallprompt b{color:var(--ink)}
+  .recallform{margin-top:10px}
+  .feedback{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:700;display:none}
+  .feedback.show{display:block}
+  .feedback.ok{background:rgba(95,194,122,.14);color:var(--green);border:1px solid rgba(95,194,122,.4)}
+  .feedback.bad{background:rgba(226,96,79,.14);color:#ffb2a3;border:1px solid rgba(226,96,79,.4)}
+  .feedback .sub{display:block;font-weight:500;color:var(--soft);margin-top:4px;font-size:12.5px}
+
+  .mcprompt{font-size:calc(18px*var(--scale));font-weight:700;margin-bottom:16px;line-height:1.35}
+  .mcgrid{display:flex;flex-direction:column;gap:9px}
+  .mcopt{
+    text-align:left;font:inherit;font-size:calc(15px*var(--scale));font-weight:600;padding:13px 15px;border-radius:13px;
+    border:1.5px solid var(--line);background:var(--card2);color:var(--ink);cursor:pointer;min-height:48px;
+  }
+  .mcopt:hover{border-color:rgba(var(--accent-rgb),.55)}
+  .mcopt.correct{border-color:var(--green);background:rgba(95,194,122,.18);color:var(--green)}
+  .mcopt.incorrect{border-color:var(--red);background:rgba(226,96,79,.18);color:#ffb2a3}
+  .mcopt:disabled{cursor:default}
+
+  .flipcard{
+    background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:24px 18px;text-align:center;
+    cursor:pointer;min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:6px;
+  }
+  .flipcard .hint{font-size:11.5px;color:var(--soft);letter-spacing:1px;text-transform:uppercase}
+  .rgbtns{display:flex;gap:8px;margin-top:16px}
+  .rgbtn{flex:1;border-radius:13px;padding:13px 8px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;border:1.5px solid;min-height:56px}
+  .rgbtn.red{background:rgba(226,96,79,.14);border-color:var(--red);color:#ffb2a3}
+  .rgbtn.yellow{background:rgba(224,200,64,.14);border-color:var(--yellow);color:#f0e18a}
+  .rgbtn.green{background:rgba(95,194,122,.14);border-color:var(--green);color:var(--green)}
+  .rgbtn small{display:block;font-weight:500;opacity:.85;font-size:10.5px;margin-top:2px}
+
+  .fbsentence{font-size:calc(18px*var(--scale));font-weight:700;line-height:1.5;margin-bottom:14px}
+  .fbsentence .blankslot{display:inline-block;min-width:64px;height:1.1em;margin:0 2px;border-bottom:3px dashed var(--accent)}
+
+  .patternrule{font-size:calc(14.5px*var(--scale));line-height:1.6;color:var(--soft);margin-bottom:14px}
+  .visualspec{font-family:var(--mono);font-size:12.5px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px;line-height:1.7;overflow-x:auto;white-space:pre-wrap}
+  .patex{font-size:13.5px;margin-bottom:5px}
+  .patex .en{color:var(--soft)}
+
+  .qgame .q{font-size:calc(16px*var(--scale));font-weight:700;margin-bottom:14px}
+
+  .actitout .turn{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+  .actitout .turn.mine{border-color:rgba(var(--accent-rgb),.5);background:rgba(var(--accent-rgb),.08)}
+  .actitout .who{width:30px;height:30px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-weight:800;font-size:13px;flex:0 0 auto}
+  .actitout .tx{flex:1}
+  .actitout .tx .t{font-weight:700;font-size:calc(15px*var(--scale))}
+  .actitout .tx .e{font-size:12px;color:var(--soft);margin-top:2px}
+  .swaprow{display:flex;justify-content:center;margin:10px 0 16px}
+
+  .orderpool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .ordertile{
+    font:inherit;font-size:13.5px;font-weight:600;padding:10px 13px;border-radius:11px;
+    border:1.5px solid var(--line);background:var(--card2);color:var(--ink);cursor:pointer;
+  }
+  .ordertile:disabled{opacity:.3;cursor:default}
+  .orderslots{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+  .orderslot{
+    min-height:38px;border:1.5px dashed var(--line);border-radius:10px;padding:8px 12px;font-size:13.5px;
+    display:flex;align-items:center;color:var(--soft);
+  }
+  .orderslot.filled{border-style:solid;border-color:var(--green);color:var(--ink);background:rgba(95,194,122,.08)}
+
+  /* ================= summary ================= */
+  .summarystats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .sstat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+  .sstat .v{font-size:24px;font-weight:800;color:var(--accent)}
+  .sstat .l{font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+
+  /* ================= practice ================= */
+  .blocklist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .blockrow{
+    display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:11px 13px;cursor:pointer;
+  }
+  .blockrow .bt{flex:1;font-weight:700;font-size:14px}
+  .blockrow .be{font-size:12px;color:var(--soft)}
+  .statuschip{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:999px;flex:0 0 auto}
+  .statuschip.new{background:var(--card2);color:var(--soft)}
+  .statuschip.red{background:rgba(226,96,79,.18);color:#ffb2a3}
+  .statuschip.yellow{background:rgba(224,200,64,.18);color:#f0e18a}
+  .statuschip.green{background:rgba(95,194,122,.18);color:var(--green)}
+
+  .accordion summary{cursor:pointer;list-style:none}
+  .accordion summary::-webkit-details-marker{display:none}
+
+  /* ================= settings ================= */
+  .settingrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .settingrow:last-child{border-bottom:0}
+  .settingrow .lab{font-size:14px;font-weight:700}
+  .settingrow .sub{font-size:12px;color:var(--soft);margin-top:2px}
+
+  .footnote{font-size:11.5px;color:var(--soft);text-align:center;margin-top:22px;line-height:1.6}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+  /* Screenshot/QA aid only — set by the dev-only ?seed= hook so headless captures
+     (whose virtual clock doesn't advance CSS animations reliably) come out crisp.
+     Never applied during normal use. */
+  html.qa-no-anim *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  @media (max-width:420px){
+    .shell{padding:16px 14px 56px}
+    .stepcard{padding:20px 16px}
+    .gamify{gap:8px}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark">🗣️</span>Tongues</div>
+    <div class="spacer"></div>
+    <button type="button" class="pill streakpill" id="streakPill" data-action="go-home">🔥 <span id="streakNum">0</span></button>
+    <button type="button" class="pill" id="profilePill" data-action="go-settings">···</button>
+  </header>
+  <main class="shell" id="shell">
+
+    <section class="screen" id="screen-profiles"></section>
+    <section class="screen" id="screen-home"></section>
+    <section class="screen" id="screen-session"></section>
+    <section class="screen" id="screen-summary"></section>
+    <section class="screen" id="screen-practice"></section>
+    <section class="screen" id="screen-settings"></section>
+
+  </main>
+</div>
+
+<script src="scheduler.js"></script>
+<script src="es-a1.js"></script>
+<script>
+/* ============================================================================
+   Tongues app shell — vanilla JS, no framework, no build step, file://-openable.
+   Uses window.TonguesScheduler (scheduler.js) for all Leitner/session math and
+   window.TONGUES_COURSE (es-a1.js) for the real Unit 1 data. Everything below is
+   UI state + rendering + localStorage plumbing.
+   ============================================================================ */
+(function(){
+  "use strict";
+
+  var course = window.TONGUES_COURSE;
+  var Sched = window.TonguesScheduler;
+
+  if (!course || course.contract_version !== 1) {
+    document.getElementById("shell").innerHTML =
+      '<div class="card"><h2>Course data needs updating</h2>' +
+      '<p style="color:var(--soft);margin-top:8px">es-a1.js is missing or its contract_version doesn\'t match ' +
+      'what this app expects. Run <code class="mono">node build-data.mjs</code> and reload.</p></div>';
+    return;
+  }
+
+  /* ---------------- storage keys ---------------- */
+  var K = {
+    profiles: "tongues.profiles.v1",
+    active: "tongues.active.v1",
+    progress: function(id){ return "tongues.progress.v1." + id; }
+  };
+
+  function esc(s){
+    return (s == null ? "" : String(s)).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  function nowIso(){ return new Date().toISOString(); }
+  function localDateStr(d){
+    d = d || new Date();
+    var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+    return y + "-" + m + "-" + day;
+  }
+  function normalizeEs(s){
+    return (s == null ? "" : String(s))
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[¿?¡!.,;:"“”']/g, "")
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* ---------------- profile storage ---------------- */
+  function loadProfiles(){
+    try { return JSON.parse(localStorage.getItem(K.profiles)) || []; } catch(e){ return []; }
+  }
+  function saveProfiles(list){ localStorage.setItem(K.profiles, JSON.stringify(list)); }
+  function getActiveId(){ return localStorage.getItem(K.active); }
+  function setActiveId(id){ localStorage.setItem(K.active, id); }
+
+  function defaultProgress(){
+    return { cards:{}, patternSeen:{}, streak:{count:0,lastDate:null}, sessionsCompleted:0, reviewMode:null, familyView:"kid" };
+  }
+  function loadProgress(profileId){
+    try {
+      var raw = localStorage.getItem(K.progress(profileId));
+      if (!raw) return defaultProgress();
+      var p = JSON.parse(raw);
+      return Object.assign(defaultProgress(), p);
+    } catch(e){ return defaultProgress(); }
+  }
+  function saveProgress(profileId, p){
+    localStorage.setItem(K.progress(profileId), JSON.stringify(p));
+    syncProgress(profileId, p);
+  }
+
+  /* ---------------- cross-device sync — DISABLED IN THIS PUBLIC DEMO COPY ----------------
+     This is Jake's Workshop public showcase build of Tongues (static files only, no backend
+     co-located). The real family app syncs progress to a
+     private Postgres instance at a private, tailnet-only origin — that
+     stays entirely separate from this deployment and this file never talks to it.
+     canSync() is hardcoded false here (explicit-safe, not "relies on the fetch 404-ing") so
+     syncProgress()/pullProgress() below are permanent no-ops: nothing is ever sent, on any
+     origin, from this copy. localStorage in the visitor's own browser is the only storage.
+     ---------------------------------------------------------------------------------- */
+  function canSync(){
+    return false; // public demo copy — progress sync intentionally disabled, see comment above
+  }
+  function cardsToApi(cards){
+    return Object.keys(cards || {}).map(function(cid){
+      var c = cards[cid] || {};
+      var boxIdx = Sched.BOX_ORDER.indexOf(c.box);
+      return {
+        card_id: cid,
+        course_id: course.id,
+        status: c.status === "in_review" ? (c.box || "red") : "new",
+        box: boxIdx === -1 ? 0 : boxIdx,
+        review_count: c.seenCount || 0,
+        last_reviewed: c.lastSeen || null,
+        next_due: c.dueAt ? c.dueAt.slice(0, 10) : null
+      };
+    });
+  }
+  function syncProgress(profileId, p){
+    if (!canSync()) return;
+    var prof = state.profiles.find(function(x){ return x.id === profileId; });
+    if (!prof) return;
+    try {
+      fetch("/api/progress", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          profile_id: prof.id, profile_name: prof.name, kind: prof.kind,
+          cards: cardsToApi(p.cards)
+        })
+      }).catch(function(){ /* offline/unreachable — localStorage stays authoritative */ });
+    } catch (e) { /* never let sync break the app */ }
+  }
+  function pullProgress(profileId){
+    if (!canSync() || !profileId) return Promise.resolve(null);
+    return fetch("/api/progress?profile_id=" + encodeURIComponent(profileId))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .catch(function(){ return null; });
+  }
+
+  /* ---------------- app state ---------------- */
+  var state = {
+    view: "home",
+    profiles: loadProfiles(),
+    activeId: getActiveId(),
+    progress: null,
+    session: null,     // { steps, idx, combo, maxCombo, stats, reviewMode }
+    practice: { openLesson: null }
+  };
+
+  function activeProfile(){
+    return state.profiles.find(function(p){ return p.id === state.activeId; }) || null;
+  }
+  function isKidView(profile){
+    if (!profile) return false;
+    if (profile.kind === "kid") return true;
+    if (profile.kind === "adult") return false;
+    if (profile.kind === "family") return (state.progress && state.progress.familyView) !== "adult";
+    return false;
+  }
+  function reviewModeFor(profile, progress){
+    if (progress.reviewMode) return progress.reviewMode;
+    return (profile && (profile.kind === "kid" || profile.kind === "family")) ? "self_rate" : "graded";
+  }
+
+  /* ---------------- boot routing ---------------- */
+  function boot(){
+    if (!state.profiles.length) { state.view = "profiles"; render(); return; }
+    if (!state.activeId || !activeProfile()) {
+      state.activeId = state.profiles[0].id;
+      setActiveId(state.activeId);
+    }
+    state.progress = loadProgress(state.activeId);
+    state.view = "home";
+    render();
+  }
+
+  /* ============================================================
+     RENDER DISPATCH
+     ============================================================ */
+  function render(){
+    var prof = activeProfile();
+    document.body.classList.toggle("kid-mode", isKidView(prof));
+    document.getElementById("streakNum").textContent = state.progress ? state.progress.streak.count : 0;
+    document.getElementById("profilePill").textContent = prof ? (prof.emoji + " " + prof.name) : "···";
+
+    ["profiles","home","session","summary","practice","settings"].forEach(function(v){
+      document.getElementById("screen-" + v).classList.toggle("active", state.view === v);
+    });
+
+    if (state.view === "profiles") renderProfiles();
+    else if (state.view === "home") renderHome();
+    else if (state.view === "session") renderSession();
+    else if (state.view === "summary") renderSummary();
+    else if (state.view === "practice") renderPractice();
+    else if (state.view === "settings") renderSettings();
+
+    window.scrollTo(0,0);
+  }
+
+  /* ============================================================
+     SCREEN: profiles
+     ============================================================ */
+  var KIND_META = {
+    adult:  { emoji:"🧑", label:"Adult" },
+    kid:    { emoji:"🧒", label:"Kid" },
+    family: { emoji:"👪", label:"Family co-learn" }
+  };
+
+  function renderProfiles(){
+    var el = document.getElementById("screen-profiles");
+    var cards = state.profiles.map(function(p){
+      var km = KIND_META[p.kind] || KIND_META.adult;
+      return '<button type="button" class="profilecard" data-action="pick-profile" data-id="' + esc(p.id) + '">' +
+        '<div class="av">' + km.emoji + '</div>' +
+        '<div class="nm">' + esc(p.name) + '</div>' +
+        '<div class="kd">' + km.label + '</div>' +
+      '</button>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="kicker">Welcome</div>' +
+      '<div class="scene">' +
+        '<div class="sceneline"><span class="em">🌳</span>At the park, a new friend walks up</div>' +
+        '<p class="hook">Tongues teaches real Spanish, one small conversation at a time — starting with the one everybody needs first: meeting someone new.</p>' +
+        '<div class="spine">' +
+          '<div class="q">¿Cómo te llamas?</div><div class="qen">What\'s your name?</div>' +
+          '<div class="arrow">↓</div>' +
+          '<div class="a">Me llamo…</div><div class="aen">My name is…</div>' +
+        '</div>' +
+      '</div>' +
+      (cards ? ('<div class="kicker">Who\'s learning?</div><div class="profilegrid">' + cards +
+        '<button type="button" class="profilecard addnew" data-action="new-profile"><div class="av">＋</div><div class="nm">New profile</div></button>' +
+      '</div>') : "") +
+      (cards ? "" : renderNewProfileForm());
+
+    if (!cards) wireNewProfileForm(el);
+  }
+
+  function renderNewProfileForm(){
+    return (
+      '<div class="card">' +
+        '<label for="npName">Name</label>' +
+        '<input type="text" id="npName" placeholder="e.g. Jake, or Sofía" autocomplete="off" spellcheck="false">' +
+        '<div class="kicker" style="margin-top:16px">Who is this profile for?</div>' +
+        '<div class="chiprow" id="npKindChips">' +
+          '<button type="button" class="chip" data-kind="adult" aria-pressed="true">🧑 Adult</button>' +
+          '<button type="button" class="chip" data-kind="kid" aria-pressed="false">🧒 Kid</button>' +
+          '<button type="button" class="chip" data-kind="family" aria-pressed="false">👪 Family (co-learn)</button>' +
+        '</div>' +
+        '<p style="font-size:12.5px;color:var(--soft);margin-top:12px;line-height:1.5">' +
+          'Adult sees full grammar notes. Kid sees big, warm, simple cards. Family shares one deck on the couch — ' +
+          'kid view by default, with a one-tap switch to peek at the grown-up notes.' +
+        '</p>' +
+        '<button type="button" class="btn primary" style="margin-top:16px" data-action="create-profile">Start learning</button>' +
+      '</div>'
+    );
+  }
+
+  function wireNewProfileForm(root){
+    var chips = root.querySelectorAll("#npKindChips .chip");
+    chips.forEach(function(c){
+      c.addEventListener("click", function(){
+        chips.forEach(function(x){ x.setAttribute("aria-pressed","false"); });
+        c.setAttribute("aria-pressed","true");
+      });
+    });
+  }
+
+  function doCreateProfile(root){
+    var nameEl = root.querySelector("#npName");
+    var name = (nameEl ? nameEl.value : "").trim();
+    if (!name) { if (nameEl) nameEl.focus(); return; }
+    var kindChip = root.querySelector('#npKindChips .chip[aria-pressed="true"]');
+    var kind = kindChip ? kindChip.getAttribute("data-kind") : "adult";
+    var km = KIND_META[kind] || KIND_META.adult;
+    var profile = { id: "p_" + Date.now().toString(36) + Math.random().toString(36).slice(2,6), name: name, kind: kind, emoji: km.emoji, createdAt: nowIso() };
+    state.profiles.push(profile);
+    saveProfiles(state.profiles);
+    state.activeId = profile.id;
+    setActiveId(profile.id);
+    state.progress = loadProgress(profile.id);
+    state.view = "home";
+    render();
+  }
+
+  /* ============================================================
+     SCREEN: home
+     ============================================================ */
+  function renderHome(){
+    var el = document.getElementById("screen-home");
+    var prof = activeProfile();
+    var progress = state.progress;
+    var kid = isKidView(prof);
+    var today = Sched.buildTodaySession(course, progress.cards, nowIso(), { newCap: 8 });
+    var dueN = today.dueCardIds.length, newN = today.newCardIds.length, totalN = dueN + newN;
+    var slip = Sched.cardsAboutToSlip(course, progress.cards, nowIso());
+    var unitPct = Math.round(100 * unitMastery());
+
+    var familyToggle = "";
+    if (prof && prof.kind === "family") {
+      familyToggle =
+        '<div class="chiprow" style="margin-bottom:14px">' +
+          '<button type="button" class="chip" data-action="family-view" data-view="kid" aria-pressed="' + (kid ? "true":"false") + '">🧒 Kid view</button>' +
+          '<button type="button" class="chip" data-action="family-view" data-view="adult" aria-pressed="' + (!kid ? "true":"false") + '">🧑 Grown-up view</button>' +
+        '</div>';
+    }
+
+    el.innerHTML =
+      familyToggle +
+      '<div class="scene">' +
+        '<div class="sceneline"><span class="em">🌳</span>' + esc(course.scene.setting === "park" ? "At the park" : course.scene.setting) + '</div>' +
+        '<p class="hook">' + esc(course.scene.opening_line) + '</p>' +
+        '<div class="spine">' +
+          '<div class="q">' + esc(course.scene.spine.target_q) + '</div><div class="qen">' + esc(course.scene.spine.en_q) + '</div>' +
+          '<div class="arrow">↓</div>' +
+          '<div class="a">' + esc(course.scene.spine.target_a) + '</div><div class="aen">' + esc(course.scene.spine.en_a) + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="gamify">' +
+        '<div class="gstat streak"><div class="v">🔥' + progress.streak.count + '</div><div class="l">Streak</div></div>' +
+        '<div class="gstat"><div class="v">' + unitPct + '%</div><div class="l">Unit 1</div></div>' +
+        '<div class="gstat"><div class="v">' + progress.sessionsCompleted + '</div><div class="l">Sessions</div></div>' +
+      '</div>' +
+
+      (slip > 0 ? ('<div class="slipcue"><span class="em">⏳</span><span><b>' + slip + '</b> card' + (slip===1?"":"s") + ' ' + (slip===1?"is":"are") + ' about to slip back to red — review today to keep ' + (slip===1?"it":"them") + '.</span></div>') : "") +
+
+      (totalN > 0 ?
+        ('<button type="button" class="btn primary todaybtn" data-action="start-today">Start today\'s session' +
+          '<span class="sub">' + dueN + ' due · ' + newN + ' new</span></button>')
+        :
+        ('<div class="card" style="text-align:center"><b>All caught up</b><p style="color:var(--soft);margin-top:6px;font-size:13.5px">Nothing due right now. Practice a lesson below anytime.</p></div>')
+      ) +
+
+      '<div class="kicker" style="margin-top:18px">Lessons</div>' +
+      '<div class="lessonlist">' + course.units[0].lessons.map(function(lesson, i){
+        var pct = Math.round(100 * lessonMastery(lesson));
+        return '<div class="lessonrow" data-action="open-practice-lesson" data-id="' + esc(lesson.id) + '">' +
+          '<div class="num">' + (i+1) + '</div>' +
+          '<div class="lname"><div class="t">' + esc(lesson.title) + '</div><div class="s">' + esc(lesson.summary || "") + '</div></div>' +
+          '<div class="lbar"><div class="f" style="width:' + pct + '%"></div></div>' +
+          '<div class="lpct">' + pct + '%</div>' +
+        '</div>';
+      }).join("") + '</div>' +
+
+      '<button type="button" class="btn" style="margin-top:6px" data-action="go-practice">Free practice</button>';
+  }
+
+  function lessonMastery(lesson){
+    var cardIds = lesson.block_ids.filter(function(id){ return course.blocks[id].flashcard; });
+    if (!cardIds.length) return 1;
+    var graduated = cardIds.filter(function(id){
+      var c = state.progress.cards[id];
+      return c && c.status === "in_review";
+    }).length;
+    return graduated / cardIds.length;
+  }
+  function unitMastery(){
+    var all = course.leitner_card_ids;
+    var graduated = all.filter(function(id){
+      var c = state.progress.cards[id];
+      return c && c.status === "in_review";
+    }).length;
+    return all.length ? graduated / all.length : 0;
+  }
+
+  /* ============================================================
+     SESSION ENGINE
+     ============================================================ */
+  function buildSessionSteps(){
+    var progress = state.progress;
+    var today = Sched.buildTodaySession(course, progress.cards, nowIso(), { newCap: 8 });
+    var steps = [];
+    today.dueCardIds.forEach(function(id){ steps.push({ kind:"due", blockId:id }); });
+    today.newCardIds.forEach(function(id){
+      steps.push({ kind:"learn", blockId:id });
+      steps.push({ kind:"recall", blockId:id });
+    });
+    course.units.forEach(function(u){
+      u.lessons.forEach(function(lesson){
+        lesson.block_ids.forEach(function(id){
+          var block = course.blocks[id];
+          if ((block.type === "pattern_card" || block.type === "dialogue") && !progress.patternSeen[id]) {
+            if (Sched.isPatternReady(course, lesson, progress.cards)) {
+              steps.push({ kind: block.type === "dialogue" ? "capstone" : "pattern", blockId:id });
+            }
+          }
+        });
+      });
+    });
+    return steps;
+  }
+
+  function startTodaySession(){
+    var steps = buildSessionSteps();
+    var prof = activeProfile();
+    state.session = {
+      steps: steps, idx: 0, combo: 0, maxCombo: 0,
+      stats: { reviewed:0, correct:0, graduated:0, patternsDone:0 },
+      reviewMode: reviewModeFor(prof, state.progress),
+      source: "today"
+    };
+    state.view = "session";
+    render();
+  }
+
+  function startPracticeSteps(steps){
+    var prof = activeProfile();
+    state.session = {
+      steps: steps, idx: 0, combo: 0, maxCombo: 0,
+      stats: { reviewed:0, correct:0, graduated:0, patternsDone:0 },
+      reviewMode: reviewModeFor(prof, state.progress),
+      source: "practice"
+    };
+    state.view = "session";
+    render();
+  }
+
+  function comboHit(correct){
+    var s = state.session;
+    if (correct) { s.combo++; s.maxCombo = Math.max(s.maxCombo, s.combo); }
+    else s.combo = 0;
+  }
+
+  function advanceSession(){
+    var s = state.session;
+    s.idx++;
+    if (s.idx >= s.steps.length) { finishSession(); return; }
+    render();
+  }
+
+  function finishSession(){
+    var s = state.session;
+    var progress = state.progress;
+    if (s.steps.length > 0 && s.source === "today") {
+      var today = localDateStr();
+      if (progress.streak.lastDate !== today) {
+        var y = new Date(); y.setDate(y.getDate() - 1);
+        var yesterday = localDateStr(y);
+        progress.streak.count = (progress.streak.lastDate === yesterday) ? progress.streak.count + 1 : 1;
+        progress.streak.lastDate = today;
+      }
+      progress.sessionsCompleted++;
+    }
+    saveProgress(state.activeId, progress);
+    state.view = "summary";
+    render();
+  }
+
+  function renderSession(){
+    var el = document.getElementById("screen-session");
+    var s = state.session;
+    if (!s || !s.steps.length) {
+      el.innerHTML = '<div class="card" style="text-align:center"><b>Nothing to review right now.</b>' +
+        '<p style="color:var(--soft);margin-top:6px;font-size:13.5px">Try Free practice from the home screen.</p>' +
+        '<button type="button" class="btn" style="margin-top:14px" data-action="go-home">Back home</button></div>';
+      return;
+    }
+    var step = s.steps[s.idx];
+    var block = course.blocks[step.blockId];
+    var pct = Math.round(100 * s.idx / s.steps.length);
+
+    var head =
+      '<div class="sessionhead">' +
+        '<span class="steppos">' + (s.idx+1) + '/' + s.steps.length + '</span>' +
+        '<div class="progtrack"><div class="f" style="width:' + pct + '%"></div></div>' +
+        '<span class="combo' + (s.combo>0?"":" zero") + '">🔥' + s.combo + '</span>' +
+      '</div>';
+
+    var modeToggle = "";
+    if (step.kind === "due") {
+      modeToggle =
+        '<div class="modetoggle">' +
+          '<button type="button" class="chip" data-action="set-mode" data-mode="graded" aria-pressed="' + (s.reviewMode==="graded"?"true":"false") + '">📝 Test me</button>' +
+          '<button type="button" class="chip" data-action="set-mode" data-mode="self_rate" aria-pressed="' + (s.reviewMode==="self_rate"?"true":"false") + '">🤝 I\'ll rate myself</button>' +
+        '</div>';
+    }
+
+    var body = "";
+    if (step.kind === "learn") body = renderLearnStep(block);
+    else if (step.kind === "recall") body = renderRecallStep(step, block);
+    else if (step.kind === "due") body = renderDueStep(step, block);
+    else if (step.kind === "pattern") body = renderPatternStep(step, block);
+    else if (step.kind === "capstone") body = renderCapstoneStep(step, block);
+
+    el.innerHTML = head + modeToggle + '<div class="cardstage">' + body + '</div>';
+    wireStepExtras(el, step, block);
+  }
+
+  function audioButtons(block, kidView){
+    var recPath = (block.lang && block.lang.audio) || (course.audio_manifest && course.audio_manifest[block.id]);
+    var text = block.lang ? block.lang.lemma : null;
+    var html = '<div class="audiorow">';
+    if (recPath) {
+      html += '<button type="button" class="audiobtn rec" data-action="play-audio" data-src="' + esc(recPath) + '">▶ Recording</button>';
+    }
+    if (text) {
+      html += '<button type="button" class="audiobtn" data-action="speak" data-text="' + esc(text) + '">🔊 Hear it</button>';
+    }
+    html += "</div>";
+    return html;
+  }
+
+  function renderLearnStep(block){
+    var kid = isKidView(activeProfile());
+    var lang = block.lang || {};
+    var kidHtml = kid ?
+      ('<div class="kidtrack">' + esc(block.kid_track || block.content || "") + '</div>') :
+      ('<div class="adultnotes">' +
+        (block.content ? ('<div class="note">' + esc(block.content) + '</div>') : "") +
+        (block.usage_note ? ('<div class="note"><b>Usage:</b> ' + esc(block.usage_note) + '</div>') : "") +
+        (block.mnemonic ? ('<div class="note"><b>Mnemonic:</b> ' + esc(block.mnemonic) + '</div>') : "") +
+      '</div>');
+
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag">🌱 New word</div>' +
+        '<div class="lemma">' + esc(lang.lemma || block.content) + (lang.gender ? ('<span class="g">' + (lang.gender==="m"?"masc.":"fem.") + '</span>') : "") + '</div>' +
+        (lang.ipa ? ('<div class="ipa">' + esc(lang.ipa) + '</div>') : "") +
+        (lang.translation ? ('<div class="translation">' + esc(lang.translation) + '</div>') : "") +
+        (lang.example ? ('<div class="examplebox"><div class="ex-t">' + esc(lang.example.target) + '</div><div class="ex-e">' + esc(lang.example.en) + '</div></div>') : "") +
+        kidHtml +
+        audioButtons(block, kid) +
+        '<button type="button" class="btn primary" style="margin-top:18px" data-action="advance-learn">Got it — quiz me</button>' +
+      '</div>'
+    );
+  }
+
+  function renderRecallStep(step, block){
+    var kid = isKidView(activeProfile());
+    var lang = block.lang || {};
+    var fb = step._fb || "";
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag">✍️ Type it</div>' +
+        '<p class="recallprompt">How do you say <b>' + esc(lang.translation) + '</b> in Spanish?</p>' +
+        '<form class="recallform" data-action="submit-recall">' +
+          '<input type="text" id="recallInput" autocomplete="off" spellcheck="false" placeholder="' + (kid ? "type it here…" : "Spanish word or phrase") + '">' +
+          '<button type="button" class="btn primary" style="margin-top:12px" data-action="submit-recall">Check</button>' +
+        '</form>' +
+        '<div class="feedback' + (fb ? " show " + (step._fbOk ? "ok" : "bad") : "") + '">' + fb + '</div>' +
+        (step._answered ? '<button type="button" class="btn" style="margin-top:12px" data-action="advance">Continue</button>' : "") +
+      '</div>'
+    );
+  }
+
+  function renderDueStep(step, block){
+    var lang = block.lang || {};
+    var card = state.progress.cards[block.id];
+    var box = card ? card.box : "red";
+    var mode = state.session.reviewMode;
+
+    if (mode === "self_rate") {
+      var kid = isKidView(activeProfile());
+      var flipped = !!step._flipped;
+      var front = kid ? esc(lang.lemma) : esc(lang.lemma);
+      var back =
+        '<div class="translation">' + esc(lang.translation) + '</div>' +
+        (lang.example ? ('<div class="examplebox"><div class="ex-t">' + esc(lang.example.target) + '</div><div class="ex-e">' + esc(lang.example.en) + '</div></div>') : "") +
+        (kid && block.kid_track ? ('<div class="kidtrack">' + esc(block.kid_track) + '</div>') : "");
+      return (
+        '<div class="stepcard">' +
+          '<div class="steptag"><span class="box-dot" style="background:var(--' + box + ')"></span>Review</div>' +
+          '<div class="flipcard" data-action="flip-card">' +
+            (flipped ? ('<div class="lemma">' + front + '</div>' + back) : ('<div class="lemma">' + front + '</div><div class="hint">tap to reveal</div>')) +
+          '</div>' +
+          (flipped ?
+            ('<div class="rgbtns">' +
+              '<button type="button" class="rgbtn red" data-action="self-rate" data-box="red">Red<small>Still learning</small></button>' +
+              '<button type="button" class="rgbtn yellow" data-action="self-rate" data-box="yellow">Yellow<small>Getting there</small></button>' +
+              '<button type="button" class="rgbtn green" data-action="self-rate" data-box="green">Green<small>Nailed it</small></button>' +
+            '</div>') : "") +
+        '</div>'
+      );
+    }
+
+    // graded mode
+    if (step._useFillBlank === undefined) {
+      step._useFillBlank = canFillBlank(block) && Math.random() < 0.35;
+      step._dir = Math.random() < 0.5 ? "t2e" : "e2t";
+      var correct = step._dir === "t2e" ? lang.translation : lang.lemma;
+      var pool = block.distractors.map(function(d){ return step._dir === "t2e" ? d.translation : d.lemma; }).filter(Boolean);
+      step._options = shuffle([correct].concat(pool));
+    }
+
+    if (step._useFillBlank && !step._answered) {
+      return renderFillBlank(step, block, box, true);
+    }
+
+    var qLine = step._dir === "t2e" ?
+      ('What does <b>' + esc(lang.lemma) + '</b> mean?') :
+      ('How do you say <b>' + esc(lang.translation) + '</b> in Spanish?');
+
+    var opts = step._options.map(function(opt, i){
+      var cls = "mcopt";
+      var disabled = step._answered ? "disabled" : "";
+      if (step._answered) {
+        var isCorrect = opt === (step._dir === "t2e" ? lang.translation : lang.lemma);
+        if (isCorrect) cls += " correct";
+        else if (opt === step._picked && !isCorrect) cls += " incorrect";
+      }
+      return '<button type="button" class="' + cls + '" ' + disabled + ' data-action="pick-mc" data-idx="' + i + '">' + esc(opt) + '</button>';
+    }).join("");
+
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag"><span class="box-dot" style="background:var(--' + box + ')"></span>Review</div>' +
+        '<p class="mcprompt">' + qLine + '</p>' +
+        '<div class="mcgrid">' + opts + '</div>' +
+        (step._answered ? '<button type="button" class="btn" style="margin-top:16px" data-action="advance">Continue</button>' : "") +
+      '</div>'
+    );
+  }
+
+  function canFillBlank(block){
+    var lang = block.lang;
+    if (!lang || !lang.example || !lang.example.target || !lang.lemma) return false;
+    return lang.example.target.toLowerCase().indexOf(lang.lemma.toLowerCase()) !== -1;
+  }
+
+  function renderFillBlank(step, block, box, isDue){
+    var lang = block.lang;
+    var re = new RegExp(lang.lemma.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    var blanked = lang.example.target.replace(re, '<span class="blankslot">&nbsp;</span>');
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag">' + (isDue ? '<span class="box-dot" style="background:var(--' + box + ')"></span>' : "") + 'Fill in the blank</div>' +
+        '<p class="fbsentence">' + blanked + '</p>' +
+        '<p style="color:var(--soft);font-size:13px;margin-bottom:10px">' + esc(lang.example.en) + '</p>' +
+        '<input type="text" id="fbInput" autocomplete="off" spellcheck="false" placeholder="type the missing word">' +
+        '<button type="button" class="btn primary" style="margin-top:12px" data-action="submit-fillblank">Check</button>' +
+        '<div class="feedback' + (step._fb ? " show " + (step._fbOk?"ok":"bad") : "") + '">' + (step._fb||"") + '</div>' +
+        (step._answered ? '<button type="button" class="btn" style="margin-top:12px" data-action="advance">Continue</button>' : "") +
+      '</div>'
+    );
+  }
+
+  function renderPatternStep(step, block){
+    var pc = block.pattern_card;
+    var kid = isKidView(activeProfile());
+    var examplesHtml = (pc.examples||[]).map(function(ex){
+      return '<div class="patex"><b>' + esc(ex.target) + '</b> <span class="en">— ' + esc(ex.en) + '</span></div>';
+    }).join("");
+
+    var gameHtml = "";
+    var rg = block.retrieval_game;
+    if (rg && rg.type === "fill-blank") {
+      gameHtml = renderPatternFillBlank(step, rg);
+    } else if (rg && rg.type === "quiz") {
+      gameHtml = renderPatternQuiz(step, rg);
+    }
+
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag">🧩 Pattern</div>' +
+        '<p class="patternrule">' + esc(kid && block.kid_track ? block.kid_track : pc.rule) + '</p>' +
+        (pc.visual_spec ? ('<div class="visualspec">' + esc(pc.visual_spec) + '</div>') : "") +
+        examplesHtml +
+        (gameHtml ? ('<div style="margin-top:16px">' + gameHtml + '</div>') : "") +
+        (step._answered || !rg ? '<button type="button" class="btn primary" style="margin-top:16px" data-action="advance-pattern" data-id="' + esc(block.id) + '">Continue</button>' : "") +
+      '</div>'
+    );
+  }
+
+  function renderPatternFillBlank(step, rg){
+    var d = rg.data;
+    var blanked = d.template;
+    return (
+      '<div class="qgame">' +
+        '<p class="q">' + esc(blanked) + '</p>' +
+        '<input type="text" id="pfbInput" autocomplete="off" spellcheck="false" placeholder="fill in the blank">' +
+        '<button type="button" class="btn primary" style="margin-top:12px" data-action="submit-pattern-fb" data-answer="' + esc(d.answer) + '" data-blank="' + esc((d.blanks||[]).join("")) + '">Check</button>' +
+        '<div class="feedback' + (step._fb ? " show " + (step._fbOk?"ok":"bad") : "") + '">' + (step._fb||"") + '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderPatternQuiz(step, rg){
+    var d = rg.data;
+    if (!step._qopts) step._qopts = shuffle(d.options.map(function(o,i){ return {text:o, correct:i===d.correct_index}; }));
+    var opts = step._qopts.map(function(o, i){
+      var cls = "mcopt";
+      if (step._answered) { if (o.correct) cls += " correct"; else if (i === step._pickedIdx) cls += " incorrect"; }
+      return '<button type="button" class="' + cls + '" ' + (step._answered?"disabled":"") + ' data-action="pick-pattern-quiz" data-idx="' + i + '">' + esc(o.text) + '</button>';
+    }).join("");
+    return (
+      '<div class="qgame">' +
+        '<p class="q">' + esc(d.question) + '</p>' +
+        '<div class="mcgrid">' + opts + '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderCapstoneStep(step, block){
+    var kid = isKidView(activeProfile());
+    var role = step._role || "A";
+    var turnsHtml = (block.dialogue_turns||[]).map(function(t){
+      var mine = t.speaker === role;
+      return '<div class="turn' + (mine?" mine":"") + '">' +
+        '<div class="who">' + esc(t.speaker) + '</div>' +
+        '<div class="tx"><div class="t">' + esc(t.target) + '</div><div class="e">' + esc(t.en) + '</div></div>' +
+      '</div>';
+    }).join("");
+
+    var rg = block.retrieval_game;
+    var orderHtml = "";
+    if (rg && rg.type === "ordering") orderHtml = renderOrderingGame(step, rg);
+
+    return (
+      '<div class="stepcard">' +
+        '<div class="steptag">🎭 Act it out</div>' +
+        '<p class="patternrule">' + esc(kid ? (block.kid_track||"") : "The whole conversation — hello to goodbye. Read your role out loud, then swap.") + '</p>' +
+        '<div class="swaprow"><button type="button" class="chip" data-action="swap-role">🔁 Swap roles (you\'re ' + (role==="A"?"B":"A") + ' next)</button></div>' +
+        '<div class="actitout">' + turnsHtml + '</div>' +
+        (orderHtml ? ('<div class="kicker" style="margin-top:18px">Now put it in order</div>' + orderHtml) : "") +
+        '<div class="btnrow" style="margin-top:16px">' +
+          (step._orderDone || !rg ? '<button type="button" class="btn primary" data-action="advance-pattern" data-id="' + esc(block.id) + '">Continue</button>' : '<button type="button" class="btn ghost" data-action="advance">Do this later</button>') +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderOrderingGame(step, rg){
+    var steps = rg.data.steps;
+    if (!step._pool) step._pool = shuffle(steps.map(function(s, i){ return { text:s, origIdx:i }; }));
+    if (!step._placed) step._placed = [];
+    var placedTexts = step._placed.map(function(p){ return p.text; });
+
+    var slots = steps.map(function(s, i){
+      var filled = step._placed[i];
+      return '<div class="orderslot' + (filled?" filled":"") + '">' + (filled ? esc(filled.text) : (i+1) + '. …') + '</div>';
+    }).join("");
+
+    var tiles = step._pool.map(function(t, i){
+      var used = placedTexts.indexOf(t.text) !== -1;
+      return '<button type="button" class="ordertile" ' + (used?"disabled":"") + ' data-action="order-tap" data-poolidx="' + i + '">' + esc(t.text) + '</button>';
+    }).join("");
+
+    return '<div class="orderslots">' + slots + '</div><div class="orderpool">' + tiles + '</div>';
+  }
+
+  /* ============================================================
+     STEP INTERACTIONS
+     ============================================================ */
+  function wireStepExtras(root, step, block){
+    var form = root.querySelector('form[data-action="submit-recall"]');
+    if (form) form.addEventListener("submit", function(e){ e.preventDefault(); submitRecall(step, block); });
+  }
+
+  function submitRecall(step, block){
+    if (step._answered) return;
+    var input = document.getElementById("recallInput");
+    var val = input ? input.value : "";
+    var correct = normalizeEs(val) === normalizeEs(block.lang.lemma);
+    var card = state.progress.cards[block.id] || Sched.newCardState();
+    var updated = Sched.applyTypedRecall(card, correct, nowIso());
+    state.progress.cards[block.id] = updated;
+    state.session.stats.reviewed++;
+    if (correct) { state.session.stats.correct++; state.session.stats.graduated++; }
+    comboHit(correct);
+    saveProgress(state.activeId, state.progress);
+
+    step._answered = true;
+    step._fbOk = correct;
+    step._fb = correct
+      ? "¡Correcto! Graduated into your review rotation."
+      : ("Close — it's “" + block.lang.lemma + "”. You'll see this word again soon.");
+    render();
+  }
+
+  function pickMc(idx){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    if (step._answered) return;
+    var block = course.blocks[step.blockId];
+    var lang = block.lang;
+    var picked = step._options[idx];
+    var correctVal = step._dir === "t2e" ? lang.translation : lang.lemma;
+    var correct = picked === correctVal;
+
+    var card = state.progress.cards[block.id];
+    var updated = Sched.applyGradedReview(card, correct, nowIso());
+    state.progress.cards[block.id] = updated;
+    state.session.stats.reviewed++;
+    if (correct) state.session.stats.correct++;
+    comboHit(correct);
+    saveProgress(state.activeId, state.progress);
+
+    step._answered = true;
+    step._picked = picked;
+    render();
+  }
+
+  function submitFillBlank(){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    if (step._answered) return;
+    var block = course.blocks[step.blockId];
+    var input = document.getElementById("fbInput");
+    var val = normalizeEs(input ? input.value : "");
+    var correct = val === normalizeEs(block.lang.lemma) || val === normalizeEs(block.lang.example.target.replace(/[^\wÀ-ÿ ]/g,""));
+    // also accept the whole example with the lemma substituted back in (loose match on lemma alone covers most cases)
+
+    var card = state.progress.cards[block.id];
+    var updated = Sched.applyGradedReview(card, correct, nowIso());
+    state.progress.cards[block.id] = updated;
+    state.session.stats.reviewed++;
+    if (correct) state.session.stats.correct++;
+    comboHit(correct);
+    saveProgress(state.activeId, state.progress);
+
+    step._answered = true;
+    step._fbOk = correct;
+    step._fb = correct ? "¡Correcto!" : ("It was “" + block.lang.lemma + "”.");
+    render();
+  }
+
+  function selfRate(box){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    var block = course.blocks[step.blockId];
+    var card = state.progress.cards[block.id];
+    var updated = Sched.applySelfRate(card, box, nowIso());
+    state.progress.cards[block.id] = updated;
+    state.session.stats.reviewed++;
+    if (box === "green") { state.session.stats.correct++; comboHit(true); }
+    else if (box === "red") comboHit(false);
+    saveProgress(state.activeId, state.progress);
+    advanceSession();
+  }
+
+  function submitPatternFb(answer, blankFrag){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    var input = document.getElementById("pfbInput");
+    var val = normalizeEs(input ? input.value : "");
+    var correct = val === normalizeEs(answer) || (blankFrag && val === normalizeEs(blankFrag));
+    step._answered = true;
+    step._fbOk = correct;
+    step._fb = correct ? "¡Correcto!" : ("It was “" + answer + "”.");
+    comboHit(correct);
+    render();
+  }
+
+  function pickPatternQuiz(idx){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    if (step._answered) return;
+    step._answered = true;
+    step._pickedIdx = idx;
+    comboHit(!!step._qopts[idx].correct);
+    render();
+  }
+
+  function orderTap(poolIdx){
+    var s = state.session;
+    var step = s.steps[s.idx];
+    var block = course.blocks[step.blockId];
+    var rg = block.retrieval_game;
+    var tile = step._pool[poolIdx];
+    var expectedIdx = step._placed.length;
+    if (tile.origIdx === expectedIdx) {
+      step._placed.push(tile);
+      comboHit(true);
+      if (step._placed.length === rg.data.steps.length) {
+        step._orderDone = true;
+      }
+    } else {
+      comboHit(false);
+    }
+    render();
+  }
+
+  function advancePattern(blockId){
+    state.progress.patternSeen[blockId] = true;
+    state.session.stats.patternsDone++;
+    saveProgress(state.activeId, state.progress);
+    advanceSession();
+  }
+
+  function playAudio(src){
+    try { new Audio(src).play(); } catch(e){}
+  }
+  function speakText(text){
+    if (!("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "es-ES";
+      var kid = isKidView(activeProfile());
+      u.rate = kid ? 0.85 : 0.95;
+      var voices = window.speechSynthesis.getVoices();
+      var esVoice = voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf("es") === 0; });
+      if (esVoice) u.voice = esVoice;
+      window.speechSynthesis.speak(u);
+    } catch(e){}
+  }
+
+  /* ============================================================
+     SCREEN: summary
+     ============================================================ */
+  function renderSummary(){
+    var el = document.getElementById("screen-summary");
+    var s = state.session;
+    var stats = s ? s.stats : { reviewed:0, correct:0, graduated:0, patternsDone:0 };
+    var maxCombo = s ? s.maxCombo : 0;
+
+    el.innerHTML =
+      '<div class="scene">' +
+        '<div class="sceneline"><span class="em">🌇</span>Heading home</div>' +
+        '<p class="hook">' + esc(course.scene.closing_line) + '</p>' +
+        '<div class="spine">' +
+          '<div class="q">' + esc(course.scene.spine.target_q) + '</div>' +
+          '<div class="arrow">↓</div>' +
+          '<div class="a">' + esc(course.scene.spine.target_a) + '</div>' +
+          '<div class="aen" style="margin-top:6px">Notice that rings a bell now?</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="summarystats">' +
+        '<div class="sstat"><div class="v">' + stats.reviewed + '</div><div class="l">Reviewed</div></div>' +
+        '<div class="sstat"><div class="v">' + stats.graduated + '</div><div class="l">Graduated</div></div>' +
+        '<div class="sstat"><div class="v">' + maxCombo + '</div><div class="l">Best combo</div></div>' +
+        '<div class="sstat"><div class="v">🔥' + state.progress.streak.count + '</div><div class="l">Streak</div></div>' +
+      '</div>' +
+      '<div class="btnrow">' +
+        '<button type="button" class="btn" data-action="go-practice">Keep practicing</button>' +
+        '<button type="button" class="btn primary" data-action="go-home">Done</button>' +
+      '</div>';
+  }
+
+  /* ============================================================
+     SCREEN: practice
+     ============================================================ */
+  function renderPractice(){
+    var el = document.getElementById("screen-practice");
+    var openId = state.practice.openLesson;
+
+    var lessonsHtml = course.units[0].lessons.map(function(lesson, i){
+      var open = lesson.id === openId;
+      var blocksHtml = lesson.block_ids.map(function(id){
+        var b = course.blocks[id];
+        var label = b.type === "pattern_card" ? "🧩 Pattern card" : b.type === "dialogue" ? "🎭 Act it out" : (b.lang ? b.lang.lemma : b.content);
+        var sub = b.lang ? b.lang.translation : (b.pattern_card ? "" : "");
+        var st = cardStatus(id);
+        return '<div class="blockrow" data-action="practice-block" data-id="' + esc(id) + '">' +
+          '<div><div class="bt">' + esc(label) + '</div>' + (sub ? ('<div class="be">' + esc(sub) + '</div>') : "") + '</div>' +
+          '<span class="statuschip ' + st + '">' + st.replace("_"," ") + '</span>' +
+        '</div>';
+      }).join("");
+
+      return '<details class="accordion card" ' + (open?"open":"") + '>' +
+        '<summary data-action="toggle-lesson" data-id="' + esc(lesson.id) + '">' +
+          '<div class="lessonrow" style="margin:0;background:transparent;border:0;padding:0;cursor:pointer">' +
+            '<div class="num">' + (i+1) + '</div>' +
+            '<div class="lname"><div class="t">' + esc(lesson.title) + '</div><div class="s">' + esc(lesson.summary||"") + '</div></div>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="blocklist">' + blocksHtml + '</div>' +
+      '</details>';
+    }).join("");
+
+    el.innerHTML = '<div class="kicker">Free practice — pick anything, anytime</div>' + lessonsHtml;
+  }
+
+  function cardStatus(id){
+    var block = course.blocks[id];
+    if (!block.flashcard) return state.progress.patternSeen[id] ? "green" : "new";
+    var c = state.progress.cards[id];
+    if (!c || c.status === "new") return "new";
+    return c.box || "red";
+  }
+
+  function openPracticeBlock(id){
+    var block = course.blocks[id];
+    if (block.type === "pattern_card") {
+      startPracticeSteps([{ kind:"pattern", blockId:id }]);
+      return;
+    }
+    if (block.type === "dialogue") {
+      startPracticeSteps([{ kind:"capstone", blockId:id }]);
+      return;
+    }
+    var card = state.progress.cards[id];
+    if (!card || card.status === "new") {
+      startPracticeSteps([{ kind:"learn", blockId:id }, { kind:"recall", blockId:id }]);
+    } else {
+      startPracticeSteps([{ kind:"due", blockId:id }]);
+    }
+  }
+
+  /* ============================================================
+     SCREEN: settings
+     ============================================================ */
+  function renderSettings(){
+    var el = document.getElementById("screen-settings");
+    var prof = activeProfile();
+    var progress = state.progress;
+
+    var profileRows = state.profiles.map(function(p){
+      var km = KIND_META[p.kind] || KIND_META.adult;
+      var active = p.id === state.activeId;
+      return '<div class="settingrow">' +
+        '<div><div class="lab">' + km.emoji + ' ' + esc(p.name) + (active ? " (active)" : "") + '</div><div class="sub">' + km.label + '</div></div>' +
+        '<div class="btnrow" style="width:auto;gap:6px">' +
+          (active ? "" : '<button type="button" class="btn" style="width:auto" data-action="pick-profile" data-id="' + esc(p.id) + '">Switch</button>') +
+          '<button type="button" class="btn danger" style="width:auto" data-action="delete-profile" data-id="' + esc(p.id) + '">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="kicker">Profiles</div>' +
+      '<div class="card">' + profileRows + '</div>' +
+      '<button type="button" class="btn" style="margin-bottom:18px" data-action="new-profile-settings">＋ Add profile</button>' +
+
+      '<div class="kicker">Review style</div>' +
+      '<div class="card">' +
+        '<div class="settingrow">' +
+          '<div><div class="lab">Default for due reviews</div><div class="sub">You can also switch mid-session</div></div>' +
+        '</div>' +
+        '<div class="chiprow">' +
+          '<button type="button" class="chip" data-action="set-default-mode" data-mode="graded" aria-pressed="' + (reviewModeFor(prof,progress)==="graded"?"true":"false") + '">📝 Test me</button>' +
+          '<button type="button" class="chip" data-action="set-default-mode" data-mode="self_rate" aria-pressed="' + (reviewModeFor(prof,progress)==="self_rate"?"true":"false") + '">🤝 Self-rate</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="kicker">Danger zone</div>' +
+      '<div class="card">' +
+        '<div class="settingrow"><div><div class="lab">Reset this profile\'s progress</div><div class="sub">Clears all card boxes and the streak</div></div></div>' +
+        '<button type="button" class="btn danger" data-action="reset-progress">Reset progress</button>' +
+      '</div>' +
+
+      '<p class="footnote">Tongues · Curriculum Forge · ' + course.meta.level + ' · ' + course.generated.block_count + ' blocks from real Unit 1 data · contract v' + course.contract_version + '<br>Everything lives in this browser\'s storage — nothing leaves this device.</p>';
+  }
+
+  /* ============================================================
+     GLOBAL EVENT DELEGATION
+     ============================================================ */
+  document.addEventListener("click", function(e){
+    var t = e.target.closest("[data-action]");
+    if (!t) return;
+    var action = t.getAttribute("data-action");
+
+    switch(action){
+      case "go-home": state.view = "home"; render(); break;
+      case "go-settings": state.view = "settings"; render(); break;
+      case "go-practice": state.practice.openLesson = null; state.view = "practice"; render(); break;
+
+      case "pick-profile":
+        state.activeId = t.getAttribute("data-id");
+        setActiveId(state.activeId);
+        state.progress = loadProgress(state.activeId);
+        state.view = "home";
+        render();
+        break;
+
+      case "new-profile":
+      case "new-profile-settings":
+        state.profiles = state.profiles; // no-op, just route
+        state.view = "profiles";
+        render();
+        // force the create form even though profiles exist
+        document.getElementById("screen-profiles").innerHTML =
+          '<div class="kicker">New profile</div>' + renderNewProfileForm();
+        wireNewProfileForm(document.getElementById("screen-profiles"));
+        break;
+
+      case "create-profile":
+        doCreateProfile(document.getElementById("screen-profiles"));
+        break;
+
+      case "delete-profile": {
+        var delId = t.getAttribute("data-id");
+        if (!confirm("Delete this profile and its progress? This can't be undone.")) break;
+        state.profiles = state.profiles.filter(function(p){ return p.id !== delId; });
+        saveProfiles(state.profiles);
+        localStorage.removeItem(K.progress(delId));
+        if (state.activeId === delId) {
+          state.activeId = state.profiles.length ? state.profiles[0].id : null;
+          if (state.activeId) { setActiveId(state.activeId); state.progress = loadProgress(state.activeId); }
+        }
+        if (!state.profiles.length) { state.view = "profiles"; }
+        render();
+        break;
+      }
+
+      case "family-view":
+        state.progress.familyView = t.getAttribute("data-view");
+        saveProgress(state.activeId, state.progress);
+        render();
+        break;
+
+      case "start-today": startTodaySession(); break;
+
+      case "open-practice-lesson":
+        state.practice.openLesson = t.getAttribute("data-id");
+        state.view = "practice";
+        render();
+        break;
+
+      case "toggle-lesson":
+        // let <details> native toggle happen; just sync state after
+        setTimeout(function(){
+          var id = t.getAttribute("data-id");
+          var details = t.closest("details");
+          state.practice.openLesson = (details && details.open) ? id : null;
+        }, 0);
+        break;
+
+      case "practice-block": openPracticeBlock(t.getAttribute("data-id")); break;
+
+      case "set-mode":
+        state.session.reviewMode = t.getAttribute("data-mode");
+        render();
+        break;
+      case "set-default-mode":
+        state.progress.reviewMode = t.getAttribute("data-mode");
+        saveProgress(state.activeId, state.progress);
+        render();
+        break;
+
+      case "advance-learn": advanceSession(); break;
+      case "advance": advanceSession(); break;
+      case "submit-recall": {
+        var stp = state.session.steps[state.session.idx];
+        var blk = course.blocks[stp.blockId];
+        if (stp._answered) advanceSession(); else submitRecall(stp, blk);
+        break;
+      }
+      case "pick-mc": pickMc(parseInt(t.getAttribute("data-idx"),10)); break;
+      case "submit-fillblank": submitFillBlank(); break;
+      case "flip-card": {
+        var fstep = state.session.steps[state.session.idx];
+        fstep._flipped = true;
+        render();
+        break;
+      }
+      case "self-rate": selfRate(t.getAttribute("data-box")); break;
+      case "submit-pattern-fb": submitPatternFb(t.getAttribute("data-answer"), t.getAttribute("data-blank")); break;
+      case "pick-pattern-quiz": pickPatternQuiz(parseInt(t.getAttribute("data-idx"),10)); break;
+      case "advance-pattern": advancePattern(t.getAttribute("data-id")); break;
+      case "swap-role": {
+        var cstep = state.session.steps[state.session.idx];
+        cstep._role = cstep._role === "A" ? "B" : "A";
+        render();
+        break;
+      }
+      case "order-tap": orderTap(parseInt(t.getAttribute("data-poolidx"),10)); break;
+
+      case "play-audio": playAudio(t.getAttribute("data-src")); break;
+      case "speak": speakText(t.getAttribute("data-text")); break;
+
+      case "reset-progress":
+        if (!confirm("Reset all progress for this profile? This can't be undone.")) break;
+        state.progress = defaultProgress();
+        saveProgress(state.activeId, state.progress);
+        state.view = "home";
+        render();
+        break;
+    }
+  });
+
+  document.addEventListener("keydown", function(e){
+    if (e.key !== "Enter") return;
+    var s = state.session;
+    if (state.view !== "session" || !s) return;
+    var step = s.steps[s.idx];
+    if (!step) return;
+    if (step.kind === "recall" && document.activeElement && document.activeElement.id === "recallInput") {
+      e.preventDefault();
+      if (step._answered) advanceSession(); else submitRecall(step, course.blocks[step.blockId]);
+    } else if (document.activeElement && document.activeElement.id === "fbInput") {
+      e.preventDefault();
+      if (!step._answered) submitFillBlank();
+    } else if (document.activeElement && document.activeElement.id === "pfbInput") {
+      e.preventDefault();
+      if (!step._answered) {
+        var btn = document.querySelector('[data-action="submit-pattern-fb"]');
+        if (btn) btn.click();
+      }
+    }
+  });
+
+  /* ----------------------------------------------------------------------
+     Dev/preview seed hook — INERT unless ?seed=... is in the URL. Lets a
+     screenshot/QA pass reach a populated state without hand-clicking through
+     onboarding. Does not run on a normal file:// open with no query string,
+     so it never affects real usage. */
+  function applyDemoSeed(){
+    var q = new URLSearchParams(location.search);
+    var seed = q.get("seed");
+    if (!seed) return false;
+    document.documentElement.classList.add("qa-no-anim");
+
+    var mk = function(id, name, kind){ return { id:id, name:name, kind:kind, emoji:KIND_META[kind].emoji, createdAt: nowIso() }; };
+    var t0 = nowIso();
+    var past = function(days){ var d = new Date(); d.setDate(d.getDate()-days); return d.toISOString(); };
+    var future = function(days){ var d = new Date(); d.setDate(d.getDate()+days); return d.toISOString(); };
+
+    function seedCards(spec){
+      var cards = {};
+      spec.forEach(function(row){
+        var id = row[0], status = row[1], box = row[2], dueOffset = row[3];
+        if (status === "new") return;
+        cards[id] = { status:"in_review", box:box, dueAt: dueOffset<=0?past(-dueOffset):future(dueOffset), typedRecallSuccess:true, introducedAt:past(10), seenCount:3, lastSeen:past(1) };
+      });
+      return cards;
+    }
+
+    var ids = course.leitner_card_ids;
+
+    if (seed === "home") {
+      var p = mk("p_demo1", "Jake", "adult");
+      state.profiles = [p]; saveProfiles(state.profiles);
+      state.activeId = p.id; setActiveId(p.id);
+      var cards = seedCards([
+        [ids[0],"in_review","green",-3], [ids[1],"in_review","yellow",-1], [ids[2],"in_review","yellow",2],
+        [ids[3],"in_review","red",-1], [ids[4],"in_review","red",0], [ids[5],"in_review","green",4],
+        [ids[6],"in_review","yellow",-2]
+      ]);
+      state.progress = Object.assign(defaultProgress(), { cards:cards, streak:{count:4,lastDate: localDateStr(new Date(Date.now()-86400000))}, sessionsCompleted:6 });
+      saveProgress(p.id, state.progress);
+      state.view = "home";
+    } else if (seed === "kid") {
+      var pk = mk("p_demo2", "Sofía", "kid");
+      state.profiles = [pk]; saveProfiles(state.profiles);
+      state.activeId = pk.id; setActiveId(pk.id);
+      var cards2 = seedCards([[ids[0],"in_review","green",-1],[ids[1],"in_review","yellow",1],[ids[2],"in_review","red",-1]]);
+      state.progress = Object.assign(defaultProgress(), { cards:cards2, streak:{count:9,lastDate: localDateStr()}, sessionsCompleted:11 });
+      saveProgress(pk.id, state.progress);
+      state.view = "home";
+    } else if (seed === "session-mc") {
+      var pm = mk("p_demo3", "Jake", "adult");
+      state.profiles = [pm]; saveProfiles(state.profiles);
+      state.activeId = pm.id; setActiveId(pm.id);
+      var cards3 = seedCards([[ids[0],"in_review","yellow",-1]]);
+      state.progress = Object.assign(defaultProgress(), { cards:cards3, streak:{count:4,lastDate: localDateStr()}, reviewMode:"graded" });
+      saveProgress(pm.id, state.progress);
+      state.session = { steps:[{kind:"due", blockId: ids[0]}], idx:0, combo:3, maxCombo:5, stats:{reviewed:2,correct:2,graduated:1,patternsDone:0}, reviewMode:"graded", source:"today" };
+      state.session.steps[0]._dir = "e2t";
+      var b0 = course.blocks[ids[0]];
+      state.session.steps[0]._options = [b0.lang.lemma].concat(b0.distractors.map(function(d){return d.lemma;}));
+      state.view = "session";
+    } else if (seed === "session-learn") {
+      var pl = mk("p_demo4", "Jake", "adult");
+      state.profiles = [pl]; saveProfiles(state.profiles);
+      state.activeId = pl.id; setActiveId(pl.id);
+      state.progress = defaultProgress();
+      saveProgress(pl.id, state.progress);
+      state.session = { steps:[{kind:"learn", blockId: ids[10]}], idx:0, combo:2, maxCombo:2, stats:{reviewed:0,correct:0,graduated:0,patternsDone:0}, reviewMode:"graded", source:"today" };
+      state.view = "session";
+    } else if (seed === "session-selfrate") {
+      var ps = mk("p_demo5", "Jake & Sofía", "family");
+      state.profiles = [ps]; saveProfiles(state.profiles);
+      state.activeId = ps.id; setActiveId(ps.id);
+      var cardsS = seedCards([[ids[3],"in_review","yellow",-1]]);
+      state.progress = Object.assign(defaultProgress(), { cards:cardsS, streak:{count:6,lastDate: localDateStr()}, reviewMode:"self_rate", familyView:"kid" });
+      saveProgress(ps.id, state.progress);
+      state.session = { steps:[{kind:"due", blockId: ids[3]}], idx:0, combo:5, maxCombo:5, stats:{reviewed:4,correct:4,graduated:1,patternsDone:0}, reviewMode:"self_rate", source:"today" };
+      state.session.steps[0]._flipped = true;
+      state.view = "session";
+    } else if (seed === "session-fillblank") {
+      var pf = mk("p_demo6", "Jake", "adult");
+      state.profiles = [pf]; saveProfiles(state.profiles);
+      state.activeId = pf.id; setActiveId(pf.id);
+      var cardsF = seedCards([[ids[0],"in_review","yellow",-1]]);
+      state.progress = Object.assign(defaultProgress(), { cards:cardsF, streak:{count:4,lastDate: localDateStr()}, reviewMode:"graded" });
+      saveProgress(pf.id, state.progress);
+      state.session = { steps:[{kind:"due", blockId: ids[0]}], idx:0, combo:1, maxCombo:3, stats:{reviewed:3,correct:2,graduated:1,patternsDone:0}, reviewMode:"graded", source:"today" };
+      state.session.steps[0]._useFillBlank = true;
+      state.view = "session";
+    } else if (seed === "session-pattern") {
+      var pp = mk("p_demo7", "Jake", "adult");
+      state.profiles = [pp]; saveProfiles(state.profiles);
+      state.activeId = pp.id; setActiveId(pp.id);
+      state.progress = defaultProgress();
+      saveProgress(pp.id, state.progress);
+      state.session = { steps:[{kind:"pattern", blockId:"block-es-a1-pattern-gender-oa-001"}], idx:0, combo:2, maxCombo:2, stats:{reviewed:0,correct:0,graduated:0,patternsDone:0}, reviewMode:"graded", source:"today" };
+      state.view = "session";
+    } else if (seed === "session-capstone") {
+      var pc2 = mk("p_demo8", "Jake & Diego", "family");
+      state.profiles = [pc2]; saveProfiles(state.profiles);
+      state.activeId = pc2.id; setActiveId(pc2.id);
+      state.progress = defaultProgress();
+      saveProgress(pc2.id, state.progress);
+      state.session = { steps:[{kind:"capstone", blockId: course.capstone_block_id}], idx:0, combo:0, maxCombo:0, stats:{reviewed:0,correct:0,graduated:0,patternsDone:0}, reviewMode:"graded", source:"today" };
+      state.view = "session";
+    } else if (seed === "practice") {
+      var pr = mk("p_demo9", "Jake", "adult");
+      state.profiles = [pr]; saveProfiles(state.profiles);
+      state.activeId = pr.id; setActiveId(pr.id);
+      var cardsPr = seedCards([[ids[0],"in_review","green",-3],[ids[1],"in_review","yellow",1],[ids[2],"in_review","red",-1]]);
+      state.progress = Object.assign(defaultProgress(), { cards:cardsPr, streak:{count:4,lastDate: localDateStr()} });
+      saveProgress(pr.id, state.progress);
+      state.practice.openLesson = "lesson-saludos-01-hola";
+      state.view = "practice";
+    }
+    render();
+    return true;
+  }
+
+  if (new URLSearchParams(location.search).has("qa")) document.documentElement.classList.add("qa-no-anim");
+  if (!applyDemoSeed()) boot();
+})();
+</script>
+</body>
+</html>

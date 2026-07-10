@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#d7cdad">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Veteran Finder">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jake's Workshop">
+<meta property="og:title" content="Veteran Finder — FM 4-VET">
+<meta property="og:description" content="Find the nonprofits that can help veterans & families — search by need, era, and keyword, or answer four questions for a matched shortlist.">
+<meta property="og:image" content="og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Veteran Finder — FM 4-VET">
+<meta name="twitter:description" content="Find the nonprofits that can help veterans & families — by need, era, and keyword, or a 4-question matched shortlist.">
+<meta name="twitter:image" content="og.png">
+<title>FM 4-VET — Veteran Support Resource Locator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Oswald:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#d7cdad;
+    --paper-2:#cbc09c;
+    --paper-3:#c0b48c;
+    --ink:#21261a;
+    --ink-soft:#3c412e;
+    --od:#4a5230;
+    --od-deep:#343a20;
+    --stamp:#8c3a2c;
+    --stamp-ink:#7a3025;
+    --rule:#575b3c;
+    --font-stencil:'Stardos Stencil','Oswald',Impact,sans-serif;
+    --font-head:'Oswald','Arial Narrow',sans-serif;
+    --font-body:'Special Elite','Courier New',monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(12px,3vw,34px);
+    padding-top:calc(clamp(12px,3vw,34px) + env(safe-area-inset-top));
+    padding-bottom:calc(clamp(12px,3vw,34px) + env(safe-area-inset-bottom));
+  }
+  /* paper grain overlay */
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ===== HOME BUTTON (Workshop) ===== */
+  .home{
+    position:fixed;z-index:30;
+    top:calc(8px + env(safe-area-inset-top));left:8px;
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-head);text-transform:uppercase;font-weight:600;
+    letter-spacing:.12em;font-size:11px;text-decoration:none;
+    color:var(--paper);background:var(--od-deep);
+    border:2px solid var(--od-deep);padding:7px 11px;
+    box-shadow:2px 2px 0 rgba(52,58,32,.3);
+    transition:transform .12s ease,background .12s ease;
+  }
+  .home:hover,.home:focus{background:var(--stamp);border-color:var(--stamp);transform:translate(-1px,-1px);outline:none;}
+  .home .ico{font-size:13px;}
+
+  .sheet{
+    position:relative;z-index:1;
+    max-width:1080px;margin:0 auto;
+    background:var(--paper);
+    border:2px solid var(--od-deep);
+    box-shadow:0 2px 0 var(--od-deep), 0 14px 40px rgba(20,22,12,.28);
+    padding:clamp(16px,3.4vw,40px);
+  }
+  /* corner crop marks */
+  .sheet::before,.sheet::after{
+    content:"";position:absolute;width:16px;height:16px;pointer-events:none;
+    border-color:var(--od-deep);
+  }
+  .sheet::before{top:7px;left:7px;border-top:2px solid;border-left:2px solid;}
+  .sheet::after{bottom:7px;right:7px;border-bottom:2px solid;border-right:2px solid;}
+
+  /* ===== MASTHEAD ===== */
+  .masthead{position:relative;border-bottom:3px double var(--od-deep);padding-bottom:16px;}
+  .doc-line{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 18px;
+    font-family:var(--font-head);text-transform:uppercase;
+    font-size:11px;letter-spacing:.22em;color:var(--od-deep);font-weight:600;
+    padding-right:160px;
+  }
+  .title-block{margin-top:14px;display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;}
+  .fm-code{
+    font-family:var(--font-stencil);font-weight:700;
+    font-size:clamp(30px,7vw,54px);line-height:.9;color:var(--od-deep);
+    border:3px solid var(--od-deep);padding:6px 12px 4px;white-space:nowrap;
+  }
+  .title-text{flex:1;min-width:220px;}
+  .title-text h1{
+    font-family:var(--font-stencil);font-weight:700;margin:0;
+    font-size:clamp(20px,3.6vw,33px);letter-spacing:.03em;color:var(--ink);line-height:1;
+  }
+  .title-text .sub{
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.3em;
+    font-size:12px;color:var(--od);margin-top:9px;font-weight:500;
+  }
+  .stamp{
+    position:absolute;top:-4px;right:-2px;
+    transform:rotate(-9deg);
+    border:3px solid var(--stamp);color:var(--stamp);
+    font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+    letter-spacing:.14em;font-size:12px;line-height:1.25;text-align:center;
+    padding:5px 11px;opacity:.82;border-radius:2px;
+    box-shadow:inset 0 0 0 1px var(--stamp);
+    animation:thunk .5s cubic-bezier(.2,1.4,.5,1) both;
+  }
+  @keyframes thunk{0%{transform:rotate(-9deg) scale(2.4);opacity:0;}70%{opacity:.9;}100%{transform:rotate(-9deg) scale(1);opacity:.82;}}
+  .distro{
+    margin-top:14px;font-size:11.5px;color:var(--ink-soft);
+    letter-spacing:.04em;max-width:640px;
+  }
+
+  /* ===== CRISIS STRIP (always visible) ===== */
+  .crisis{
+    margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    border:2px solid var(--stamp);background:rgba(140,58,44,.08);
+    padding:9px 13px;
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;
+    font-size:11.5px;font-weight:600;color:var(--stamp-ink);
+  }
+  .crisis .b{font-family:var(--font-stencil);font-weight:700;letter-spacing:.04em;}
+  .crisis a{color:var(--stamp-ink);text-decoration:underline;text-underline-offset:2px;font-weight:700;display:inline-block;padding:4px 3px;}
+  .crisis a:hover,.crisis a:focus{color:var(--stamp);}
+
+  /* ===== SECTION HEADERS ===== */
+  .sec-head{
+    display:flex;align-items:center;gap:12px;
+    margin:30px 0 16px;
+  }
+  .sec-head .bar{height:0;flex:0 0 34px;border-top:6px solid var(--od);}
+  .sec-head .lbl{
+    font-family:var(--font-head);text-transform:uppercase;font-weight:600;
+    letter-spacing:.18em;font-size:14px;color:var(--od-deep);white-space:nowrap;
+  }
+  .sec-head .fill{flex:1;border-top:2px solid var(--rule);}
+  .sec-head .code{
+    font-family:var(--font-body);font-size:11px;color:var(--ink-soft);letter-spacing:.1em;
+  }
+
+  /* ===== REQUIREMENTS / FILTERS ===== */
+  .req{
+    border:2px solid var(--rule);background:var(--paper-2);
+    padding:16px clamp(12px,2.4vw,20px);
+  }
+  .req-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+  .field label{
+    display:block;font-family:var(--font-head);text-transform:uppercase;
+    font-weight:600;letter-spacing:.14em;font-size:11px;color:var(--od-deep);margin-bottom:6px;
+  }
+  .field select,.field input{
+    width:100%;font-family:var(--font-body);font-size:16px;color:var(--ink);
+    background:var(--paper);border:2px solid var(--od-deep);border-radius:0;
+    padding:9px 10px;appearance:none;
+  }
+  .field select{
+    background-image:linear-gradient(45deg,transparent 50%,var(--od-deep) 50%),linear-gradient(135deg,var(--od-deep) 50%,transparent 50%);
+    background-position:calc(100% - 16px) center,calc(100% - 11px) center;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:30px;
+  }
+  .field input::placeholder{color:var(--ink-soft);opacity:.7;}
+  .field select:focus,.field input:focus{outline:3px solid var(--stamp);outline-offset:1px;}
+
+  .readout{
+    display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.12em;
+    font-size:13px;color:var(--od-deep);font-weight:500;
+  }
+  .readout .arrow{color:var(--stamp);font-weight:700;}
+  .readout .n{color:var(--stamp);font-weight:700;font-family:var(--font-body);}
+  .readout .spacer{margin-left:auto;}
+  .btn-o{
+    background:none;border:1.5px solid var(--od-deep);color:var(--od-deep);
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-weight:600;
+    font-size:11px;padding:7px 13px;cursor:pointer;transition:background .12s,color .12s;min-height:44px;
+  }
+  .btn-o:hover,.btn-o:focus{background:var(--od-deep);color:var(--paper);outline:none;}
+  .wiz-launch{
+    background:var(--stamp);border:1.5px solid var(--stamp);color:var(--paper);
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-weight:700;
+    font-size:12px;padding:8px 15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;
+    box-shadow:2px 2px 0 rgba(52,58,32,.25);transition:transform .12s,background .12s;
+  }
+  .wiz-launch:hover,.wiz-launch:focus{background:var(--stamp-ink);transform:translate(-1px,-1px);outline:none;}
+
+  /* ===== MATCH-RESULT BANNER ===== */
+  .match-banner{
+    display:none;align-items:center;gap:11px;flex-wrap:wrap;
+    border:2px solid var(--od-deep);background:var(--od-deep);color:var(--paper);
+    padding:11px 15px;margin-bottom:16px;
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:600;
+  }
+  .match-banner.on{display:flex;}
+  .match-banner .chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .match-banner .chip{border:1px solid var(--paper);padding:2px 8px;font-size:10.5px;letter-spacing:.08em;}
+  .match-banner .clear{margin-left:auto;background:var(--stamp);border:1px solid var(--stamp);color:var(--paper);
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:11px;padding:5px 11px;cursor:pointer;}
+  .match-banner .clear:hover{background:var(--stamp-ink);}
+
+  /* ===== ROSTER / CARDS ===== */
+  .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+  .card{
+    position:relative;background:var(--paper);
+    border:2px solid var(--od-deep);
+    padding:0;display:flex;flex-direction:column;
+    box-shadow:3px 3px 0 rgba(52,58,32,.18);
+    transition:transform .12s ease,box-shadow .12s ease;
+  }
+  @media (hover:hover){.card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(52,58,32,.22);}}
+  .card-top{
+    display:flex;justify-content:space-between;align-items:stretch;
+    border-bottom:2px solid var(--rule);
+  }
+  .code-chip{
+    font-family:var(--font-stencil);font-weight:700;font-size:15px;letter-spacing:.03em;
+    color:var(--paper);background:var(--od-deep);padding:8px 12px;display:flex;align-items:center;
+  }
+  .scope-tag{
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.12em;font-weight:600;
+    font-size:10px;color:var(--od-deep);padding:8px 12px;display:flex;align-items:center;gap:5px;
+  }
+  .scope-tag::before{content:"";width:7px;height:7px;background:var(--od);border-radius:50%;}
+  .card-body{padding:13px 15px 4px;flex:1;}
+  .card-body h3{
+    font-family:var(--font-head);font-weight:700;text-transform:uppercase;letter-spacing:.02em;
+    font-size:17px;margin:0 0 2px;color:var(--ink);line-height:1.12;
+  }
+  .card-body .desc{font-size:12.5px;color:var(--ink-soft);margin:8px 0 12px;}
+  .meta{border-top:1px dashed var(--rule);padding-top:9px;font-size:11px;color:var(--ink-soft);}
+  .meta .row{display:flex;gap:8px;margin-bottom:3px;}
+  .meta .k{
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-weight:600;
+    color:var(--od-deep);flex:0 0 74px;font-size:10px;padding-top:1px;
+  }
+  .meta .v{flex:1;}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;padding:11px 15px 0;}
+  .tag{
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:500;
+    font-size:9.5px;color:var(--od-deep);border:1px solid var(--rule);padding:2px 6px;
+  }
+  .actions{display:flex;border-top:2px solid var(--od-deep);margin-top:12px;}
+  .actions a{
+    flex:1;text-align:center;text-decoration:none;
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.08em;font-weight:600;
+    font-size:11px;color:var(--od-deep);padding:0 6px;min-height:44px;
+    display:flex;align-items:center;justify-content:center;
+    border-right:1px solid var(--rule);transition:background .12s,color .12s;
+  }
+  .actions a:last-child{border-right:none;}
+  .actions a:hover,.actions a:focus{background:var(--od-deep);color:var(--paper);outline:none;}
+  .actions a.primary{background:var(--stamp);color:var(--paper);}
+  .actions a.primary:hover{background:var(--stamp-ink);}
+
+  /* crisis result card */
+  .crisis-card{
+    grid-column:1/-1;border:3px solid var(--stamp);background:rgba(140,58,44,.08);
+    padding:16px 18px;
+  }
+  .crisis-card h3{font-family:var(--font-stencil);font-weight:700;color:var(--stamp-ink);margin:0 0 6px;font-size:19px;letter-spacing:.02em;}
+  .crisis-card p{font-size:13px;color:var(--ink-soft);margin:0 0 10px;}
+  .crisis-card .lines{display:flex;gap:10px;flex-wrap:wrap;}
+  .crisis-card .lines a{
+    font-family:var(--font-head);text-transform:uppercase;font-weight:700;letter-spacing:.08em;font-size:13px;
+    text-decoration:none;color:var(--paper);background:var(--stamp);padding:9px 14px;
+  }
+  .crisis-card .lines a:hover{background:var(--stamp-ink);}
+
+  .empty{
+    grid-column:1/-1;text-align:center;padding:46px 20px;border:2px dashed var(--rule);
+    font-family:var(--font-head);text-transform:uppercase;letter-spacing:.14em;
+    color:var(--od-deep);font-size:14px;font-weight:500;
+  }
+  .empty small{display:block;font-family:var(--font-body);text-transform:none;letter-spacing:0;
+    color:var(--ink-soft);margin-top:8px;font-size:12px;font-weight:400;}
+
+  /* ===== WIZARD ===== */
+  .wiz-overlay{
+    display:none;position:fixed;inset:0;z-index:50;
+    background:rgba(20,22,12,.62);
+    padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));
+    overflow-y:auto;
+  }
+  .wiz-overlay.on{display:flex;align-items:flex-start;justify-content:center;}
+  .wiz-card{
+    position:relative;width:100%;max-width:560px;margin:auto;
+    background:var(--paper);border:2px solid var(--od-deep);
+    box-shadow:0 2px 0 var(--od-deep),0 18px 50px rgba(20,22,12,.5);
+    padding:clamp(16px,4vw,26px);
+    animation:wizin .22s cubic-bezier(.2,.9,.3,1) both;
+  }
+  @keyframes wizin{0%{opacity:0;transform:translateY(14px);}100%{opacity:1;transform:none;}}
+  .wiz-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px double var(--od-deep);padding-bottom:12px;margin-bottom:6px;}
+  .wiz-head .t{font-family:var(--font-stencil);font-weight:700;font-size:20px;color:var(--ink);line-height:1;}
+  .wiz-head .code{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:var(--od);margin-top:6px;font-weight:600;}
+  .wiz-close{background:none;border:2px solid var(--od-deep);color:var(--od-deep);font-family:var(--font-head);font-weight:700;font-size:15px;line-height:1;width:32px;height:32px;cursor:pointer;flex:0 0 auto;}
+  .wiz-close:hover{background:var(--stamp);border-color:var(--stamp);color:var(--paper);}
+  .wiz-progress{display:flex;gap:6px;margin:14px 0 4px;}
+  .wiz-progress span{flex:1;height:5px;background:var(--paper-3);border:1px solid var(--rule);}
+  .wiz-progress span.done{background:var(--od);}
+  .wiz-progress span.cur{background:var(--stamp);border-color:var(--stamp);}
+  .wiz-q{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.06em;font-weight:600;font-size:15px;color:var(--od-deep);margin:18px 0 4px;}
+  .wiz-hint{font-size:12px;color:var(--ink-soft);margin:0 0 14px;}
+  .wiz-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;}
+  .wiz-opts.two{grid-template-columns:1fr 1fr;}
+  .wiz-opt{
+    font-family:var(--font-body);font-size:14px;text-align:left;color:var(--ink);
+    background:var(--paper-2);border:2px solid var(--od-deep);padding:12px 13px;cursor:pointer;
+    transition:background .1s,color .1s,transform .1s;line-height:1.25;
+  }
+  .wiz-opt:hover{background:var(--paper-3);}
+  .wiz-opt.sel{background:var(--od-deep);color:var(--paper);}
+  .wiz-opt.sel:hover{background:var(--od);}
+  .wiz-state{width:100%;font-family:var(--font-body);font-size:16px;color:var(--ink);background:var(--paper);border:2px solid var(--od-deep);padding:11px 10px;appearance:none;margin-top:4px;}
+  .wiz-state:focus{outline:3px solid var(--stamp);outline-offset:1px;}
+  .wiz-nav{display:flex;gap:10px;margin-top:22px;padding-top:16px;border-top:2px solid var(--rule);}
+  .wiz-nav button{flex:1;font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-weight:700;font-size:13px;padding:12px;cursor:pointer;border:2px solid var(--od-deep);}
+  .wiz-nav .back{background:none;color:var(--od-deep);}
+  .wiz-nav .back:hover{background:var(--od-deep);color:var(--paper);}
+  .wiz-nav .next{background:var(--stamp);border-color:var(--stamp);color:var(--paper);}
+  .wiz-nav .next:hover{background:var(--stamp-ink);}
+  .wiz-nav button:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* ===== FOOTER ===== */
+  .foot{
+    margin-top:30px;border-top:3px double var(--od-deep);padding-top:14px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 20px;
+    font-size:11px;color:var(--ink-soft);letter-spacing:.03em;
+  }
+  .foot .note{max-width:560px;}
+  .foot .note b{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;color:var(--od-deep);}
+  .foot .sig{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:var(--od-deep);text-align:right;}
+  .wm{display:block;text-align:center;margin-top:20px;font-family:var(--font-head);text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--od);opacity:.75;}
+  .wm a{color:var(--od);text-decoration:none;}
+  .wm a:hover{color:var(--stamp);}
+
+  a:focus-visible,button:focus-visible,.home:focus-visible,.btn-o:focus-visible,.wiz-launch:focus-visible,.wiz-opt:focus-visible,.wiz-close:focus-visible,.actions a:focus-visible,.match-banner .clear:focus-visible,.crisis a:focus-visible{
+    outline:3px solid var(--stamp);outline-offset:2px;
+  }
+
+  @media (max-width:560px){
+    .sheet{margin-top:46px;}
+    .doc-line{padding-right:0;}
+    .actions{flex-wrap:wrap;}
+    .actions a{flex:1 0 40%;border-bottom:1px solid var(--rule);}
+    .stamp{position:static;display:inline-block;transform:rotate(-4deg);margin-top:12px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<a class="home" href="../"><span class="ico">🏠</span> Workshop</a>
+<div class="sheet">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="doc-line">
+      <span>Department of Veteran Support &nbsp;//&nbsp; Field Reference</span>
+      <span>Distribution A — Public</span>
+    </div>
+    <div class="title-block">
+      <div class="fm-code">FM<br>4&#8209;VET</div>
+      <div class="title-text">
+        <h1>Veteran Support Resource Locator</h1>
+        <div class="sub">Find the organizations that can help — by need, era, and mission</div>
+      </div>
+    </div>
+    <div class="stamp">Unclassified<br>For Veteran Use</div>
+    <p class="distro">This locator indexes vetted nonprofit resources for veterans, service members, families, and caregivers. Select your requirements below to return matching assets, or run the guided match. Every entry links to the organization and to an independent IRS nonprofit record.</p>
+    <div class="crisis">
+      <span class="b">In Crisis?</span>
+      <span>Dial <a href="tel:988">988</a> then press 1 · Text <a href="sms:838255">838255</a> · If in danger, call <a href="tel:911">911</a></span>
+    </div>
+  </header>
+
+  <!-- ============ SECTION I — REQUIREMENTS ============ -->
+  <div class="sec-head">
+    <span class="bar"></span>
+    <span class="lbl">Section I — Requirements</span>
+    <span class="fill"></span>
+    <span class="code">FORM 4-VET-A</span>
+  </div>
+
+  <div class="req">
+    <div class="req-grid">
+      <div class="field">
+        <label for="need">Requirement / Need</label>
+        <select id="need">
+          <option value="all">All requirements</option>
+          <option value="BEN">Claims &amp; Benefits</option>
+          <option value="MH">Mental Health &amp; Suicide Prevention</option>
+          <option value="HSG">Housing &amp; Homelessness</option>
+          <option value="FIN">Financial Assistance</option>
+          <option value="EMP">Employment &amp; Career</option>
+          <option value="EDU">Education &amp; Scholarships</option>
+          <option value="K9">Service Dogs</option>
+          <option value="REC">Recreation &amp; Healing</option>
+          <option value="FAM">Family &amp; Caregiver</option>
+          <option value="SUR">Survivors / Gold Star</option>
+          <option value="LEG">Legal Aid</option>
+          <option value="PUR">Purpose After Service</option>
+          <option value="POP">Population-Specific</option>
+          <option value="MOR">Morale &amp; Tickets</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="era">Service Era</label>
+        <select id="era">
+          <option value="all">Any era</option>
+          <option value="post911">Post-9/11 only</option>
+          <option value="all-era">Not era-restricted</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="q">Keyword / Organization</label>
+        <input id="q" type="text" placeholder="e.g. housing, PTSD, dog…" autocomplete="off">
+      </div>
+    </div>
+    <div class="readout">
+      <span class="arrow">&#9658;</span>
+      <span><span class="n" id="count">000</span> assets matching criteria</span>
+      <span class="spacer"></span>
+      <button class="wiz-launch" id="wizOpen">◆ Guided Match — 4 Questions</button>
+      <button class="btn-o" id="reset">Clear</button>
+    </div>
+  </div>
+
+  <!-- ============ SECTION II — AVAILABLE ASSETS ============ -->
+  <div class="sec-head">
+    <span class="bar"></span>
+    <span class="lbl">Section II — Available Assets</span>
+    <span class="fill"></span>
+    <span class="code" id="sortNote">SORTED: NATIONAL FIRST</span>
+  </div>
+
+  <div class="match-banner" id="matchBanner"></div>
+  <div class="roster" id="roster"></div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="foot">
+    <div class="note"><b>Advisory:</b> This locator narrows the field — it does not confirm eligibility. Discharge characterization, service era, disability rating, and dependency status may affect qualification. Confirm directly with each organization before proceeding. Not affiliated with the U.S. Department of Veterans Affairs. In crisis, dial 988 then press 1.</div>
+    <div class="sig">FM 4-VET<br>Rev. 001</div>
+  </footer>
+  <div class="wm"><a href="../">🧰 Jake's Workshop</a></div>
+</div>
+
+<!-- ============ GUIDED MATCH WIZARD ============ -->
+<div class="wiz-overlay" id="wizOverlay" role="dialog" aria-modal="true" aria-label="Guided match">
+  <div class="wiz-card">
+    <div class="wiz-head">
+      <div>
+        <div class="t">Guided Match</div>
+        <div class="code">FORM 4-VET-B // GUIDED INTAKE</div>
+      </div>
+      <button class="wiz-close" id="wizClose" aria-label="Close">✕</button>
+    </div>
+    <div class="wiz-progress" id="wizProgress"></div>
+    <div id="wizBody"></div>
+    <div class="wiz-nav">
+      <button class="back" id="wizBack">◀ Back</button>
+      <button class="next" id="wizNext">Next ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ===== DATA (edit this array to add/remove organizations) =====
+     Fields: code, name, ein (string "NN-NNNNNNN" or null — NEVER fabricated),
+     cats (primary first), scope, states, era, desc, elig, tags, site */
+  /* ORGS:START — generated from ~/veteran-finder/data/orgs.json by scripts/build-app.py; do not hand-edit between the markers */
+  const ORGS = [
+    {
+      "code": "BEN-01",
+      "name": "Disabled American Veterans (DAV)",
+      "ein": "31-0263158",
+      "cats": [
+        "BEN",
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered veterans service organization. Accredited National Service Officers provide free VA disability claims and appeals representation nationwide.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "Appeals",
+        "Transportation"
+      ],
+      "site": "https://www.dav.org"
+    },
+    {
+      "code": "BEN-02",
+      "name": "Veterans of Foreign Wars (VFW)",
+      "ein": "44-0474290",
+      "cats": [
+        "BEN",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered VSO whose accredited service officers help veterans file and appeal VA benefit claims for free. Also runs emergency financial grant programs.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "Appeals",
+        "Free"
+      ],
+      "site": "https://www.vfw.org"
+    },
+    {
+      "code": "BEN-03",
+      "name": "The American Legion",
+      "ein": "35-0144250",
+      "cats": [
+        "BEN",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Largest congressionally chartered VSO. Accredited service officers provide free VA claims assistance, alongside temporary financial aid and other programs.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "VSO",
+        "Free"
+      ],
+      "site": "https://www.legion.org"
+    },
+    {
+      "code": "BEN-04",
+      "name": "AMVETS (American Veterans)",
+      "ein": "53-0176836",
+      "cats": [
+        "BEN",
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered VSO providing free VA claim filing assistance through accredited National Service Officers, plus career and healthcare programs.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "VSO",
+        "Free"
+      ],
+      "site": "https://www.amvets.org"
+    },
+    {
+      "code": "BEN-05",
+      "name": "Paralyzed Veterans of America (PVA)",
+      "ein": "13-1946868",
+      "cats": [
+        "BEN",
+        "POP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered VSO serving veterans with spinal cord injury or disease. Free VA claims help plus advocacy, research, and adaptive sports.",
+      "elig": "All branches // SCI/D focus",
+      "tags": [
+        "VA Claims",
+        "SCI/D",
+        "Free"
+      ],
+      "site": "https://pva.org"
+    },
+    {
+      "code": "BEN-06",
+      "name": "Vietnam Veterans of America (VVA)",
+      "ein": "13-2929110",
+      "cats": [
+        "BEN",
+        "POP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered VSO founded by Vietnam veterans. Accredited service officers provide free VA claims help, with focus on Agent Orange and Vietnam-era issues.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "VSO",
+        "Agent Orange"
+      ],
+      "site": "https://vva.org"
+    },
+    {
+      "code": "BEN-07",
+      "name": "Military Order of the Purple Heart",
+      "ein": "59-0829647",
+      "cats": [
+        "BEN",
+        "POP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Congressionally chartered VSO of combat-wounded Purple Heart recipients. Accredited service officers provide free VA claims assistance to all veterans.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "VA Claims",
+        "VSO",
+        "Free"
+      ],
+      "site": "https://www.purpleheart.org"
+    },
+    {
+      "code": "BEN-08",
+      "name": "National Veterans Legal Services Program (NVLSP)",
+      "ein": "52-1238058",
+      "cats": [
+        "BEN",
+        "LEG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National nonprofit providing free legal representation and attorney training to secure VA and other benefits for veterans, including discharge upgrades and appeals.",
+      "elig": "All branches // all eras",
+      "tags": [
+        "Legal Aid",
+        "Claims",
+        "Appeals"
+      ],
+      "site": "https://www.nvlsp.org"
+    },
+    {
+      "code": "MH-01",
+      "name": "Wounded Warrior Project",
+      "ein": "20-2370934",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "National veterans nonprofit offering free mental health programs, including intensive PTSD treatment and peer support, alongside physical health, career, and benefits services for wounded post-9/11 service members.",
+      "elig": "Post-9/11 // wounded, ill, injured + families",
+      "tags": [
+        "Mental Health",
+        "PTSD",
+        "Peer Support"
+      ],
+      "site": "https://www.woundedwarriorproject.org"
+    },
+    {
+      "code": "MH-02",
+      "name": "Stop Soldier Suicide",
+      "ein": "27-3512119",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National nonprofit focused solely on reducing military and veteran suicide, providing free, confidential one-on-one crisis support, safety planning, and case management.",
+      "elig": "All branches, eras, discharge statuses",
+      "tags": [
+        "Suicide Prevention",
+        "Crisis"
+      ],
+      "site": "https://stopsoldiersuicide.org"
+    },
+    {
+      "code": "MH-03",
+      "name": "Cohen Veterans Network",
+      "ein": "47-3950655",
+      "cats": [
+        "MH",
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "Nationwide network of Steven A. Cohen Military Family Clinics providing low-to-no-cost outpatient mental health care for PTSD, depression, and anxiety to veterans and their families.",
+      "elig": "Post-9/11 // veterans & families; cost never a barrier",
+      "tags": [
+        "Therapy",
+        "Family Clinics"
+      ],
+      "site": "https://www.cohenveteransnetwork.org"
+    },
+    {
+      "code": "MH-04",
+      "name": "Give an Hour",
+      "ein": "61-1493378",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National nonprofit connecting military members, veterans, and families with volunteer mental health professionals for free counseling and peer support.",
+      "elig": "Service members, veterans & families",
+      "tags": [
+        "Free Counseling",
+        "Peer Support"
+      ],
+      "site": "https://giveanhour.org"
+    },
+    {
+      "code": "MH-05",
+      "name": "Mission 22",
+      "ein": "46-2750726",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National veteran nonprofit (legal name Elderheart Inc) offering no-cost mental health treatment programs, wellness resources, and family support to combat veteran suicide, PTSD, TBI, and MST.",
+      "elig": "Veterans & family members; free",
+      "tags": [
+        "Suicide Prevention",
+        "PTSD"
+      ],
+      "site": "https://mission22.com"
+    },
+    {
+      "code": "MH-06",
+      "name": "Objective Zero Foundation",
+      "ein": "81-4324563",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Suicide-prevention nonprofit whose free app connects service members, veterans, and their families to trained volunteer peer supporters and mental health resources via text, voice, or video.",
+      "elig": "Service members, veterans, Guard/Reserve & families",
+      "tags": [
+        "Suicide Prevention",
+        "Peer Support",
+        "App"
+      ],
+      "site": "https://www.objectivezero.org"
+    },
+    {
+      "code": "MH-07",
+      "name": "Task Force Dagger Special Operations Foundation",
+      "ein": "80-0439987",
+      "cats": [
+        "MH",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Run by Special Operations veterans; funds medical grants and next-generation TBI/PTSD treatments, rehabilitative adaptive events, and urgent-need assistance for USSOCOM members and families.",
+      "elig": "USSOCOM members (wounded, ill, injured) & families",
+      "tags": [
+        "Special Operations",
+        "Medical Grants"
+      ],
+      "site": "https://www.taskforcedagger.org"
+    },
+    {
+      "code": "MH-08",
+      "name": "The Independence Fund",
+      "ein": "26-0322088",
+      "cats": [
+        "MH",
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Serves catastrophically wounded veterans and their caregivers through mobility equipment, caregiver support, advocacy, and Operation Resilience mental-health and suicide-prevention retreats.",
+      "elig": "Severely wounded combat veterans & caregivers",
+      "tags": [
+        "Caregivers",
+        "Mobility",
+        "Resilience"
+      ],
+      "site": "https://www.independencefund.org"
+    },
+    {
+      "code": "MH-09",
+      "name": "Avalon Action Alliance",
+      "ein": "88-0748620",
+      "cats": [
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Alliance of nationwide treatment partners (legal name Avalon Network) providing training and treatment for veterans and first responders with co-occurring traumatic brain injury, post-traumatic stress, and substance abuse.",
+      "elig": "Veterans & first responders (TBI/PTS/substance) + families",
+      "tags": [
+        "TBI",
+        "Trauma Treatment"
+      ],
+      "site": "https://avalonactionalliance.org"
+    },
+    {
+      "code": "MH-10",
+      "name": "Warrior Wellness Solutions",
+      "ein": "27-1320064",
+      "cats": [
+        "MH",
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides integrative health and wellness programs — functional-medicine coaching, mindfulness, adaptive exercise, yoga therapy, and post-traumatic growth coaching — to wounded, ill, and injured service members and veterans.",
+      "elig": "Wounded/ill/injured veterans + families; virtual nationwide",
+      "tags": [
+        "Wellness",
+        "Integrative Health"
+      ],
+      "site": "https://www.warriorwellnesssolutions.org"
+    },
+    {
+      "code": "HSG-01",
+      "name": "U.S.VETS",
+      "ein": "95-4382752",
+      "cats": [
+        "HSG",
+        "MH",
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Operates transitional and permanent housing sites for veterans nationwide, paired with counseling, case management, and employment services.",
+      "elig": "Veterans facing homelessness; often via VA referral",
+      "tags": [
+        "Housing",
+        "Homelessness",
+        "Case Management"
+      ],
+      "site": "https://usvets.org"
+    },
+    {
+      "code": "HSG-02",
+      "name": "Volunteers of America",
+      "ein": "13-1692595",
+      "cats": [
+        "HSG",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National human-services nonprofit whose affiliates provide housing, homelessness services, and supportive care to veterans among other populations.",
+      "elig": "Varies by local affiliate; veteran status for vet housing",
+      "tags": [
+        "Housing",
+        "Homelessness",
+        "Supportive Services"
+      ],
+      "site": "https://www.voa.org"
+    },
+    {
+      "code": "HSG-03",
+      "name": "Operation Homefront",
+      "ein": "32-0033325",
+      "cats": [
+        "HSG",
+        "FIN",
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides transitional and mortgage-free housing, emergency financial assistance, and family-support programs to military families and veterans.",
+      "elig": "Service members, veterans & families; need-based",
+      "tags": [
+        "Housing",
+        "Emergency Grants",
+        "Families"
+      ],
+      "site": "https://operationhomefront.org"
+    },
+    {
+      "code": "HSG-04",
+      "name": "Minnesota Assistance Council for Veterans (MACV)",
+      "ein": "41-1694717",
+      "cats": [
+        "HSG",
+        "EMP",
+        "LEG"
+      ],
+      "scope": "State",
+      "states": [
+        "MN"
+      ],
+      "era": "all-era",
+      "desc": "Statewide Minnesota nonprofit working to end veteran homelessness through housing, employment, legal services, and direct financial assistance.",
+      "elig": "Minnesota veterans & families; many programs any discharge",
+      "tags": [
+        "Housing",
+        "Homelessness",
+        "Minnesota"
+      ],
+      "site": "https://www.mac-v.org"
+    },
+    {
+      "code": "HSG-05",
+      "name": "National Coalition for Homeless Veterans",
+      "ein": "52-1826860",
+      "cats": [
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National resource, technical-assistance, and advocacy center for community-based providers serving homeless and at-risk veterans; runs a referral line to local help.",
+      "elig": "Referral line for veterans; serves providers & policymakers",
+      "tags": [
+        "Housing",
+        "Homelessness",
+        "Referral"
+      ],
+      "site": "https://nchv.org"
+    },
+    {
+      "code": "HSG-06",
+      "name": "Final Salute Inc.",
+      "ein": "80-0660380",
+      "cats": [
+        "HSG",
+        "POP",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides safe and suitable housing and emergency financial assistance to homeless women veterans and their children.",
+      "elig": "Women veterans & their children facing housing instability",
+      "tags": [
+        "Housing",
+        "Women Veterans",
+        "Financial Aid"
+      ],
+      "site": "https://www.finalsaluteinc.org"
+    },
+    {
+      "code": "HSG-07",
+      "name": "Homes For Our Troops",
+      "ein": "54-2143612",
+      "cats": [
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "Builds and donates specially adapted, mortgage-free custom homes to severely injured post-9/11 veterans.",
+      "elig": "Post-9/11 // severely injured (amputation, paralysis, TBI)",
+      "tags": [
+        "Adaptive Housing",
+        "Home Building"
+      ],
+      "site": "https://www.hfotusa.org"
+    },
+    {
+      "code": "HSG-08",
+      "name": "Gary Sinise Foundation",
+      "ein": "80-0587086",
+      "cats": [
+        "HSG",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Serves veterans, first responders, and their families; its R.I.S.E. program builds specially adapted smart homes for severely wounded heroes, alongside financial and wellness support.",
+      "elig": "Severely wounded veterans (R.I.S.E.); veterans & first responders broadly",
+      "tags": [
+        "Adaptive Housing",
+        "Financial Aid"
+      ],
+      "site": "https://www.garysinisefoundation.org"
+    },
+    {
+      "code": "HSG-09",
+      "name": "Tunnel to Towers Foundation",
+      "ein": "02-0554654",
+      "cats": [
+        "HSG",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Builds mortgage-free smart homes for catastrophically injured service members and pays off mortgages for families of fallen first responders and service members.",
+      "elig": "Catastrophically injured veterans; Gold Star & fallen first-responder families",
+      "tags": [
+        "Adaptive Housing",
+        "Mortgage-Free",
+        "Gold Star"
+      ],
+      "site": "https://t2t.org"
+    },
+    {
+      "code": "HSG-10",
+      "name": "Semper Fi & America's Fund",
+      "ein": "26-0086305",
+      "cats": [
+        "HSG",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides lifetime case management, financial grants, adaptive housing, and home-modification help to critically wounded, ill, and injured service members and veterans of all branches.",
+      "elig": "All branches // critically wounded, ill, injured + families",
+      "tags": [
+        "Adaptive Housing",
+        "Financial Aid",
+        "Case Management"
+      ],
+      "site": "https://thefund.org"
+    },
+    {
+      "code": "HSG-11",
+      "name": "Purple Heart Homes",
+      "ein": "26-3516121",
+      "cats": [
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides accessible-housing modifications and home-ownership solutions for service-connected disabled and aging veterans.",
+      "elig": "Honorably discharged, service-connected disabled or aging veterans",
+      "tags": [
+        "Adaptive Housing",
+        "Home Modification"
+      ],
+      "site": "https://www.purplehearthomesusa.org"
+    },
+    {
+      "code": "HSG-12",
+      "name": "Operation FINALLY HOME",
+      "ein": "20-8964096",
+      "cats": [
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Builds and provides mortgage-free custom and adapted homes to wounded, ill, and injured veterans, surviving military spouses, and some first responders.",
+      "elig": "Wounded/ill/injured veterans & surviving military spouses",
+      "tags": [
+        "Adaptive Housing",
+        "Mortgage-Free"
+      ],
+      "site": "https://www.operationfinallyhome.org"
+    },
+    {
+      "code": "HSG-13",
+      "name": "Helping A Hero",
+      "ein": "20-5433598",
+      "cats": [
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "Builds specially adapted homes for severely wounded post-9/11 veterans through a shared-responsibility model with builders and communities.",
+      "elig": "Post-9/11 // severely wounded (GWOT) veterans",
+      "tags": [
+        "Adaptive Housing",
+        "Post-9/11"
+      ],
+      "site": "https://helpingahero.org"
+    },
+    {
+      "code": "FIN-01",
+      "name": "USA Cares",
+      "ein": "05-0588761",
+      "cats": [
+        "FIN",
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "Provides emergency financial assistance for housing, utilities, and essentials, plus post-service skills support, to post-9/11 veterans, service members, and their families.",
+      "elig": "Post-9/11 veterans, service members & families; hardship-based",
+      "tags": [
+        "Emergency Grants",
+        "Financial Aid"
+      ],
+      "site": "https://usacares.org"
+    },
+    {
+      "code": "FIN-02",
+      "name": "Air Force Aid Society",
+      "ein": "54-1797281",
+      "cats": [
+        "FIN",
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "The official charity of the U.S. Air Force and Space Force; provides no-interest emergency loans, grants, and education support to Airmen, Guardians, and their families.",
+      "elig": "Air Force & Space Force members, families & eligible survivors",
+      "tags": [
+        "Air Force",
+        "Emergency Loans",
+        "Scholarships"
+      ],
+      "site": "https://afas.org"
+    },
+    {
+      "code": "FIN-03",
+      "name": "Army Emergency Relief",
+      "ein": "53-0196552",
+      "cats": [
+        "FIN",
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "The Army's official nonprofit for emergency financial help; provides zero-interest loans and grants for essentials plus scholarships for spouses and children.",
+      "elig": "Active/retired Soldiers, eligible Guard/Reserve, families & survivors",
+      "tags": [
+        "Army",
+        "Emergency Loans",
+        "Scholarships"
+      ],
+      "site": "https://www.armyemergencyrelief.org"
+    },
+    {
+      "code": "FIN-04",
+      "name": "Navy-Marine Corps Relief Society",
+      "ein": "53-0204618",
+      "cats": [
+        "FIN",
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "The relief society for the naval services; provides interest-free loans, grants, and scholarships to Sailors, Marines, and their families.",
+      "elig": "Active/retired Sailors & Marines, families & survivors",
+      "tags": [
+        "Navy",
+        "Marine Corps",
+        "Emergency Loans"
+      ],
+      "site": "https://www.nmcrs.org"
+    },
+    {
+      "code": "FIN-05",
+      "name": "Coast Guard Mutual Assistance",
+      "ein": "31-1801931",
+      "cats": [
+        "FIN",
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "The official relief society of the U.S. Coast Guard; provides interest-free loans, grants, and education aid across the Coast Guard community.",
+      "elig": "Coast Guard members, retirees, auxiliarists, civilians & families",
+      "tags": [
+        "Coast Guard",
+        "Emergency Loans"
+      ],
+      "site": "https://www.mycgma.org"
+    },
+    {
+      "code": "FIN-06",
+      "name": "PenFed Foundation",
+      "ein": "54-2062271",
+      "cats": [
+        "FIN",
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National nonprofit affiliated with PenFed Credit Union; provides emergency financial assistance and veteran entrepreneur support to the military community.",
+      "elig": "Service members, veterans & families; program-specific criteria",
+      "tags": [
+        "Financial Aid",
+        "Entrepreneurship"
+      ],
+      "site": "https://penfedfoundation.org"
+    },
+    {
+      "code": "FIN-07",
+      "name": "Modest Needs Foundation",
+      "ein": "47-0863430",
+      "cats": [
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Makes small emergency self-sufficiency grants, paid directly to creditors, to low-income working households facing a short-term crisis. Not veteran-specific, but open to veterans.",
+      "elig": "Low-income working households; general public (incl. veterans)",
+      "tags": [
+        "Emergency Grants",
+        "General Public"
+      ],
+      "site": "https://www.modestneeds.org"
+    },
+    {
+      "code": "EMP-01",
+      "name": "Hire Heroes USA",
+      "ein": "43-1562688",
+      "cats": [
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides free, personalized job-search assistance including resume help, career coaching, and workshops to veterans, service members, and military spouses.",
+      "elig": "Veterans, transitioning service members & military spouses",
+      "tags": [
+        "Job Placement",
+        "Career Coaching"
+      ],
+      "site": "https://www.hireheroesusa.org"
+    },
+    {
+      "code": "EMP-02",
+      "name": "FourBlock",
+      "ein": "46-3575713",
+      "cats": [
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Runs a career-readiness program connecting transitioning service members, veterans, and military spouses to professional networks and civilian careers.",
+      "elig": "Transitioning service members, veterans & military spouses",
+      "tags": [
+        "Career Readiness",
+        "Networking"
+      ],
+      "site": "https://www.fourblock.org"
+    },
+    {
+      "code": "EMP-03",
+      "name": "Onward to Opportunity (IVMF)",
+      "ein": null,
+      "cats": [
+        "EMP",
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Free career-training and professional-certification program run by the D'Aniello Institute for Veterans and Military Families (IVMF) at Syracuse University.",
+      "elig": "Transitioning service members, veterans & military spouses",
+      "tags": [
+        "Job Training",
+        "Certification"
+      ],
+      "site": "https://ivmf.syracuse.edu/programs/career-training/"
+    },
+    {
+      "code": "EMP-04",
+      "name": "American Corporate Partners",
+      "ein": "61-1556042",
+      "cats": [
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "National nonprofit pairing post-9/11 veterans and military spouses with corporate professionals for free, yearlong one-on-one career mentorship.",
+      "elig": "Post-9/11 veterans (180+ days active duty) & active-duty spouses",
+      "tags": [
+        "Mentorship",
+        "Career"
+      ],
+      "site": "https://www.acp-usa.org"
+    },
+    {
+      "code": "EMP-05",
+      "name": "Veterati",
+      "ein": null,
+      "cats": [
+        "EMP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Free online mentorship platform connecting service members, veterans, and military spouses with volunteer professional mentors for career guidance.",
+      "elig": "Service members, veterans & military spouses",
+      "tags": [
+        "Mentorship",
+        "Career"
+      ],
+      "site": "https://www.veterati.com"
+    },
+    {
+      "code": "EDU-01",
+      "name": "Warrior-Scholar Project",
+      "ein": "45-2745669",
+      "cats": [
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Runs free, intensive college-preparatory academic boot camps at partner universities to help enlisted veterans and transitioning service members succeed in higher education.",
+      "elig": "Enlisted veterans & transitioning service members",
+      "tags": [
+        "College Prep",
+        "Boot Camp"
+      ],
+      "site": "https://www.warrior-scholar.org"
+    },
+    {
+      "code": "EDU-02",
+      "name": "Student Veterans of America",
+      "ein": "26-1971279",
+      "cats": [
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National network of campus chapters supporting student veterans through advocacy, programming, and scholarships to help them succeed in higher education.",
+      "elig": "Student veterans (via campus chapters)",
+      "tags": [
+        "Student Veterans",
+        "Campus Chapters"
+      ],
+      "site": "https://studentveterans.org"
+    },
+    {
+      "code": "EDU-03",
+      "name": "Folds of Honor",
+      "ein": "75-3240683",
+      "cats": [
+        "EDU",
+        "SUR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Awards educational scholarships to the spouses and children of fallen or disabled U.S. service members, and to eligible first responder families.",
+      "elig": "Spouses & children of fallen/disabled service members",
+      "tags": [
+        "Scholarships",
+        "Survivors"
+      ],
+      "site": "https://foldsofhonor.org"
+    },
+    {
+      "code": "EDU-04",
+      "name": "Children of Fallen Patriots Foundation",
+      "ein": "47-0902295",
+      "cats": [
+        "EDU",
+        "SUR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides college scholarships and educational counseling to children who lost a military parent in the line of duty.",
+      "elig": "Children of service members who died in the line of duty",
+      "tags": [
+        "Scholarships",
+        "Survivors"
+      ],
+      "site": "https://www.fallenpatriots.org"
+    },
+    {
+      "code": "EDU-05",
+      "name": "Pat Tillman Foundation",
+      "ein": null,
+      "cats": [
+        "EDU"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Scholarships and leadership development for veterans, active service members, and military spouses (Tillman Scholars).",
+      "elig": "Veterans, service members & military spouses",
+      "tags": [
+        "Scholarships",
+        "Leadership"
+      ],
+      "site": "https://pattillmanfoundation.org"
+    },
+    {
+      "code": "K9-01",
+      "name": "K9s For Warriors",
+      "ein": "27-5219467",
+      "cats": [
+        "K9",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides trained service dogs at no cost to veterans living with PTSD, traumatic brain injury, or military sexual trauma; residential training program in Florida serving nationwide.",
+      "elig": "Service-connected veterans with PTSD, TBI, or MST",
+      "tags": [
+        "Service Dogs",
+        "PTSD",
+        "TBI"
+      ],
+      "site": "https://k9sforwarriors.org"
+    },
+    {
+      "code": "K9-02",
+      "name": "America's VetDogs",
+      "ein": "20-8814368",
+      "cats": [
+        "K9",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Breeds, trains, and places service and guide dogs at no cost to veterans, active-duty service members, and first responders.",
+      "elig": "Veterans, active-duty & first responders with disabilities",
+      "tags": [
+        "Service Dogs",
+        "Guide Dogs",
+        "PTSD"
+      ],
+      "site": "https://www.vetdogs.org"
+    },
+    {
+      "code": "K9-03",
+      "name": "Patriot PAWS Service Dogs",
+      "ein": "04-3815107",
+      "cats": [
+        "K9",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Trains and provides service dogs at no cost to disabled American veterans and others with mobility disabilities.",
+      "elig": "Disabled American veterans (mobility, TBI, PTSD)",
+      "tags": [
+        "Service Dogs",
+        "Mobility",
+        "PTSD"
+      ],
+      "site": "https://patriotpaws.org"
+    },
+    {
+      "code": "K9-04",
+      "name": "Warrior Canine Connection",
+      "ein": "45-2981579",
+      "cats": [
+        "K9",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Enlists recovering veterans in training service dogs for fellow veterans through a 'Mission Based Trauma Recovery' model, and places mobility/psychiatric service dogs.",
+      "elig": "Veterans & service members with PTSD or TBI",
+      "tags": [
+        "Service Dogs",
+        "PTSD",
+        "Trauma Recovery"
+      ],
+      "site": "https://warriorcanineconnection.org"
+    },
+    {
+      "code": "K9-05",
+      "name": "Guardian Angels Medical Service Dogs",
+      "ein": "27-2667123",
+      "cats": [
+        "K9",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Trains and donates medical service dogs to veterans, first responders, and civilians with disabilities, with lifelong support.",
+      "elig": "Veterans & first responders with permanent disabilities",
+      "tags": [
+        "Service Dogs",
+        "Medical Alert",
+        "PTSD"
+      ],
+      "site": "https://www.medicalservicedogs.org"
+    },
+    {
+      "code": "REC-01",
+      "name": "Move United",
+      "ein": "94-6174016",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National adaptive-sports network (2020 merger of Disabled Sports USA and Adaptive Sports USA) running sports programming for people with disabilities, including veterans, through local chapters.",
+      "elig": "Youth & adults with disabilities, including veterans",
+      "tags": [
+        "Adaptive Sports",
+        "Rehab",
+        "Recreation"
+      ],
+      "site": "https://moveunitedsport.org"
+    },
+    {
+      "code": "REC-02",
+      "name": "Achilles International",
+      "ein": "13-3318293",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides running and endurance-athletics programming for people with disabilities; its Achilles Freedom Team serves wounded, ill, and injured service members and veterans.",
+      "elig": "People with disabilities; Freedom Team serves wounded veterans",
+      "tags": [
+        "Adaptive Sports",
+        "Running",
+        "Freedom Team"
+      ],
+      "site": "https://www.achillesinternational.org"
+    },
+    {
+      "code": "REC-03",
+      "name": "Challenged Athletes Foundation",
+      "ein": "33-0739596",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides grants, adaptive equipment, and training to people with physical disabilities; its Operation Rebound program serves military veterans, active-duty members, and first responders.",
+      "elig": "People with physical disabilities; Operation Rebound for veterans",
+      "tags": [
+        "Adaptive Sports",
+        "Grants",
+        "Operation Rebound"
+      ],
+      "site": "https://www.challengedathletes.org"
+    },
+    {
+      "code": "REC-04",
+      "name": "Project Healing Waters Fly Fishing",
+      "ein": "61-1518154",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Uses fly fishing, fly tying, and rod building as therapeutic recreation for disabled active-military and veterans; equipment and trips provided at no cost.",
+      "elig": "Disabled active-duty military & veterans, all eras",
+      "tags": [
+        "Fly Fishing",
+        "Recreation",
+        "Healing"
+      ],
+      "site": "https://projecthealingwaters.org"
+    },
+    {
+      "code": "REC-05",
+      "name": "Warriors & Quiet Waters Foundation",
+      "ein": "20-8837637",
+      "cats": [
+        "REC"
+      ],
+      "scope": "Regional",
+      "states": [
+        "MT"
+      ],
+      "era": "post911",
+      "desc": "Montana-based retreats offering fly fishing, hunting, and photography experiences in nature for post-9/11 combat veterans and their families.",
+      "elig": "Post-9/11 combat veterans & their loved ones",
+      "tags": [
+        "Retreat",
+        "Fly Fishing",
+        "Nature"
+      ],
+      "site": "https://www.warriorsandquietwaters.org"
+    },
+    {
+      "code": "REC-06",
+      "name": "Higher Ground (Sun Valley)",
+      "ein": "82-0512146",
+      "cats": [
+        "REC"
+      ],
+      "scope": "Regional",
+      "states": [
+        "ID"
+      ],
+      "era": "all-era",
+      "desc": "Idaho-based adaptive recreation and therapy programs for veterans, first responders, and people with disabilities.",
+      "elig": "Veterans, first responders & people with disabilities",
+      "tags": [
+        "Adaptive Sports",
+        "Retreat",
+        "Recreation"
+      ],
+      "site": "https://highergroundusa.org"
+    },
+    {
+      "code": "REC-07",
+      "name": "Heroes on the Water",
+      "ein": "13-4367788",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "No-cost kayak-fishing outings for veterans, active-duty service members, first responders, and their families, run through volunteer-led local chapters nationwide.",
+      "elig": "Veterans, active-duty, first responders & families",
+      "tags": [
+        "Kayak Fishing",
+        "Recreation",
+        "Chapters"
+      ],
+      "site": "https://heroesonthewater.org"
+    },
+    {
+      "code": "REC-08",
+      "name": "Operation Second Chance",
+      "ein": "20-2624345",
+      "cats": [
+        "REC",
+        "FIN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides emergency financial assistance and all-inclusive retreats to wounded, injured, and ill combat veterans and their families.",
+      "elig": "Wounded/injured/ill combat veterans (aid often 70%+ rating) & families",
+      "tags": [
+        "Retreats",
+        "Financial Aid",
+        "Wounded Warriors"
+      ],
+      "site": "https://operationsecondchance.org"
+    },
+    {
+      "code": "REC-09",
+      "name": "Outward Bound Veterans",
+      "ein": "04-2375956",
+      "cats": [
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Wilderness expedition courses for veterans and eligible active-duty service members to rebuild camaraderie, confidence, and clarity for civilian life. Tuition covered.",
+      "elig": "Veterans & eligible active-duty service members",
+      "tags": [
+        "Wilderness",
+        "Expeditions",
+        "Transition"
+      ],
+      "site": "https://www.outwardbound.org"
+    },
+    {
+      "code": "FAM-01",
+      "name": "Elizabeth Dole Foundation",
+      "ein": "45-4292692",
+      "cats": [
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Supports and empowers military and veteran caregivers and their families through advocacy, research, and support programs. Runs the Hidden Heroes campaign.",
+      "elig": "Military & veteran caregivers and their families",
+      "tags": [
+        "Caregivers",
+        "Hidden Heroes"
+      ],
+      "site": "https://www.elizabethdolefoundation.org"
+    },
+    {
+      "code": "FAM-02",
+      "name": "Blue Star Families",
+      "ein": "80-0369895",
+      "cats": [
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "National network supporting military and veteran families through local chapters, research, and connection programs.",
+      "elig": "Military & veteran families",
+      "tags": [
+        "Military Families",
+        "Community"
+      ],
+      "site": "https://bluestarfam.org"
+    },
+    {
+      "code": "FAM-03",
+      "name": "Fisher House Foundation",
+      "ein": "11-3158401",
+      "cats": [
+        "FAM",
+        "HSG"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides free lodging for military and veteran families while a loved one receives treatment at a military or VA medical center.",
+      "elig": "Families of hospitalized service members & veterans",
+      "tags": [
+        "Lodging",
+        "Families"
+      ],
+      "site": "https://www.fisherhouse.org"
+    },
+    {
+      "code": "FAM-04",
+      "name": "National Military Family Association",
+      "ein": "52-0899384",
+      "cats": [
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Advocates for and supports military families with programs including spouse scholarships, caregiver support, and Operation Purple camps.",
+      "elig": "Military & veteran families",
+      "tags": [
+        "Military Families",
+        "Scholarships"
+      ],
+      "site": "https://www.militaryfamily.org"
+    },
+    {
+      "code": "SUR-01",
+      "name": "Tragedy Assistance Program for Survivors (TAPS)",
+      "ein": "92-0152268",
+      "cats": [
+        "SUR",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides peer-based emotional support, grief resources, casework, and a 24/7 helpline to families grieving the death of a military loved one.",
+      "elig": "Surviving family & loved ones of fallen service members",
+      "tags": [
+        "Grief Support",
+        "Survivors",
+        "24/7 Line"
+      ],
+      "site": "https://www.taps.org"
+    },
+    {
+      "code": "SUR-02",
+      "name": "Snowball Express (Gary Sinise Foundation)",
+      "ein": null,
+      "cats": [
+        "SUR",
+        "FAM"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "A program of the Gary Sinise Foundation providing retreats, events, and year-round support to the surviving children and spouses of fallen military heroes. Operates as a program (no separate EIN).",
+      "elig": "Surviving children & spouses of post-9/11 fallen service members",
+      "tags": [
+        "Gold Star Kids",
+        "Retreats"
+      ],
+      "site": "https://www.garysinisefoundation.org/snowball-express"
+    },
+    {
+      "code": "LEG-01",
+      "name": "Veterans Legal Institute",
+      "ein": "47-1608069",
+      "cats": [
+        "LEG",
+        "BEN"
+      ],
+      "scope": "State",
+      "states": [
+        "CA"
+      ],
+      "era": "all-era",
+      "desc": "Public interest law firm providing free legal aid to low-income, homeless, disabled, and at-risk current and former service members in Southern California.",
+      "elig": "Low-income California veterans & service members",
+      "tags": [
+        "Legal Aid",
+        "Housing",
+        "Claims"
+      ],
+      "site": "https://www.vetslegal.org"
+    },
+    {
+      "code": "LEG-02",
+      "name": "Swords to Plowshares",
+      "ein": "94-2260626",
+      "cats": [
+        "LEG",
+        "HSG"
+      ],
+      "scope": "Regional",
+      "states": [
+        "CA"
+      ],
+      "era": "all-era",
+      "desc": "Bay Area veterans nonprofit offering free legal services, housing, employment, and benefits assistance to veterans in need.",
+      "elig": "Bay Area / California veterans",
+      "tags": [
+        "Legal Aid",
+        "Housing",
+        "Benefits"
+      ],
+      "site": "https://www.swords-to-plowshares.org"
+    },
+    {
+      "code": "LEG-03",
+      "name": "Connecticut Veterans Legal Center",
+      "ein": "27-0963659",
+      "cats": [
+        "LEG",
+        "HSG"
+      ],
+      "scope": "State",
+      "states": [
+        "CT"
+      ],
+      "era": "all-era",
+      "desc": "Connecticut nonprofit providing free legal assistance to help low-income veterans overcome barriers to housing, healthcare, and income.",
+      "elig": "Low-income Connecticut veterans",
+      "tags": [
+        "Legal Aid",
+        "Housing",
+        "Benefits"
+      ],
+      "site": "https://ctveteranslegal.org"
+    },
+    {
+      "code": "LEG-04",
+      "name": "ABA Veterans' Claims Assistance Network (VCAN)",
+      "ein": null,
+      "cats": [
+        "LEG",
+        "BEN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "American Bar Association program connecting unrepresented veterans with volunteer attorneys who help complete VA disability claims for expedited review, at no cost.",
+      "elig": "Unrepresented VA disability claimants",
+      "tags": [
+        "Legal",
+        "Claims",
+        "Pro Bono"
+      ],
+      "site": "https://www.americanbar.org/groups/legal_services/milvets/aba_home_front/Military_Pro_Bono/aba-veterans-claims-and-assistance-network/"
+    },
+    {
+      "code": "PUR-01",
+      "name": "Team Rubicon",
+      "ein": "27-1720480",
+      "cats": [
+        "PUR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Mobilizes veterans to serve communities by responding to disasters and humanitarian crises, giving them renewed purpose.",
+      "elig": "Veterans & civilian volunteers",
+      "tags": [
+        "Disaster Response",
+        "Volunteer"
+      ],
+      "site": "https://teamrubiconusa.org"
+    },
+    {
+      "code": "PUR-02",
+      "name": "The Mission Continues",
+      "ein": "20-8742553",
+      "cats": [
+        "PUR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Empowers veterans to continue serving through community service platoons and local volunteer projects in under-resourced communities.",
+      "elig": "Veterans (all eras)",
+      "tags": [
+        "Volunteer",
+        "Community Service"
+      ],
+      "site": "https://www.missioncontinues.org"
+    },
+    {
+      "code": "PUR-03",
+      "name": "Team Red White & Blue (Team RWB)",
+      "ein": "27-2196347",
+      "cats": [
+        "PUR",
+        "REC"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Enriches veterans' lives through a health and wellness community built on physical, social, and community activity.",
+      "elig": "Veterans & community members",
+      "tags": [
+        "Health & Wellness",
+        "Community"
+      ],
+      "site": "https://www.teamrwb.org"
+    },
+    {
+      "code": "POP-01",
+      "name": "Women Veterans Alliance",
+      "ein": null,
+      "cats": [
+        "POP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Membership network connecting and empowering women veterans through community, events, and resources.",
+      "elig": "Women veterans",
+      "tags": [
+        "Women Veterans",
+        "Network"
+      ],
+      "site": "https://www.womenveteransalliance.com"
+    },
+    {
+      "code": "POP-02",
+      "name": "Grace After Fire",
+      "ein": "46-3653209",
+      "cats": [
+        "POP",
+        "MH"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides women veterans peer support, wellness programs, financial resiliency (STARS), and community resource navigation.",
+      "elig": "Women veterans",
+      "tags": [
+        "Women Veterans",
+        "Peer Support"
+      ],
+      "site": "https://graceafterfire.org"
+    },
+    {
+      "code": "POP-03",
+      "name": "National Association of Black Veterans (NABVETS)",
+      "ein": "90-0400517",
+      "cats": [
+        "POP",
+        "BEN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Serves Black and other veterans since 1969 with benefits claims assistance, advocacy, and community programs through chapters nationwide.",
+      "elig": "Black veterans (open to all veterans)",
+      "tags": [
+        "Black Veterans",
+        "Claims Help"
+      ],
+      "site": "https://nabvetsnational.org"
+    },
+    {
+      "code": "POP-04",
+      "name": "Iraq and Afghanistan Veterans of America (IAVA)",
+      "ein": "20-1664531",
+      "cats": [
+        "POP",
+        "BEN"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "post911",
+      "desc": "Advocacy and support organization for post-9/11 veterans, providing case management, benefits navigation, and policy advocacy.",
+      "elig": "Post-9/11 veterans",
+      "tags": [
+        "Post-9/11",
+        "Advocacy",
+        "Case Management"
+      ],
+      "site": "https://iava.org"
+    },
+    {
+      "code": "POP-05",
+      "name": "SPARTA Pride",
+      "ein": "46-3921146",
+      "cats": [
+        "POP"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Advocacy and peer-support community for transgender and LGBTQ+ military service members, veterans, and their families.",
+      "elig": "LGBTQ+ service members & veterans",
+      "tags": [
+        "LGBTQ+",
+        "Transgender",
+        "Peer Support"
+      ],
+      "site": "https://spartapride.org"
+    },
+    {
+      "code": "MOR-01",
+      "name": "Veteran Tickets Foundation (Vet Tix)",
+      "ein": "26-2291955",
+      "cats": [
+        "MOR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides free tickets to sporting events, concerts, and other events to service members, veterans, and families of those killed in action.",
+      "elig": "Service members, veterans & families (incl. surviving KIA families)",
+      "tags": [
+        "Free Tickets",
+        "Events",
+        "Morale"
+      ],
+      "site": "https://www.vettix.org"
+    },
+    {
+      "code": "MOR-02",
+      "name": "United Service Organizations (USO)",
+      "ein": "13-1610451",
+      "cats": [
+        "MOR"
+      ],
+      "scope": "National",
+      "states": [],
+      "era": "all-era",
+      "desc": "Provides morale, welfare, and recreation services to active-duty service members and their families at centers worldwide, plus transition support.",
+      "elig": "Active-duty service members & their families",
+      "tags": [
+        "Morale",
+        "Troop Support"
+      ],
+      "site": "https://www.uso.org"
+    }
+  ];
+  /* ORGS:END */
+
+  const CAT_LABEL = {BEN:"Claims & Benefits",MH:"Mental Health",HSG:"Housing",FIN:"Financial",EMP:"Employment",EDU:"Education",K9:"Service Dogs",REC:"Recreation",FAM:"Family/Caregiver",SUR:"Survivors",LEG:"Legal Aid",PUR:"Purpose",POP:"Population-Specific",MOR:"Morale"};
+  const NEED_LABEL = {BEN:"Claims & Benefits",MH:"Mental Health & Suicide Prevention",HSG:"Housing & Homelessness",FIN:"Financial Assistance",EMP:"Employment & Career",EDU:"Education & Scholarships",K9:"Service Dogs",REC:"Recreation & Healing",FAM:"Family & Caregiver",SUR:"Survivors / Gold Star",LEG:"Legal Aid",PUR:"Purpose After Service",POP:"Population-Specific",MOR:"Morale & Tickets"};
+  const NEED_ORDER = ["BEN","MH","HSG","FIN","EMP","EDU","K9","REC","FAM","SUR","LEG","PUR","POP","MOR"];
+  const STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"];
+
+  const $ = id => document.getElementById(id);
+  const roster = $("roster"), countEl = $("count"), sortNote = $("sortNote");
+  const needSel = $("need"), eraSel = $("era"), qInput = $("q"), resetBtn = $("reset");
+  const matchBanner = $("matchBanner");
+
+  let matchMode = null; // null in filter mode, else {need,era,state,crisis}
+
+  function verifyUrl(o){
+    if(o.ein){ return "https://projects.propublica.org/nonprofits/organizations/" + o.ein.replace(/\D/g,""); }
+    return "https://projects.propublica.org/nonprofits/search?q=" + encodeURIComponent(o.name);
+  }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  function cardHTML(o){
+    const tags = o.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("");
+    return `<article class="card">
+      <div class="card-top">
+        <div class="code-chip">${esc(o.code)}</div>
+        <div class="scope-tag">${esc(o.scope)}${o.scope!=="National"&&o.states.length?" · "+esc(o.states.join(", ")):""}</div>
+      </div>
+      <div class="card-body">
+        <h3>${esc(o.name)}</h3>
+        <p class="desc">${esc(o.desc)}</p>
+        <div class="meta">
+          <div class="row"><span class="k">Eligibility</span><span class="v">${esc(o.elig)}</span></div>
+          <div class="row"><span class="k">Category</span><span class="v">${o.cats.map(c=>esc(CAT_LABEL[c]||c)).join(" · ")}</span></div>
+        </div>
+      </div>
+      <div class="tags">${tags}</div>
+      <div class="actions">
+        <a class="primary" href="${esc(o.site)}" target="_blank" rel="noopener">Contact</a>
+        <a href="${esc(o.site)}" target="_blank" rel="noopener">How to Apply</a>
+        <a href="${verifyUrl(o)}" target="_blank" rel="noopener">Verify (IRS)</a>
+      </div>
+    </article>`;
+  }
+
+  function paint(list, opts){
+    opts = opts || {};
+    countEl.textContent = String(list.length).padStart(3,"0");
+    let html = "";
+    if(opts.crisis){
+      html += `<div class="crisis-card">
+        <h3>You said this is urgent.</h3>
+        <p>You don't have to wait for a callback. The Veterans Crisis Line is free, confidential, and open 24/7 — you can call, text, or chat with someone who understands military life.</p>
+        <div class="lines">
+          <a href="tel:988">Call 988 · Press 1</a>
+          <a href="sms:838255">Text 838255</a>
+          <a href="https://www.veteranscrisisline.net/get-help-now/chat/" target="_blank" rel="noopener">Chat online</a>
+        </div>
+      </div>`;
+    }
+    if(list.length===0 && !opts.crisis){
+      roster.innerHTML = `<div class="empty">No assets match current criteria<small>Broaden your requirement or clear the keyword to see the full roster.</small></div>`;
+      return;
+    }
+    roster.innerHTML = html + list.map(cardHTML).join("");
+  }
+
+  function applyFilters(){
+    matchMode = null;
+    matchBanner.classList.remove("on");
+    sortNote.textContent = "SORTED: NATIONAL FIRST";
+    const need = needSel.value, era = eraSel.value, q = qInput.value.trim().toLowerCase();
+    let list = ORGS.filter(o=>{
+      if(need!=="all" && !o.cats.includes(need)) return false;
+      if(era==="post911" && o.era!=="post911") return false;
+      if(era==="all-era" && o.era!=="all-era") return false;
+      if(q){
+        const hay = (o.name+" "+o.desc+" "+o.tags.join(" ")+" "+o.elig+" "+o.cats.map(c=>CAT_LABEL[c]).join(" ")).toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    list.sort((a,b)=> (a.scope==="National"?0:1)-(b.scope==="National"?0:1));
+    paint(list);
+  }
+
+  [needSel,eraSel].forEach(el=>el.addEventListener("change",applyFilters));
+  qInput.addEventListener("input",applyFilters);
+  resetBtn.addEventListener("click",()=>{needSel.value="all";eraSel.value="all";qInput.value="";applyFilters();});
+
+  /* ===== GUIDED MATCH WIZARD ===== */
+  const wizOverlay=$("wizOverlay"), wizBody=$("wizBody"), wizProgress=$("wizProgress"),
+        wizBack=$("wizBack"), wizNext=$("wizNext");
+  const wiz = {step:0, need:null, era:null, state:"", crisis:null};
+  const STEPS = 4;
+
+  function openWiz(){ wiz.step=0; wiz.need=null; wiz.era=null; wiz.state=""; wiz.crisis=null; wizOverlay.classList.add("on"); document.body.style.overflow="hidden"; renderWiz(); $("wizClose").focus(); }
+  function closeWiz(){ wizOverlay.classList.remove("on"); document.body.style.overflow=""; }
+
+  function renderProgress(){
+    wizProgress.innerHTML = Array.from({length:STEPS},(_,i)=>
+      `<span class="${i<wiz.step?'done':i===wiz.step?'cur':''}"></span>`).join("");
+  }
+
+  function renderWiz(){
+    renderProgress();
+    let h="";
+    if(wiz.step===0){
+      h = `<div class="wiz-q">1 — What do you need most right now?</div>
+        <p class="wiz-hint">Pick the one that fits best. You can broaden the search after.</p>
+        <div class="wiz-opts">` +
+        NEED_ORDER.map(c=>`<button class="wiz-opt ${wiz.need===c?'sel':''}" data-need="${c}">${NEED_LABEL[c]}</button>`).join("") +
+        `</div>`;
+    } else if(wiz.step===1){
+      h = `<div class="wiz-q">2 — When did you serve?</div>
+        <p class="wiz-hint">Some organizations focus on post-9/11 service; most serve all eras.</p>
+        <div class="wiz-opts two">
+          <button class="wiz-opt ${wiz.era==='post911'?'sel':''}" data-era="post911">Post-9/11 (2001 or later)</button>
+          <button class="wiz-opt ${wiz.era==='pre911'?'sel':''}" data-era="pre911">Before 9/11</button>
+          <button class="wiz-opt ${wiz.era==='any'?'sel':''}" data-era="any">Any / all eras</button>
+          <button class="wiz-opt ${wiz.era==='unsure'?'sel':''}" data-era="unsure">Not sure</button>
+        </div>`;
+    } else if(wiz.step===2){
+      h = `<div class="wiz-q">3 — Where are you located?</div>
+        <p class="wiz-hint">Most organizations serve nationwide. Adding your state also surfaces local ones.</p>
+        <select class="wiz-state" id="wizState">
+          <option value="">— National is fine / any state —</option>` +
+          STATES.map(s=>`<option value="${s}" ${wiz.state===s?'selected':''}>${s}</option>`).join("") +
+        `</select>`;
+    } else if(wiz.step===3){
+      h = `<div class="wiz-q">4 — Are you in crisis or need help today?</div>
+        <p class="wiz-hint">If yes, we'll put the 24/7 Veterans Crisis Line at the top of your results.</p>
+        <div class="wiz-opts two">
+          <button class="wiz-opt ${wiz.crisis===true?'sel':''}" data-crisis="yes">Yes — I need help now</button>
+          <button class="wiz-opt ${wiz.crisis===false?'sel':''}" data-crisis="no">No — just looking</button>
+        </div>`;
+    }
+    wizBody.innerHTML = h;
+
+    wizBody.querySelectorAll("[data-need]").forEach(b=>b.onclick=()=>{wiz.need=b.dataset.need;renderWiz();});
+    wizBody.querySelectorAll("[data-era]").forEach(b=>b.onclick=()=>{wiz.era=b.dataset.era;renderWiz();});
+    wizBody.querySelectorAll("[data-crisis]").forEach(b=>b.onclick=()=>{wiz.crisis=(b.dataset.crisis==="yes");renderWiz();});
+    const ws=$("wizState"); if(ws) ws.onchange=()=>{wiz.state=ws.value;};
+
+    wizBack.disabled = wiz.step===0;
+    wizNext.textContent = wiz.step===STEPS-1 ? "See Matches ▶" : "Next ▶";
+    wizNext.disabled = !stepReady();
+  }
+
+  function stepReady(){
+    if(wiz.step===0) return !!wiz.need;
+    if(wiz.step===1) return !!wiz.era;
+    if(wiz.step===3) return wiz.crisis!==null;
+    return true; // step 2 (state) optional
+  }
+
+  wizBack.onclick=()=>{ if(wiz.step>0){wiz.step--;renderWiz();} };
+  wizNext.onclick=()=>{
+    if(!stepReady()) return;
+    if(wiz.step<STEPS-1){ wiz.step++; renderWiz(); }
+    else finishWiz();
+  };
+  $("wizOpen").onclick=openWiz;
+  $("wizClose").onclick=closeWiz;
+  wizOverlay.addEventListener("click",e=>{ if(e.target===wizOverlay) closeWiz(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape" && wizOverlay.classList.contains("on")) closeWiz(); });
+  wizOverlay.addEventListener("keydown",e=>{
+    if(e.key!=="Tab" || !wizOverlay.classList.contains("on")) return;
+    const f=[...wizOverlay.querySelectorAll('button:not([disabled]),select,a[href]')].filter(el=>el.offsetParent!==null);
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ last.focus(); e.preventDefault(); }
+    else if(!e.shiftKey && document.activeElement===last){ first.focus(); e.preventDefault(); }
+  });
+
+  function eraWanted(w){ // map wizard era answer to record era preference
+    if(w==='post911') return 'post911';
+    if(w==='pre911' || w==='any') return 'all-era';
+    return null; // unsure -> no era ranking
+  }
+
+  function finishWiz(){
+    const wantEra = eraWanted(wiz.era);
+    matchMode = {need:wiz.need, era:wiz.era, state:wiz.state, crisis:wiz.crisis};
+
+    let list = ORGS.filter(o=>{
+      if(o.cats.indexOf(wiz.need)===-1) return false;
+      if(wiz.state && o.scope!=="National" && o.states.indexOf(wiz.state)===-1) return false;
+      if(wiz.era==="pre911" && o.era==="post911") return false; // a pre-9/11 vet isn't eligible for post-9/11-only orgs
+      return true;
+    });
+
+    const score = o=>{
+      let s=0;
+      if(o.cats[0]===wiz.need) s+=3;                                   // primary-need org outranks a secondary tag
+      if(wantEra==='post911' && o.era==='post911') s+=2;              // era-specific org for a post-9/11 vet
+      if(wantEra==='all-era' && o.era==='all-era') s+=1;
+      if(wiz.state && o.scope!=="National" && o.states.indexOf(wiz.state)!==-1) s+=2; // local to the user
+      if(wiz.crisis && (o.cats.indexOf("MH")!==-1 || o.tags.some(t=>/crisis|suicide/i.test(t)))) s+=5;
+      return s;
+    };
+    list.sort((a,b)=> score(b)-score(a) || (a.scope==="National"?0:1)-(b.scope==="National"?0:1));
+
+    // reflect the primary need in the filter controls for consistency
+    needSel.value = wiz.need; eraSel.value = "all"; qInput.value = "";
+    sortNote.textContent = "SORTED: BEST MATCH FIRST";
+
+    const chips = [NEED_LABEL[wiz.need]];
+    if(wiz.era==='post911') chips.push("Post-9/11");
+    if(wiz.era==='pre911') chips.push("Pre-9/11");
+    if(wiz.state) chips.push(wiz.state);
+    if(wiz.crisis) chips.push("Urgent");
+    matchBanner.innerHTML =
+      `<span>◣ Guided Match</span>
+       <div class="chips">${chips.map(c=>`<span class="chip">${esc(c)}</span>`).join("")}</div>
+       <button class="clear" id="matchClear">Clear match ✕</button>`;
+    matchBanner.classList.add("on");
+    $("matchClear").onclick=()=>{ needSel.value="all"; applyFilters(); };
+
+    paint(list, {crisis:wiz.crisis});
+    closeWiz();
+    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    matchBanner.scrollIntoView({behavior: smooth ? "smooth" : "auto", block:"start"});
+  }
+
+  applyFilters();
+</script>
+</body>
+</html>

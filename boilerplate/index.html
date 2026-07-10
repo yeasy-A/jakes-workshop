@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1b140d">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Boilerplate">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jake's Workshop">
+<meta property="og:title" content="Boilerplate — the Prompt Engine">
+<meta property="og:description" content="Bolt a prefab prompt onto the end of your query — built from real mistakes, so you skip them. Pick, combine, copy, paste.">
+<meta property="og:image" content="og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Boilerplate — the Prompt Engine">
+<meta name="twitter:description" content="Bolt a prefab prompt onto the end of your query — built from real mistakes, so you skip them.">
+<meta name="twitter:image" content="og.png">
+<title>Boilerplate — the Prompt Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#1b140d; --bg2:#120d08; --card:#241a10; --card-2:#2b2013;
+    --ink:#f0e0c0; --ink-soft:#b8a684; --ink-faint:#8a795e;
+    --brass:#c9982e; --copper:#b8733a; --verdigris:#5a8a72;
+    --line:#4a3820; --line-lo:#3a2c18;
+    --shadow:0 18px 34px -20px rgba(0,0,0,.7),0 4px 12px -6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,220,160,.05);
+    --font-head:'Cinzel',Georgia,serif; --font-mono:'Space Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:var(--font-mono); color:var(--ink); background:
+      radial-gradient(700px 320px at 50% -100px, rgba(201,152,46,.14), transparent 65%),
+      radial-gradient(circle at 1px 1px, rgba(201,152,46,.10) 1px, transparent 0) 0 0/24px 24px,
+      linear-gradient(165deg,var(--bg1),var(--bg2));
+    background-attachment:fixed; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .home{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;text-decoration:none;font-size:18px;
+    background:var(--card);border:1px solid var(--line);color:var(--brass);box-shadow:var(--shadow)}
+  header{text-align:center;margin-bottom:22px}
+  header .mk{width:72px;height:72px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;font-size:38px;
+    background:radial-gradient(circle at 32% 26%,#3a2b16,#1c140b 70%);
+    border:1px solid var(--brass);box-shadow:0 0 0 4px rgba(201,152,46,.12),0 16px 30px -14px rgba(0,0,0,.8),inset 0 2px 0 rgba(255,220,160,.08);
+    animation:spin 22s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  header h1{font-family:var(--font-head);font-size:29px;letter-spacing:.5px;margin:2px 0 6px;font-weight:700;color:var(--brass);
+    text-shadow:0 2px 0 rgba(0,0,0,.5)}
+  header p{color:var(--ink-soft);margin:0 auto;font-size:13.5px;max-width:40ch;line-height:1.5}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin-bottom:18px;position:relative}
+  .panel::before{content:"";position:absolute;top:10px;left:10px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e8c877,var(--copper));box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+  .panel::after{content:"";position:absolute;top:10px;right:10px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e8c877,var(--copper));box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+  .panel h2{font-family:var(--font-head);font-size:15px;letter-spacing:1px;text-transform:uppercase;color:var(--brass);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .panel .sub{color:var(--ink-faint);font-size:12px;margin:-6px 0 14px;line-height:1.5}
+
+  textarea#queryIn{width:100%;min-height:84px;resize:vertical;background:var(--bg1);border:1px solid var(--line);border-radius:12px;
+    color:var(--ink);font-family:var(--font-mono);font-size:14px;line-height:1.5;padding:12px;outline:none}
+  textarea#queryIn:focus{border-color:var(--brass)}
+  textarea#queryIn::placeholder{color:var(--ink-faint)}
+
+  .selectedRow{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .selectedRow .chip{display:flex;align-items:center;gap:5px;background:var(--card-2);border:1px solid var(--copper);color:var(--ink);
+    border-radius:999px;padding:4px 10px 4px 12px;font-size:12px}
+  .selectedRow .chip button{all:unset;cursor:pointer;color:var(--ink-faint);font-weight:700;padding:0 2px}
+  .selectedRow .empty{color:var(--ink-faint);font-size:12.5px;font-style:italic}
+
+  #preview{width:100%;min-height:70px;background:var(--bg1);border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);
+    font-family:var(--font-mono);font-size:13px;line-height:1.55;padding:12px;white-space:pre-wrap;word-break:break-word}
+
+  .btnRow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  button.big, .big{cursor:pointer;border:none;border-radius:12px;padding:13px 18px;font-family:var(--font-mono);font-weight:700;
+    font-size:14px;letter-spacing:.3px;display:inline-flex;align-items:center;gap:8px;transition:transform .12s,box-shadow .12s}
+  button.primary{background:linear-gradient(160deg,#e0ac48,var(--copper));color:#241608;
+    box-shadow:0 10px 22px -10px rgba(201,152,46,.55),inset 0 1px 0 rgba(255,255,255,.35)}
+  button.primary:active{transform:translateY(1px) scale(.99)}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft)}
+  button.ghost:active{transform:translateY(1px)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+
+  .toolsRow{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  input#search{flex:1;min-width:160px;background:var(--bg1);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+    font-family:var(--font-mono);font-size:13.5px;padding:11px 12px;outline:none}
+  input#search:focus{border-color:var(--brass)}
+  input#search::placeholder{color:var(--ink-faint)}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .catchip{cursor:pointer;user-select:none;background:var(--card-2);border:1px solid var(--line-lo);color:var(--ink-soft);
+    border-radius:999px;padding:6px 12px;font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+  .catchip.on{background:color-mix(in srgb,var(--copper) 25%,var(--card-2));border-color:var(--copper);color:var(--ink)}
+  .catchip:active{transform:scale(.96)}
+
+  #grid{display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:15px;
+    opacity:0;transform:translateY(9px);animation:rise .4s cubic-bezier(.2,.8,.2,1) forwards}
+  .card.added{border-color:var(--copper);box-shadow:0 0 0 1px var(--copper),var(--shadow)}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .card .hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .card .ttl{font-family:var(--font-head);font-weight:700;font-size:16px;color:var(--ink);display:flex;align-items:center;gap:7px}
+  .card .star{color:var(--brass);font-size:12px}
+  .card .badge{flex:0 0 auto;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--verdigris);
+    background:rgba(90,138,114,.12);border:1px solid rgba(90,138,114,.35);border-radius:999px;padding:3px 9px;white-space:nowrap}
+  .card .blurb{color:var(--ink-soft);font-size:12.5px;line-height:1.5;margin-bottom:10px}
+  .card .plate{background:var(--bg1);border:1px solid var(--line-lo);border-radius:10px;padding:11px 12px;font-size:13px;
+    line-height:1.55;color:var(--ink);white-space:pre-wrap;word-break:break-word;margin-bottom:10px}
+  .card .row{display:flex;gap:8px;flex-wrap:wrap}
+  .card button.sm{cursor:pointer;border-radius:10px;padding:8px 12px;font-family:var(--font-mono);font-size:12.5px;font-weight:700;
+    border:1px solid var(--line);background:var(--card-2);color:var(--ink-soft);display:inline-flex;align-items:center;gap:6px}
+  .card button.sm.copy{color:var(--brass);border-color:var(--copper)}
+  .card button.sm.add.on{background:var(--copper);color:#241608;border-color:var(--copper)}
+  .card button.sm:active{transform:scale(.97)}
+
+  #empty{text-align:center;color:var(--ink-faint);font-size:13px;padding:30px 10px;font-style:italic}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--brass);color:#241608;
+    font-weight:700;font-size:13px;padding:10px 18px;border-radius:999px;box-shadow:0 14px 28px -10px rgba(0,0,0,.6);
+    opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:50;font-family:var(--font-mono)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  footer{text-align:center;color:var(--ink-faint);font-size:12px;margin-top:8px;line-height:1.7}
+  footer .wm{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--ink-soft);opacity:.85;margin-bottom:4px}
+
+  @media (hover:hover){
+    .catchip:hover{border-color:var(--copper)}
+    .card button.sm:hover{border-color:var(--copper)}
+    button.primary:hover{box-shadow:0 14px 26px -10px rgba(201,152,46,.7),inset 0 1px 0 rgba(255,255,255,.35)}
+  }
+  @media (prefers-reduced-motion:reduce){.card{animation:none;opacity:1;transform:none}header .mk{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="home" href="../" aria-label="Jake's Workshop">🏠</a>
+    <div></div>
+  </div>
+  <header>
+    <div class="mk">⚙️</div>
+    <h1>Boilerplate</h1>
+    <p>Prefab prompt fittings, forged from real mistakes. Pick one, bolt it onto your query, copy the finished line.</p>
+  </header>
+
+  <div class="panel">
+    <h2>🧭 The Hopper — load your query</h2>
+    <div class="sub">Type what you actually want. Then pull fittings off the shelf below to bolt onto the end of it — each one closes off a specific way this could've gone wrong.</div>
+    <textarea id="queryIn" placeholder="e.g. Add a login page to my app…"></textarea>
+    <div class="selectedRow" id="selectedRow"><span class="empty">No fittings loaded yet — tap “+ Add” on any card below.</span></div>
+    <div id="preview"></div>
+    <div class="btnRow">
+      <button class="big primary" id="copyFinal">📋 Copy finished query</button>
+      <button class="big ghost" id="clearAll">Clear all</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>🔩 The Shelf — browse the fittings</h2>
+    <div class="sub">29 prompts across 8 kinds of mistake. ★ = the ones most worth knowing, audited for clarity by a second model pass.</div>
+    <div class="toolsRow">
+      <input id="search" type="text" placeholder="Search prompts… (e.g. “bug”, “honest”, “done”)">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div id="grid"></div>
+    <div id="empty" style="display:none">Nothing matches that search — try a different word, or clear the filter.</div>
+  </div>
+
+  <footer><span class="wm">🧰 Jake's Workshop</span><br>Free · no sign-up · works on your phone.<br>Nothing you type here leaves your browser.</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+const CATS = [
+  {key:"calibrate",  ico:"🧭", label:"Calibrate",        desc:"Pin down scope before anything gets built."},
+  {key:"root-cause", ico:"🔥", label:"Root Cause",        desc:"Diagnose before you patch."},
+  {key:"straight",   ico:"🗣️", label:"Straight Talk",     desc:"No flattery, no hedging, no deference."},
+  {key:"disclose",   ico:"🔓", label:"Full Disclosure",   desc:"Surface constraints and options, don't hide them."},
+  {key:"verify",     ico:"🔍", label:"Verify, Don't Trust", desc:"Evidence over claims."},
+  {key:"voices",     ico:"👥", label:"Many Voices",       desc:"Keep real disagreement on the table."},
+  {key:"delegate",   ico:"⚡", label:"Delegation & Scale", desc:"Make division of labor explicit, not implied."},
+  {key:"write",      ico:"✒️", label:"Think & Write",     desc:"Everyday clarity for code, text, and thinking."},
+];
+
+// text: what gets copied / appended to your query. blurb: what it does & when to reach for it.
+const PROMPTS = [
+  // ---- Calibrate ----
+  {id:"interrogate-intent", cat:"calibrate", star:true, title:"Interrogate My Intent",
+   blurb:"Forces real clarifying questions before any work starts — for when the ask is bigger or vaguer than a one-liner.",
+   text:"Before acting on any of the above, interrogate it until there are zero holes or ambiguity in what I want. Ask however many clarifying questions you need — under-asking is worse than over-asking. Pair each question with a real suggestion so I'm choosing from options, not inventing from scratch. Don't start the task until you tell me you're ready and I say go."},
+  {id:"define-done", cat:"calibrate", star:true, title:"Define Done First",
+   blurb:"Prevents building the wrong thing by making 'finished' concrete before work starts.",
+   text:"Before you start, state back what \"done\" looks like for this — the concrete deliverable, its format, and how I'll know it's finished. If there's more than one reasonable reading of what I asked for, ask me now instead of guessing and building the wrong thing."},
+  {id:"state-the-bar", cat:"calibrate", star:true, title:"Name the Quality Bar",
+   blurb:"Stops padding-for-volume by making the actual quality target explicit up front.",
+   text:"Before you build, name the quality bar — two or three concrete things that separate \"good\" from \"merely works\" for this task. Then hold every choice to it: if something doesn't serve the bar, cut it — don't add volume or unrelated polish to look thorough."},
+  {id:"combinable-options", cat:"calibrate", star:false, title:"Let Me Combine Options",
+   blurb:"Fixes forced single-choice questions when the real answer is 'more than one of these.'",
+   text:"When you ask me to choose between options that aren't mutually exclusive, let me pick more than one — don't force a single-select choice on things I might want combined."},
+  {id:"build-feature", cat:"calibrate", star:false, title:"Build a Feature",
+   blurb:"A tight brief format for 'add this feature' asks: definition of done, smallest version, phased plan.",
+   text:"I want to build: <FEATURE>.\n1. One-sentence definition of DONE.\n2. The smallest shippable version — cut everything else.\n3. A phased task list, each task under 1 hour, in order.\n4. The very first file/command to start right now.\nFavor my existing stack — ask if you don't know it yet, and default to sticking with it over introducing something new. Bias to FINISHING over a perfect design. Flag the #1 risk up front."},
+
+  // ---- Root Cause ----
+  {id:"fix-bug", cat:"root-cause", star:true, title:"Fix the Root Cause",
+   blurb:"Stops band-aid fixes — asks for the actual cause, not just the patch.",
+   text:"There's a bug: <WHAT HAPPENS> vs <WHAT SHOULD HAPPEN>. Find the ROOT CAUSE, not a band-aid. Then give me: 1) the smallest correct fix, 2) why it happened, 3) one way to prevent the whole class of bug. If you're unsure, ask for a file or to run a command — don't guess."},
+  {id:"debug-error", cat:"root-cause", star:false, title:"Debug This Error",
+   blurb:"Turns a raw stack trace into a diagnosis instead of a guess.",
+   text:"I'm getting this error:\n<PASTE ERROR / STACK TRACE>\nDiagnose it step by step, give me the most likely cause and the exact fix. If you need to see a specific file, ask for it by path."},
+  {id:"check-logs-first", cat:"root-cause", star:true, title:"Check the Logs First",
+   blurb:"For 'it's silently doing nothing' bugs — stops theorizing before reading the tool's own error output.",
+   text:"If something is silently failing or doing nothing, don't theorize from the symptom — go find the tool's own error output first (logs, parser errors, exit codes, stack traces) and diagnose from there. A guess dressed as a diagnosis costs more than reading the log."},
+  {id:"restart-scope", cat:"root-cause", star:true, title:"Name the Restart Scope",
+   blurb:"Kills the classic 'it's not working' that's actually 'it never reloaded' — makes the fix's activation step explicit.",
+   text:"After you make a change, tell me exactly what has to happen for it to take effect — a hot-reload, a soft restart, or a full process restart — and which kind this change was. Don't assume I already know."},
+  {id:"touch-only-what-i-asked", cat:"root-cause", star:true, title:"Touch Only What I Asked",
+   blurb:"Blocks drive-by refactors and stray file edits — the single most common way a small task turns into a big diff.",
+   text:"Make the smallest change that does the job. Don't refactor, reformat, or \"improve\" anything outside what I asked for — no unrelated cleanup, renames, or style passes. List every file you touched so I can see the actual blast radius."},
+
+  // ---- Straight Talk ----
+  {id:"no-flattery", cat:"straight", star:true, title:"Skip the Flattery",
+   blurb:"Cuts padding and hedged reassurance so praise (and warnings) actually mean something.",
+   text:"Skip the flattery and hedged reassurance — no \"great question,\" no softening bad news. If something's wrong, weak, or won't work, say so plainly and say why. Only tell me something's good when you actually mean it."},
+  {id:"no-expert-deference", cat:"straight", star:true, title:"Skip the Expert-Deference",
+   blurb:"Stops generic-authority hedging so you get an actual position instead of a shrug.",
+   text:"Don't pad this with \"consult an expert\" boilerplate or default to generic authority. Give me your actual reasoning and your real position, straight, and let me decide what to do with it."},
+  {id:"decision-helper", cat:"straight", star:false, title:"Help Me Decide",
+   blurb:"Forces a real recommendation instead of a wishy-washy 'it depends.'",
+   text:"Help me decide: <OPTIONS>. Lay out the real criteria, the tradeoffs of each, then give me YOUR pick and why. Be direct — no \"it depends\" cop-outs. Flag what I might be avoiding."},
+  {id:"devils-advocate", cat:"straight", star:false, title:"Argue Against This",
+   blurb:"A stress-test pass — attacks the plan before reality does.",
+   text:"Argue HARD against this plan: <PLAN>. Find every hole, hidden cost, and way it fails. Then tell me honestly whether it still survives — and what to change so it does."},
+
+  // ---- Full Disclosure ----
+  {id:"surface-unlock", cat:"disclose", star:true, title:"Surface the Unlock",
+   blurb:"Stops silent downgrades — names the real fix alongside any workaround.",
+   text:"If a limitation is forcing you into a worse approach, name the fix that would remove the limitation — a missing install, a config flag, a bigger model, a paid tier — in the same breath as the workaround. Don't silently default to the degraded path without telling me a better one exists."},
+  {id:"state-constraints", cat:"disclose", star:true, title:"Get My Constraints First",
+   blurb:"Front-loads budget/deadline/off-limits questions so you don't build something that has to be unwound.",
+   text:"Before proposing anything, ask me for the hard constraints you don't have yet — budget, deadline, tools that are off-limits, things that must never happen. I'd rather answer a question now than have you build something I have to unwind later."},
+  {id:"code-review", cat:"disclose", star:false, title:"Review My Changes",
+   blurb:"High-signal review — real bugs and easy wins only, no nitpick noise.",
+   text:"Review my current changes for real bugs and easy simplifications. High-confidence findings only — skip nitpicks. For each: file:line, what's wrong, and the fix."},
+
+  // ---- Verify, Don't Trust ----
+  {id:"show-dont-tell", cat:"verify", star:true, title:"Show Me, Don't Tell Me",
+   blurb:"Turns claims into evidence — \"it works\" means \"I checked,\" and anything unchecked gets named.",
+   text:"Don't just tell me it works — show me. Run the test, open the render, print the actual output, and give me a real path or link I can check myself. If there's a piece you didn't verify, say so explicitly — \"it should work\" is not \"I checked and it does.\""},
+  {id:"write-tests", cat:"verify", star:false, title:"Write Tests For This",
+   blurb:"Gets coverage on the paths that actually break, not just the happy path.",
+   text:"Write tests for <WHAT>. Cover the happy path plus the edge cases that actually break things. Tell me what can't easily be tested and why."},
+
+  // ---- Many Voices ----
+  {id:"preserve-dissent", cat:"voices", star:true, title:"Preserve the Dissent",
+   blurb:"Stops multi-perspective answers from collapsing into one bland average.",
+   text:"When you give me multiple perspectives or options, keep them genuinely distinct — don't average them into a bland consensus. Tell me exactly where they disagree and why, then give me your own take, clearly labeled as yours, not theirs."},
+  {id:"brainstorm", cat:"voices", star:false, title:"Brainstorm Wide",
+   blurb:"A volume pass before a judgment pass — generate first, filter second.",
+   text:"Brainstorm 10 angles on: <TOPIC>. Mix wild and practical. Don't filter or judge yet — just generate. Then star the 2 you'd bet on."},
+
+  // ---- Delegation & Scale ----
+  {id:"mandate-not-suggest", cat:"delegate", star:true, title:"Mandate, Don't Suggest",
+   blurb:"For prompts that direct other agents or steps — makes every hand-off an explicit order, never a suggestion.",
+   text:"When you're the one directing other steps, agents, or people, make the division of labor an explicit instruction, not a suggestion — \"you must do X, then Y\" beats \"consider doing X.\" Left with an opening, the easy path wins over the right one every time."},
+  {id:"refactor", cat:"delegate", star:false, title:"Refactor Without Breaking It",
+   blurb:"Keeps a cleanup pass small, reversible, and behavior-preserving.",
+   text:"Refactor <FILE OR AREA> for clarity and reuse WITHOUT changing behavior. Show me the plan (what changes + why) before editing. Keep it small and reversible. Don't add features."},
+
+  // ---- Think & Write ----
+  {id:"explain-code", cat:"write", star:false, title:"Explain This, Step by Step",
+   blurb:"A walkthrough pitched at 'smart but rusty,' not a beginner or a fellow expert.",
+   text:"Explain what <FILE OR FUNCTION> does, step by step, like I'm smart but rusty. Call out anything surprising or risky. End with \"the one thing to remember.\""},
+  {id:"rewrite-clearer", cat:"write", star:false, title:"Rewrite It Clearer",
+   blurb:"Tightens writing without flattening it into corporate voice.",
+   text:"Rewrite this to be clearer and tighter while keeping MY voice (don't make it corporate):\n<PASTE>"},
+  {id:"summarize", cat:"write", star:false, title:"Summarize With an Action",
+   blurb:"A summary that ends in a next step, not just a recap.",
+   text:"Summarize this into the key points plus the single action it implies:\n<PASTE>"},
+  {id:"email", cat:"write", star:false, title:"Draft an Email",
+   blurb:"Short, human, on-tone — with a subject line included.",
+   text:"Draft a <TONE: friendly / firm / brief> email about: <WHAT>. Keep it short and human. Give me a subject line too."},
+  {id:"capture-to-action", cat:"write", star:false, title:"Turn a Thought Into an Action",
+   blurb:"Converts a loose brain-dump line into one concrete next step and a home for it.",
+   text:"Take this raw thought and turn it into ONE concrete next action (verb + specific thing), plus where it belongs (which project/list):\n<THOUGHT>"},
+  {id:"plan-my-day", cat:"write", star:false, title:"Plan My Day",
+   blurb:"Turns an overwhelming brain-dump into one next action plus a parked-for-later list.",
+   text:"Here's my brain-dump: <PASTE EVERYTHING ON MY MIND>. Turn it into a tiny, ordered plan: the ONE next action, then the next few, and park the rest in a \"later\" list so I'm not overwhelmed. Be realistic — assume a distractible, overloaded brain, not a perfectly linear day."},
+];
+
+const $ = s => document.querySelector(s);
+const grid = $("#grid"), chipsEl = $("#chips"), searchEl = $("#search"), emptyEl = $("#empty");
+const queryIn = $("#queryIn"), preview = $("#preview"), selectedRow = $("#selectedRow");
+const toast = $("#toast");
+
+let activeCat = "all";     // "all" | "starred" | cat key
+let selected = [];         // array of prompt ids, in the order added
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>toast.classList.remove("show"), 1500);
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      return true;
+    }catch(e2){ return false; }
+  }
+}
+
+function renderChips(){
+  const all = [{key:"all", ico:"🗂️", label:"All"}, {key:"starred", ico:"★", label:"Starred"}, ...CATS];
+  chipsEl.innerHTML = all.map(c =>
+    `<div class="catchip${activeCat===c.key?' on':''}" data-cat="${c.key}">${c.ico} ${c.label}</div>`
+  ).join("");
+  chipsEl.querySelectorAll(".catchip").forEach(el=>{
+    el.addEventListener("click", ()=>{ activeCat = el.dataset.cat; renderChips(); renderGrid(); });
+  });
+}
+
+function matches(p, q){
+  if (activeCat==="starred" && !p.star) return false;
+  if (activeCat!=="all" && activeCat!=="starred" && p.cat!==activeCat) return false;
+  if (!q) return true;
+  const hay = (p.title+" "+p.blurb+" "+p.text+" "+p.cat).toLowerCase();
+  return hay.includes(q);
+}
+
+function catInfo(key){ return CATS.find(c=>c.key===key) || {ico:"", label:key}; }
+
+function renderGrid(){
+  const q = searchEl.value.trim().toLowerCase();
+  const list = PROMPTS.filter(p=>matches(p,q));
+  emptyEl.style.display = list.length ? "none" : "block";
+  grid.innerHTML = list.map((p,i)=>{
+    const ci = catInfo(p.cat);
+    const isOn = selected.includes(p.id);
+    return `<div class="card${isOn?' added':''}" style="animation-delay:${Math.min(i,10)*30}ms" data-id="${p.id}">
+      <div class="hd">
+        <div class="ttl">${p.star?'<span class="star">★</span>':''}${escapeHtml(p.title)}</div>
+        <div class="badge">${ci.ico} ${ci.label}</div>
+      </div>
+      <div class="blurb">${escapeHtml(p.blurb)}</div>
+      <div class="plate">${escapeHtml(p.text)}</div>
+      <div class="row">
+        <button class="sm copy" data-act="copy" data-id="${p.id}">📋 Copy</button>
+        <button class="sm add${isOn?' on':''}" data-act="add" data-id="${p.id}">${isOn?'✓ Added':'+ Add to Hopper'}</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+grid.addEventListener("click", async (e)=>{
+  const btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const p = PROMPTS.find(x=>x.id===id);
+  if (!p) return;
+  if (btn.dataset.act === "copy"){
+    const ok = await copyText(p.text);
+    showToast(ok ? "Copied “"+p.title+"”" : "Couldn't copy — select & copy manually");
+  } else if (btn.dataset.act === "add"){
+    const i = selected.indexOf(id);
+    if (i === -1) selected.push(id); else selected.splice(i,1);
+    renderGrid(); renderSelected(); renderPreview(); persist();
+  }
+});
+
+function renderSelected(){
+  if (!selected.length){
+    selectedRow.innerHTML = '<span class="empty">No fittings loaded yet — tap “+ Add” on any card below.</span>';
+    return;
+  }
+  selectedRow.innerHTML = selected.map(id=>{
+    const p = PROMPTS.find(x=>x.id===id);
+    if (!p) return "";
+    return `<span class="chip">${escapeHtml(p.title)}<button data-id="${id}" aria-label="Remove">✕</button></span>`;
+  }).join("");
+  selectedRow.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      selected = selected.filter(id=>id!==b.dataset.id);
+      renderGrid(); renderSelected(); renderPreview(); persist();
+    });
+  });
+}
+
+function buildFinal(){
+  const q = queryIn.value.trim();
+  const parts = selected.map(id => PROMPTS.find(p=>p.id===id)).filter(Boolean).map(p=>p.text);
+  return [q, ...parts].filter(Boolean).join("\n\n");
+}
+
+function renderPreview(){
+  const final = buildFinal();
+  preview.textContent = final || "Type your query above, then tap fittings below to bolt them on — the finished, paste-ready query builds here.";
+}
+
+function persist(){
+  try{
+    localStorage.setItem("boilerplate_query_draft", queryIn.value);
+    localStorage.setItem("boilerplate_selected", JSON.stringify(selected));
+  }catch(e){}
+}
+function restore(){
+  try{
+    const q = localStorage.getItem("boilerplate_query_draft");
+    const s = localStorage.getItem("boilerplate_selected");
+    if (q) queryIn.value = q;
+    if (s) selected = JSON.parse(s).filter(id => PROMPTS.some(p=>p.id===id));
+  }catch(e){}
+}
+
+queryIn.addEventListener("input", ()=>{ renderPreview(); persist(); });
+searchEl.addEventListener("input", renderGrid);
+
+$("#copyFinal").addEventListener("click", async ()=>{
+  const final = buildFinal();
+  if (!final){ showToast("Nothing to copy yet"); return; }
+  const ok = await copyText(final);
+  showToast(ok ? "📋 Finished query copied — paste it in" : "Couldn't copy — select & copy manually");
+});
+$("#clearAll").addEventListener("click", ()=>{
+  queryIn.value = ""; selected = [];
+  renderGrid(); renderSelected(); renderPreview(); persist();
+  showToast("Cleared");
+});
+
+restore();
+renderChips();
+renderGrid();
+renderSelected();
+renderPreview();
+})();
+</script>
+</body>
+</html>

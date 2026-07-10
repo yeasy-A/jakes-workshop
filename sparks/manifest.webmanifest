@@ -1,0 +1,31 @@
+{
+  "name": "Sparks",
+  "short_name": "Sparks",
+  "description": "Ten quick brain games \u2014 creativity, word links, patterns, rhyme, plus focus & memory trainers.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0e6d6",
+  "theme_color": "#f0e6d6",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
