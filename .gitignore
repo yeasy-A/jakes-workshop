@@ -3,3 +3,6 @@
 __pycache__/
 node_modules/
 demo-runs.json
+jobs/
+spinner/
+tongues/

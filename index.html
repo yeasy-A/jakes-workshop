@@ -82,15 +82,12 @@
 <script>
   // Add an app: drop its folder next to this file and add a line here.
   const APPS = [
-    {dir:"sparks/", ico:"⚡", a:"#ec5a23", nm:"Sparks", bl:"Ten quick brain games — creativity, word links, patterns, symbols, rhyme, plus working-memory, focus & flexibility trainers."},
+    {dir:"muster/", ico:"🎖️", a:"#c9972e", nm:"Muster", bl:"A free field desk for veterans — a VA combined-rating calculator (real 'VA math,' with the bilateral factor), claim deadlines, PACT Act, and the full benefits stack. Nothing you enter ever leaves your browser."},
+    {dir:"veteran-finder/", ico:"🧭", a:"#5a6535", nm:"Veteran Finder", bl:"Find the nonprofits that can help veterans & families — search by need, era, and keyword, or answer four questions for a matched shortlist."},
+    {dir:"sparks/", ico:"⚡", a:"#ec5a23", nm:"Sparks", bl:"Twenty-seven quick brain games — creativity, word links, patterns, symbols, rhyme, plus working-memory, focus & flexibility trainers, with dark mode and accent themes."},
     {dir:"patternmap/", ico:"🗺️", a:"#5f86d6", nm:"PatternMap", bl:"An interactive map of the patterns & typology woven through Scripture — explore how the Bible connects to itself."},
     {dir:"faith/", ico:"✝️", a:"#8a6fc0", nm:"Faith", bl:"A Catholic companion — Daily Examen, the Rosary with today's mysteries, the Divine Mercy Chaplet, plus a Verse & Saint of the day."},
-    {dir:"va/", ico:"🎖️", a:"#c9972e", nm:"VA Toolkit", bl:"VA combined-rating calculator (real 'VA math,' with the bilateral factor), a claims checklist, and a benefits reference for veterans."},
-    {dir:"veteran-finder/", ico:"🧭", a:"#5a6535", nm:"Veteran Finder", bl:"Find the nonprofits that can help veterans & families — search by need, era, and keyword, or answer four questions for a matched shortlist."},
-    {dir:"jobs/", ico:"⚓", a:"#3a4a63", nm:"Billet", bl:"An AI job-hunt console — harvests real listings, filters them by a geo/remote compass, scores fit & joy, then swipes keep/kill. What's here is a live showcase of a real run; copy it to run your own, on your own Claude subscription."},
-    {dir:"tongues/", ico:"💬", a:"#e2934a", nm:"Tongues", bl:"A real Spanish A1 unit — Saludos y presentaciones — fully playable with real audio and spaced review, built with the Curriculum Forge pipeline. No account, no login — your progress stays only in this browser, nothing is sent anywhere."},
     {dir:"boilerplate/", ico:"⚙️", a:"#b8733a", nm:"Boilerplate", bl:"A prompt engine — prefab prompts forged from real mistakes. Pick one, bolt it onto your query, copy the finished line straight to your terminal."},
-    {dir:"spinner/", ico:"🎡", a:"#1aa088", nm:"Decision Spinner", bl:"A wheel of names — type in options, spin, and let it pick. Settles 'who does the dishes' and 'where do we eat.'"},
   ];
   document.getElementById("list").innerHTML = APPS.map((a,i)=>
     `<a class="app${a.soon?' soon':''}" href="${a.soon?'#':a.dir}" style="--a:${a.a};animation-delay:${i*60}ms">
