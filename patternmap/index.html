@@ -1488,6 +1488,10 @@ svg{ display:block; }
      modal's right edge. Two columns gives every pill enough room for its
      icon + full label. */
   .modal__cats{ grid-template-columns:repeat(2,1fr); }
+
+  /* Drop the toolbar down so it clears the search bar + filter chips instead
+     of crowding the very top-left corner. */
+  .toolbar{ top:184px; }
 }
 
 /* ===== Use Lora for scripture serif when the webfont loads (system serif fallback otherwise) ===== */
@@ -4132,6 +4136,36 @@ PM.data.books = {
       nn.vy *= DAMPING;
       var p = getPattern(ids[m]);
       if (p) { p.x = nn.x; p.y = nn.y; }
+    }
+
+    // collision resolution — no two node circles may overlap. Inverse-square
+    // repulsion + gravity settle into an overlapping pile in dense clusters;
+    // this pairwise position correction (like d3's forceCollide) GUARANTEES a
+    // minimum gap, so the constellation stays readable instead of a blob.
+    // Iterated a few passes so it actually CONVERGES against gravity/springs
+    // rather than resolving one collision only to re-pile before the next tick.
+    var MIN_SEP = (c.NODE_SIZE || 96) * 1.5;
+    for (var pass = 0; pass < 4; pass++) {
+      for (var ci = 0; ci < n; ci++) {
+        var ca = node.get(ids[ci]);
+        for (var cj = ci + 1; cj < n; cj++) {
+          var cb = node.get(ids[cj]);
+          var cdx = ca.x - cb.x, cdy = ca.y - cb.y;
+          var cd = Math.sqrt(cdx * cdx + cdy * cdy) || 0.01;
+          if (cd < MIN_SEP) {
+            var push = (MIN_SEP - cd) / 2;
+            var pux = cdx / cd, puy = cdy / cd;
+            if (!ca.pinned) { ca.x += pux * push; ca.y += puy * push; }
+            if (!cb.pinned) { cb.x -= pux * push; cb.y -= puy * push; }
+          }
+        }
+      }
+    }
+    // write the collision-corrected positions back to the patterns
+    for (var wi = 0; wi < n; wi++) {
+      var wn = node.get(ids[wi]);
+      var wp = getPattern(ids[wi]);
+      if (wp) { wp.x = wn.x; wp.y = wn.y; }
     }
   };
 
@@ -8848,8 +8882,14 @@ PM.data.books = {
         // transform frames the FINAL constellation (fitAfterSettle polls the
         // sim rather than guessing a delay — a stale mid-sim snapshot fit is
         // off by enough to push a phone-narrow graph off-screen).
-        if (isFn(PM.graph.fitAfterSettle)) safe(PM.graph.fitAfterSettle, 6000);
-        else setTimeout(function () { safe(PM.graph.fit); }, 700);
+        if (isFn(PM.graph.fitAfterSettle)) {
+          safe(PM.graph.fitAfterSettle, 6000);
+          // Backstop: re-fit on a timer too, so the final collision-spread
+          // graph is always reframed even if the rAF settle-poll is throttled.
+          setTimeout(function () { safe(PM.graph.fit); }, 2200);
+        } else {
+          setTimeout(function () { safe(PM.graph.fit); }, 700);
+        }
       } else {
         safe(PM.graph.render);
         safe(PM.graph.fit);
