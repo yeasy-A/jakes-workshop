@@ -139,6 +139,10 @@ svg{ display:block; }
   z-index:var(--z-world);
   overflow:hidden;
   cursor:grab;
+  /* touch-action:none — hand ALL touch gestures to the pan/drag handlers.
+     Without this, mobile browsers claim the one-finger drag as a page
+     gesture and never deliver pointermove, so the graph can't be panned. */
+  touch-action:none;
   background-color:var(--bg);
   /* subtle dot-field: two tiled radial gradients + a soft center vignette glow */
   background-image:
@@ -3961,24 +3965,34 @@ PM.data.books = {
     return { minX: minX - pad, minY: minY - pad, maxX: maxX + pad, maxY: maxY + pad };
   };
 
+  // Usable canvas area = viewport minus the overlaid chrome (top search+filter
+  // bar, left toolbar, bottom action pill). Fitting/centering into THIS box —
+  // not the raw viewport — keeps the graph out from under the controls. The
+  // chrome is large on a phone, which is why the default pattern used to cram
+  // into the top-left and hide behind the filters.
+  function fitBox() {
+    var vp = refs.viewport;
+    var W = vp.clientWidth, H = vp.clientHeight;
+    var narrow = W < 640;
+    var top = narrow ? 200 : 92, left = narrow ? 78 : 92,
+        right = narrow ? 14 : 24, bottom = narrow ? 104 : 40;
+    return { x: left, y: top, w: Math.max(1, W - left - right), h: Math.max(1, H - top - bottom) };
+  }
+
   G.fit = function () {
     var vp = refs.viewport;
     if (!vp) return;
     var bb = G.bbox();
     var w = bb.maxX - bb.minX || 1;
     var h = bb.maxY - bb.minY || 1;
-    var vpW = vp.clientWidth;
-    var vpH = vp.clientHeight;
-    var zmin = C().ZOOM_MIN || 0.2;
-    var zmax = C().ZOOM_MAX || 3;
-    var k = clamp(Math.min(vpW / w, vpH / h) * 0.9, zmin, zmax);
+    var box = fitBox();
+    var k = clamp(Math.min(box.w / w, box.h / h) * 0.9, C().ZOOM_MIN || 0.2, C().ZOOM_MAX || 3);
     var t = transform();
     t.k = k;
-    // center the bbox
     var cx = (bb.minX + bb.maxX) / 2;
     var cy = (bb.minY + bb.maxY) / 2;
-    t.x = vpW / 2 - cx * k;
-    t.y = vpH / 2 - cy * k;
+    t.x = (box.x + box.w / 2) - cx * k;
+    t.y = (box.y + box.h / 2) - cy * k;
     G.applyTransform();
     if (PM.save) PM.save();
   };
@@ -3988,12 +4002,12 @@ PM.data.books = {
     var vp = refs.viewport;
     if (!vp) return;
     var w = (maxX - minX) || 1, h = (maxY - minY) || 1;
-    var vpW = vp.clientWidth, vpH = vp.clientHeight;
-    var k = clamp(Math.min(vpW / w, vpH / h) * 0.9, C().ZOOM_MIN || 0.2, C().ZOOM_MAX || 3);
+    var box = fitBox();
+    var k = clamp(Math.min(box.w / w, box.h / h) * 0.9, C().ZOOM_MIN || 0.2, C().ZOOM_MAX || 3);
     var t = transform();
     t.k = k;
-    t.x = vpW / 2 - ((minX + maxX) / 2) * k;
-    t.y = vpH / 2 - ((minY + maxY) / 2) * k;
+    t.x = (box.x + box.w / 2) - ((minX + maxX) / 2) * k;
+    t.y = (box.y + box.h / 2) - ((minY + maxY) / 2) * k;
     G.applyTransform();
   }
 
@@ -8826,12 +8840,14 @@ PM.data.books = {
       // Relax the freshly-seeded (or position-less) graph, then fit.
       if (isFn(PM.graph.startLayout)) {
         safe(PM.graph.startLayout);
-        // Fit once the cooling sim actually settles (not a guessed delay) so
-        // the transform always frames the FINAL constellation, not a
-        // mid-simulation snapshot — a stale snapshot fit is off by the same
-        // absolute pixel error on any viewport, but that error is large enough
-        // relative to a narrow (phone) viewport to push the whole graph
-        // off-screen. See PM.graph.fitAfterSettle.
+        // Frame the graph IMMEDIATELY (into the chrome-inset fitBox) so it never
+        // shows as an unframed, jittering pile in the top-left corner while the
+        // sim cools — that was the "glitchy on open" on phones.
+        safe(PM.graph.fit);
+        // Then fit AGAIN once the cooling sim actually settles, so the final
+        // transform frames the FINAL constellation (fitAfterSettle polls the
+        // sim rather than guessing a delay — a stale mid-sim snapshot fit is
+        // off by enough to push a phone-narrow graph off-screen).
         if (isFn(PM.graph.fitAfterSettle)) safe(PM.graph.fitAfterSettle, 6000);
         else setTimeout(function () { safe(PM.graph.fit); }, 700);
       } else {
